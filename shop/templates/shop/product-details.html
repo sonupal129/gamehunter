@@ -1,0 +1,509 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+
+<!-- Site Title -->
+{% block title%}<title>{{ product.name|title }} Available at GameHunter.in</title>{% endblock %}
+
+{% block navbar %}
+<div class="breadcrumb-area black-bg-4">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <ul>
+                <li><a href="{% url 'shop:homepage' %}">HOME</a></li>
+                <li><a href="{% url 'shop:product-list' product.category.slug %}">{{ product.category|upper }}</a></li>
+                <li class="active">{{ product.name|upper }}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="product-details pt-65 pb-65 black-bg-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-12">
+                <div class="product-details-img">
+                    <div class="zoompro-span">
+                        <img class="zoompro" src="{{ product.get_default_photo.file.url }}"
+                             alt="{{ product.name|upper }}" width="570" height="570"/>
+                        <!--<div class="product-video">-->
+                        <!--<a class="video-popup" href="https://www.youtube.com/watch?v=Lfek7Kcq16g">-->
+                        <!--<i class="fa fa-video-camera"></i>-->
+                        <!--Watch Trailor-->
+                        <!--</a>-->
+                        <!--</div>-->
+                    </div>
+                    <div id="gallery" class="mt-20 product-dec-slider owl-carousel">
+                        {% for photo in product.photo_set.all %}
+                        <a data-image="{{ photo.file.url }}">
+                            <img src="{{ photo.file.url }}" alt="" height="100" width="100">
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% if product.item_status == 'I' %}
+                    {% if product.total_discount %}<span>{{product.total_discount}}% Off!</span>{% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="product-details-content">
+                    <h4>{{ product.name|upper }} {% if product.publisher != None %} by {{ product.publisher }} {% endif %}</h4>
+                    <div class="rating-review">
+                        <div class="pro-dec-rating">
+                            <i class="ion-android-star-outline theme-star"></i>
+                            <i class="ion-android-star-outline theme-star"></i>
+                            <i class="ion-android-star-outline theme-star"></i>
+                            <i class="ion-android-star-outline theme-star"></i>
+                            <i class="ion-android-star-outline"></i>
+                        </div>
+                        <!--<div class="pro-dec-review">-->
+                        <!--<ul>-->
+                        <!--<li>32 Reviews</li>-->
+                        <!--</ul>-->
+                        <!--</div>-->
+                    </div>
+                    {% if product.item_status == 'I' %}
+                    {% if product.total_discount != 0 %}
+                    <span class="product-old-price">₹{{product.get_mrp_and_selling_price|last}}</span>
+                    {% endif %}
+                    <span>₹ {{product.get_mrp_and_selling_price|first}}</span>
+                    {% else %}
+                    <span>Sorry! Item is Out of Stock</span>
+                    {% endif %}
+                    <div class="in-stock">
+                        {% if product.developer %}
+                        <p>Developer: <span>{{ product.developer }}</span></p>
+                        {% endif %}
+                        {% if product.publisher %}
+                        <p>Publisher: <span>{{ product.publisher }}</span></p>
+                        {% endif %}
+                        {% if product.manufacturer %}
+                        <p>Manufacturer: <span>{{ product.manufacturer }}</span></p>
+                        {% endif %}
+                        <p>Release Date: <span>{{ product.launch_date|date:"b Y"|title }}</span></p>
+                        {% if product.plan.count > 0 %}
+                        <p>Available for Subscription: <span>Yes</span></p>
+                        {% else %}
+                        <p>Available for Subscription: <span>No</span></p>
+                        {% endif %}
+                        {% if product.genre %}
+                        <p>Genre: <span>{{ product.genre }}</span></p>
+                        {% endif %}
+                        {% if product.condition == 'U' %}
+                        <p>Item Condition: <span>Used</span></p>
+                        {% else %}
+                        <p>Item Condition: <span>New</span></p>
+                        {% endif %}
+                        <p>Usually Shipped in: <span>2-4 Days</span></p>
+                    </div>
+                    {% if product.item_status == 'I' %}
+                    <p>{{product.description|striptags|slice:":300"}}</p>
+                    <!--<div class="pro-dec-feature">-->
+                    <!--<ul>-->
+                    <!--<li><input type="checkbox"> Protection Plan: <span> 2 year  $4.99</span></li>-->
+                    <!--<li><input type="checkbox"> Remote Holder: <span> $9.99</span></li>-->
+                    <!--<li><input type="checkbox"> Koral Alexa Voice Remote Case: <span> Red  $16.99</span></li>-->
+                    <!--<li><input type="checkbox"> Amazon Basics HD Antenna: <span>25 Mile  $14.99</span></li>-->
+                    <!--</ul>-->
+                    <!--</div>-->
+                    {% endif %}
+                    <div class="quality-add-to-cart">
+                        <!--<div class="quality">-->
+                        <!--<label>Qty:</label>-->
+                        <!--<input class="cart-plus-minus-box" type="text" name="qtybutton" value="02">-->
+                        <!--</div>-->
+                        {% if product.item_status == 'I' %}
+                        {% if product in cart.products.all %}
+                        <div class="product-action">
+                            <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">Go
+                                to Cart</a>
+                            <!--<a class="same-action" title="Wishlist" href="#">-->
+                            <!--<i class="fa fa-heart-o">dfsdfs</i>-->
+                            <!--</a>-->
+                            <!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
+                            <!--title="Compare" href="#">-->
+                            <!--<i class="fa fa-sliders fa-rotate-90"></i>-->
+                            <!--</a>-->
+                        </div>
+                        {% else %}
+                        <div class="product-action">
+                            <a class="action-cart" title="Add To Cart" href="{% url 'carts:add' product.slug %}">Add to
+                                Cart</a>
+                            <!--<a class="same-action" title="Wishlist" href="#">dsfsdfsd</a>-->
+                            <!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
+                            <!--title="Compare" href="#">-->
+                            <!--<i class="fa fa-sliders fa-rotate-90"></i>-->
+                            <!--</a>-->
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    <!--<div class="pro-dec-categories">-->
+                    <!--<ul>-->
+                    <!--<li class="categories-title">Available for:</li>-->
+                    <!--{% for item in product.item_type.all %}-->
+                    <!--<li><a href="#">{{item}},</a></li>-->
+                    <!--{% endfor %}-->
+                    <!--</ul>-->
+                    <!--</div>-->
+                    <!--<div class="pro-dec-categories">-->
+                    <!--<ul>-->
+                    <!--<li class="categories-title">Tags:</li>-->
+                    <!--<li><a href="#">Plazatheme,</a></li>-->
+                    <!--<li><a href="#"> Table, </a></li>-->
+                    <!--<li><a href="#">Woo,</a></li>-->
+                    <!--<li><a href="#"> e-Commerce,</a></li>-->
+                    <!--</ul>-->
+                    <!--</div>-->
+                    <div class="pro-dec-social">
+                        <ul>
+                            <li><a class="tweet" href="#"><i class="ion-social-twitter"></i> Tweet</a></li>
+                            <li><a class="share" href="{{ product.get_absolute_url }}"><i
+                                    class="ion-social-facebook"></i> Share</a></li>
+                            <li><a class="google" href="#"><i class="ion-social-googleplus-outline"></i> Google+</a>
+                            </li>
+                            <li><a class="pinterest" href="#"><i class="ion-social-pinterest"></i> Pinterest</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--<div class="pro-dec-btn">-->
+                    <!--<a href="#"><i class="fa fa-angle-left"></i></a>-->
+                    <!--<a href="#"><i class="fa fa-angle-right"></i></a>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="description-review-area pt-25 pb-70 black-bg-5">
+    <div class="container">
+        <div class="description-review-wrapper">
+            <div class="description-review-topbar nav text-center">
+                <a class="active" data-toggle="tab" href="#des-details1">Description</a>
+                <!--<a data-toggle="tab" href="#des-details2">Shipping Policy</a>-->
+            </div>
+            <div class="tab-content description-review-bottom">
+                <div id="des-details1" class="tab-pane active">
+                    <div class="product-description-wrapper">
+                        {{product.description|safe}}
+                    </div>
+                </div>
+                <!--<div id="des-details2" class="tab-pane">-->
+                <!--<div class="product-anotherinfo-wrapper">-->
+                <!--<p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel-->
+                <!--illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui-->
+                <!--blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam-->
+                <!--liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim-->
+                <!--placerat facer possim assum. Typi non habent claritatem insitam est usus legentis in iis qui-->
+                <!--facit eorum claritatem. </p>-->
+                <!--<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod-->
+                <!--tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis-->
+                <!--nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo-->
+                <!--consequat. </p>-->
+                <!--<ul>-->
+                <!--<li>- Typi non habent claritatem insitam</li>-->
+                <!--<li>- Est usus legentis in iis qui facit eorum claritatem.</li>-->
+                <!--<li>- Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius.</li>-->
+                <!--<li>- Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium-->
+                <!--lectorum.-->
+                <!--</li>-->
+                <!--</ul>-->
+                <!--</div>-->
+                <!--</div>-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div class="product-area pb-45 black-bg-5">-->
+<!--<div class="container">-->
+<!--<div class="section-border mb-10">-->
+<!--<h4 class="section-title section-bg-black">Related Products</h4>-->
+<!--</div>-->
+<!--<div class="product-slider-nav nav-style"></div>-->
+<!--<div class="headphone-slider-active product-slider owl-carousel nav-style">-->
+<!--<div class="devita-product-2">-->
+<!--<div class="product-img black-bg-5">-->
+<!--<a href="product-details.html">-->
+<!--<img src="{% static 'img/product/pro-game-1.png' %}">-->
+<!--</a>-->
+<!--</div>-->
+<!--<div class="list-col black-bg-5">-->
+<!--<div class="gridview">-->
+<!--<div class="product-content text-center">-->
+<!--<span>Headphone, Accessories</span>-->
+<!--<h4><a href="product-details.html">Matrior white Headphone Ver 2018 </a></h4>-->
+<!--<div class="product-price-wrapper">-->
+<!--<span>$260.00</span>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="product-action-wrapper-2 text-center">-->
+<!--<div class="product-rating">-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline"></i>-->
+<!--</div>-->
+<!--<p> Quam elit phasellus nibh sed eget, sed nunc in ultricies sodales sapien, non velit-->
+<!--scelerisque...</p>-->
+<!--<div class="product-action">-->
+<!--<a class="same-action" title="Wishlist" href="#">-->
+<!--<i class="fa fa-heart-o"></i>-->
+<!--</a>-->
+<!--<a class="action-cart" title="Quick View" data-toggle="modal"-->
+<!--data-target="#exampleModal" href="#">-->
+<!--Add to Cart-->
+<!--</a>-->
+<!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
+<!--title="Compare" href="#">-->
+<!--<i class="fa fa-sliders fa-rotate-90"></i>-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="devita-product-2">-->
+<!--<div class="product-img black-bg-5">-->
+<!--<a href="product-details.html">-->
+<!--<img src="{% static 'img/product/pro-game-1.png' %}" alt="">-->
+<!--</a>-->
+<!--<span>-30%</span>-->
+<!--</div>-->
+<!--<div class="list-col black-bg-5">-->
+<!--<div class="gridview">-->
+<!--<div class="product-content text-center">-->
+<!--<span>Headphone, Accessories</span>-->
+<!--<h4><a href="product-details.html">Matrior black Headphone Ver 2018</a></h4>-->
+<!--<div class="product-price-wrapper">-->
+<!--<span>$260.00</span>-->
+<!--<span class="product-price-old">$162.00 </span>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="product-action-wrapper-2 text-center">-->
+<!--<div class="product-rating">-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline"></i>-->
+<!--</div>-->
+<!--<p> Quam elit phasellus nibh sed eget, sed nunc in ultricies sodales sapien, non velit-->
+<!--scelerisque...</p>-->
+<!--<div class="product-action">-->
+<!--<a class="same-action" title="Wishlist" href="#">-->
+<!--<i class="fa fa-heart-o"></i>-->
+<!--</a>-->
+<!--<a class="action-cart" title="Quick View" data-toggle="modal"-->
+<!--data-target="#exampleModal" href="#">-->
+<!--Add to Cart-->
+<!--</a>-->
+<!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
+<!--title="Compare" href="#">-->
+<!--<i class="fa fa-sliders fa-rotate-90"></i>-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="devita-product-2">-->
+<!--<div class="product-img black-bg-5">-->
+<!--<a href="product-details.html">-->
+<!--<img src="{% static 'img/product/pro-game-1.png' %}" alt="">-->
+<!--</a>-->
+<!--</div>-->
+<!--<div class="list-col black-bg-5">-->
+<!--<div class="gridview">-->
+<!--<div class="product-content text-center">-->
+<!--<span>Headphone, Accessories</span>-->
+<!--<h4><a href="product-details.html">Matrior blue Headphone Ver 2018</a></h4>-->
+<!--<div class="product-price-wrapper">-->
+<!--<span>$300.00</span>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="product-action-wrapper-2 text-center">-->
+<!--<div class="product-rating">-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline"></i>-->
+<!--</div>-->
+<!--<p> Quam elit phasellus nibh sed eget, sed nunc in ultricies sodales sapien, non velit-->
+<!--scelerisque...</p>-->
+<!--<div class="product-action">-->
+<!--<a class="same-action" title="Wishlist" href="#">-->
+<!--<i class="fa fa-heart-o"></i>-->
+<!--</a>-->
+<!--<a class="action-cart" title="Quick View" data-toggle="modal"-->
+<!--data-target="#exampleModal" href="#">-->
+<!--Add to Cart-->
+<!--</a>-->
+<!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
+<!--title="Compare" href="#">-->
+<!--<i class="fa fa-sliders fa-rotate-90"></i>-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="devita-product-2">-->
+<!--<div class="product-img black-bg-5">-->
+<!--<a href="product-details.html">-->
+<!--<img src="{% static 'img/product/pro-game-1.png' %}" alt="">-->
+<!--</a>-->
+<!--<span>-10%</span>-->
+<!--</div>-->
+<!--<div class="list-col black-bg-5">-->
+<!--<div class="gridview">-->
+<!--<div class="product-content text-center">-->
+<!--<span>Headphone, Accessories</span>-->
+<!--<h4><a href="product-details.html">Matrior black Headphone Ver 2018</a></h4>-->
+<!--<div class="product-price-wrapper">-->
+<!--<span>$120.00</span>-->
+<!--<span class="product-price-old">$150.00 </span>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="product-action-wrapper-2 text-center">-->
+<!--<div class="product-rating">-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline"></i>-->
+<!--</div>-->
+<!--<p> Quam elit phasellus nibh sed eget, sed nunc in ultricies sodales sapien, non velit-->
+<!--scelerisque...</p>-->
+<!--<div class="product-action">-->
+<!--<a class="same-action" title="Wishlist" href="#">-->
+<!--<i class="fa fa-heart-o"></i>-->
+<!--</a>-->
+<!--<a class="action-cart" title="Quick View" data-toggle="modal"-->
+<!--data-target="#exampleModal" href="#">-->
+<!--Add to Cart-->
+<!--</a>-->
+<!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
+<!--title="Compare" href="#">-->
+<!--<i class="fa fa-sliders fa-rotate-90"></i>-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="devita-product-2">-->
+<!--<div class="product-img">-->
+<!--<a href="product-details.html">-->
+<!--<img src="assets/img/product/headphone-5.jpg" alt="">-->
+<!--</a>-->
+<!--</div>-->
+<!--<div class="list-col">-->
+<!--<div class="gridview">-->
+<!--<div class="product-content text-center">-->
+<!--<span>Headphone, Accessories</span>-->
+<!--<h4><a href="product-details.html">Matrior white Headphone Ver 2018</a></h4>-->
+<!--<div class="product-price-wrapper">-->
+<!--<span>$190.00</span>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="product-action-wrapper-2 text-center">-->
+<!--<div class="product-rating">-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline"></i>-->
+<!--</div>-->
+<!--<p> Quam elit phasellus nibh sed eget, sed nunc in ultricies sodales sapien, non velit-->
+<!--scelerisque...</p>-->
+<!--<div class="product-action">-->
+<!--<a class="same-action" title="Wishlist" href="#">-->
+<!--<i class="fa fa-heart-o"></i>-->
+<!--</a>-->
+<!--<a class="action-cart" title="Quick View" data-toggle="modal"-->
+<!--data-target="#exampleModal" href="#">-->
+<!--Add to Cart-->
+<!--</a>-->
+<!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
+<!--title="Compare" href="#">-->
+<!--<i class="fa fa-sliders fa-rotate-90"></i>-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="devita-product-2">-->
+<!--<div class="product-img">-->
+<!--<a href="product-details.html">-->
+<!--<img src="assets/img/product/headphone-2.jpg" alt="">-->
+<!--</a>-->
+<!--<span>-15%</span>-->
+<!--</div>-->
+<!--<div class="list-col">-->
+<!--<div class="gridview">-->
+<!--<div class="product-content text-center">-->
+<!--<span>Headphone, Accessories</span>-->
+<!--<h4><a href="product-details.html">Matrior black Headphone Ver 2018</a></h4>-->
+<!--<div class="product-price-wrapper">-->
+<!--<span>$260.00</span>-->
+<!--<span class="product-price-old">$162.00 </span>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="product-action-wrapper-2 text-center">-->
+<!--<div class="product-rating">-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline theme-star"></i>-->
+<!--<i class="ion-android-star-outline"></i>-->
+<!--</div>-->
+<!--<p> Quam elit phasellus nibh sed eget, sed nunc in ultricies sodales sapien, non velit-->
+<!--scelerisque...</p>-->
+<!--<div class="product-action">-->
+<!--<a class="same-action" title="Wishlist" href="#">-->
+<!--<i class="fa fa-heart-o"></i>-->
+<!--</a>-->
+<!--<a class="action-cart" title="Quick View" data-toggle="modal"-->
+<!--data-target="#exampleModal" href="#">-->
+<!--Add to Cart-->
+<!--</a>-->
+<!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
+<!--title="Compare" href="#">-->
+<!--<i class="fa fa-sliders fa-rotate-90"></i>-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<div class="brand-logo-area black-bg-5">
+    <div class="container">
+        <div class="brand-logo-active owl-carousel border-top-2 ptb-60">
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-1.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-2.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-3.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-4.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-5.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-2.png">
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'shop/include/shop-service-page.html' %}
+{% endblock %}
+<!-- Nav-bar Area End Here-->

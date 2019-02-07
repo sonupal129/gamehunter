@@ -1,0 +1,14 @@
+{% extends django_slack %}
+{% load django_slack %}
+{% block channel %}orders{% endblock %}
+{% block text %}
+Yay! New Subscription Order Received 😍 🕺 🍻 👏
+Order ID : {{ subscription.suborder_id }}
+Status : {{ subscription.active }}
+Payment Method : {{ subscription.payment_method }}😘
+Security Amount : {{ subscription.subscription_amount }}
+Security Deposit : {{ subscription.security_deposit }}
+Subscription Duration : {{ subscription.get_subscription_duration }}
+
+Please Verify Subscription Details and Inform Customer!
+{% endblock %}

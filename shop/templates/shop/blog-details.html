@@ -1,0 +1,196 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+
+<!-- Site Title -->
+{% block title%}<title>{{ article|title }}</title>{% endblock %}
+
+{% block navbar %}
+<div class="breadcrumb-area black-bg-4">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <ul>
+                <li><a href="{% url 'shop:homepage' %}">HOME</a></li>
+                <li><a href="{% url 'shop:articles' %}">BLOG</a></li>
+                <li class="active">{{ article|upper }}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="blog-area pt-65 pb-65 black-bg-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-3 col-lg-4">
+                <div class="shop-sidebar-wrapper black-bg-4">
+                    <!--<div class="shop-widget mb-35">-->
+                    <!--<div class="header-search-2">-->
+                    <!--<form class="header-search-form" action="#">-->
+                    <!--<input type="text" placeholder="Search">-->
+                    <!--<button>-->
+                    <!--<i class="ion-ios-search-strong"></i>-->
+                    <!--</button>-->
+                    <!--</form>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    {% if article.product.all %}
+                    <div class="shop-widget mt-40 pt-35 shop-sidebar-border">
+                        <h4 class="shop-sidebar-title">Related Product</h4>
+                        <div class="recent-post-wrapper mt-20">
+                            {% for product in article.product.all|slice:":5" %}
+                            <div class="single-recent-post mb-20">
+                                <div class="recent-post-img">
+                                    <a href="{{ product.get_absolute_url }}">
+                                        <img alt="" src="{% if product.get_default_photo.file %}
+                                                        {{product.get_default_photo.file.url}}
+                                                      {% else %}
+                                                        {% static 'img/product/default-product-image.png' %}
+                                                      {% endif %}" width="105" height="105">
+                                    </a>
+                                </div>
+                                <div class="product-content">
+                                    <h4>
+                                        <a href="{{ product.get_absolute_url }}">{{ product.get_product_title_name}}</a>
+                                    </h4>
+                                    <span><b>For {{ product.category.name|upper }}</b></span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="shop-widget mt-40 pt-35 shop-sidebar-border">
+                        <h4 class="shop-sidebar-title">Recent Post</h4>
+                        <div class="recent-post-wrapper mt-20">
+                            {% for article in recent_articles|slice:":5" %}
+                            <div class="single-recent-post mb-20">
+                                <div class="recent-post-img">
+                                    <a href="{{ article.get_absolute_url }}">
+                                        <img alt="" src="{{ article.card_image.url }}" height="60" width="100">
+                                    </a>
+                                </div>
+                                <div class="product-content">
+                                    <h4>
+                                        <a href="{{ article.get_absolute_url }}">{{ article.blog_title_name }}</a>
+                                    </h4>
+                                    <span>{{ article.date_created }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="shop-widget mt-40 pt-35 shop-sidebar-border">
+                        <h4 class="shop-sidebar-title">Recent Post</h4>
+                        <div class="recent-post-wrapper mt-20">
+                            {% for article in recent_articles %}
+                            <div class="single-recent-post mb-20">
+                                <div class="recent-post-img">
+                                    <a href="{{ article.get_absolute_url }}">
+                                        <img alt="" src="{{ article.card_image.url }}" height="60" width="100">
+                                    </a>
+                                </div>
+                                <div class="product-content">
+                                    <h4>
+                                        <a href="{{ article.get_absolute_url }}">{{ article.blog_title_name }}</a>
+                                    </h4>
+                                    <span>{{ article.date_created }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-8">
+                <div class="blog-details-wrapper">
+                    <div class="single-blog-wrapper">
+                        <div class="blog-img mb-30">
+                            <img src="{{article.cover_image.url}}" alt="" width="870" height="470">
+                        </div>
+                        <div class="blog-details-content">
+                            <h2>{{ article.title }}</h2>
+                            <div class="blog-meta mb-20">
+                                <ul>
+                                    <li>{{ article.date_created }}</li>
+                                    <!--<li>-->
+                                    <!--<a href="#"> 02 Comments</a>-->
+                                    <!--</li>-->
+                                </ul>
+                            </div>
+                        </div>
+                        {{ article.description|safe }}
+                        <!--<div class="dec-img-wrapper">-->
+                        <!--<div class="row">-->
+
+                        <!--<div class="col-md-6">-->
+                        <!--<div class="dec-img">-->
+                        <!--<img src="{% static 'img/blog/blog-dec-img1.jpg' %}" alt="">-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="col-md-6">-->
+                        <!--<div class="dec-img dec-mrg res-mrg-top-2">-->
+                        <!--<img src="{% static 'img/blog/blog-dec-img2.jpg' %}" alt="">-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <div class="blog-dec-tags-social">
+                            <div class="blog-dec-tags">
+                                <!--<ul>-->
+                                <!--<li><a href="#">Fashion</a></li>-->
+                                <!--<li><a href="#">Furniture</a></li>-->
+                                <!--<li><a href="#">Sports</a></li>-->
+                                <!--</ul>-->
+                            </div>
+                            <div class="blog-dec-social">
+                                <span>share :</span>
+                                <ul>
+                                    <li><a href="#"><i class="ion-social-facebook"></i></a></li>
+                                    <li><a href="#"><i class="ion-social-twitter"></i></a></li>
+                                    <li><a href="#"><i class="ion-social-instagram-outline"></i></a></li>
+                                    <li><a href="#"><i class="ion-social-googleplus-outline"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="brand-logo-area black-bg-5">
+</div>
+<div class="shop-service-area black-bg pt-65">
+    <div class="container">
+        <div class="shop-service-wrapper black-bg-2">
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
+                    <div class="shop-service-content text-center">
+                        <h4>Free Shipping</h4>
+                        <p>Free shipping on all order</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="shop-service-content text-center">
+                        <h4>Money Return</h4>
+                        <p>30 days for free return</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="shop-service-content text-center border-none">
+                        <h4>Online Support</h4>
+                        <p>Support 24 hours a day</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+<!-- Nav-bar Area End Here-->
+
+<!-- Coverpage Area Starts Here-->
+{% block coverpage %}
+{% endblock %}
+<!-- Coverpage Area End Here-->
+
+

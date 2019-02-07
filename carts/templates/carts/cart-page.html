@@ -1,0 +1,196 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+
+{% block title%}<title>My Cart</title>{% endblock %}
+{% block navbar %}
+<div class="breadcrumb-area black-bg-4">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <ul>
+                <li><a href="{% url 'shop:homepage' %}">HOME</a></li>
+                <li class="active">CART</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- shopping-cart-area start -->
+<div class="cart-main-area pt-60 pb-65 black-bg-5 ">
+    {% if cart.products.all or cart.plan %}
+    <div class="container">
+        <h3 class="page-title">Your cart items</h3>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                <form action="#">
+                    <div class="table-content table-responsive">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Product Name</th>
+                                <th>Discount %</th>
+                                <th>₹ Price</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cart in carts %}
+                            <tr>
+                                <td class="product-thumbnail">{% if cart.is_object_of_class %}
+                                    <a href="{{ cart.get_absolute_url }}"><img
+                                            src="{{ cart.image.url }}" alt="" width="80"
+                                            height="80"></a>
+                                    {% else %}
+                                    <a href="{{ cart.get_absolute_url }}"><img
+                                            src="{{ cart.get_default_photo.file.url }}" alt="" width="80"
+                                            height="80"></a>
+                                    {% endif %}
+                                </td>
+                                <td class="product-name">{% if cart.is_object_of_class %}<a
+                                        href="{{ cart.get_absolute_url }}">{{ cart.name|title }}</a>{% else %}<a
+                                        href="{{ cart.get_absolute_url }}">{{cart.name|title }} for {{ cart.category}}
+                                </a>{% endif %}
+                                </td>
+                                {% if cart.is_object_of_class %}
+                                <td class="product-price-cart"><span class="amount">{{ cart.discount }} %</span>
+                                    {% else %}
+                                <td class="product-price-cart"><span class="amount">{{ cart.total_discount }} %</span>
+                                    {% endif %}
+                                </td>
+                                {% if cart.is_object_of_class %}
+                                <td class="product-subtotal">₹ {{ cart.get_plan_selling_price }} +
+                                    {{cart.security_deposit }} (Security Deposit)
+                                </td>
+                                <td class="product-remove">
+                                    <a href="{% url 'carts:remove-plan' cart.slug %}"><i class="fa fa-times"></i></a>
+                                </td>
+                                {% else %}
+                                <td class="product-subtotal">₹ {{ cart.get_mrp_and_selling_price|first }}</td>
+                                <td class="product-remove">
+                                    <a href="{% url 'carts:remove' cart.slug %}"><i class="fa fa-times"></i></a>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="cart-shiping-update-wrapper">
+                                <div class="cart-shiping-update">
+                                    <a href="{% url 'shop:homepage' %}">Continue Shopping</a>
+                                </div>
+                                <div class="cart-clear">
+                                    <a href="{% url 'carts:delete-all' %}">Clear Shopping Cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <!--<div class="cart-tax">-->
+                        <!--<div class="title-wrap">-->
+                        <!--<h4 class="cart-bottom-title section-bg-white">Estimate Shipping And Tax</h4>-->
+                        <!--</div>-->
+                        <!--<div class="tax-wrapper">-->
+                        <!--<p>Enter your destination to get a shipping estimate.</p>-->
+                        <!--<div class="tax-select-wrapper">-->
+                        <!--<div class="tax-select">-->
+                        <!--<label>-->
+                        <!--* Country-->
+                        <!--</label>-->
+                        <!--<select class="email s-email s-wid">-->
+                        <!--<option>Bangladesh</option>-->
+                        <!--<option>Albania</option>-->
+                        <!--<option>Åland Islands</option>-->
+                        <!--<option>Afghanistan</option>-->
+                        <!--<option>Belgium</option>-->
+                        <!--</select>-->
+                        <!--</div>-->
+                        <!--<div class="tax-select">-->
+                        <!--<label>-->
+                        <!--* Region / State-->
+                        <!--</label>-->
+                        <!--<select class="email s-email s-wid">-->
+                        <!--<option>Bangladesh</option>-->
+                        <!--<option>Albania</option>-->
+                        <!--<option>Åland Islands</option>-->
+                        <!--<option>Afghanistan</option>-->
+                        <!--<option>Belgium</option>-->
+                        <!--</select>-->
+                        <!--</div>-->
+                        <!--<div class="tax-select">-->
+                        <!--<label>-->
+                        <!--* Zip/Postal Code-->
+                        <!--</label>-->
+                        <!--<input type="text">-->
+                        <!--</div>-->
+                        <!--<button class="cart-btn-2" type="submit">Get A Quote</button>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="discount-code-wrapper">
+                            <div class="title-wrap">
+                                <h4 class="cart-bottom-title section-bg-black">Use Coupon Code</h4>
+                            </div>
+                            <div class="discount-code">
+                                <p>Enter your coupon code if you have one.</p>
+                                <form>
+                                    <input type="text" required="" name="name">
+                                    <button class="cart-btn-2" type="submit">Apply Coupon</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="grand-totall">
+                            <div class="title-wrap">
+                                <h4 class="cart-bottom-title section-bg-black">Cart Total</h4>
+                            </div>
+                            <h5>Subtotal<span>₹ {{ cart.total_mrp }}</span></h5>
+                            <h5>Discount <span>₹ {{ cart.get_discount }}</span></h5>
+                            <h4 class="grand-totall-title">Grand Total <span>₹ {{ cart.total_selling_price }}</span>
+                            </h4>
+                            <a href="{% url 'carts:checkout' %}">Proceed to Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <h3 class="page-title" align="center">Nothing here to show, to continue shopping. <a
+            href="{% url 'shop:homepage' %}">Click
+        here </a></h3>
+    {% endif %}
+</div>
+<div class="brand-logo-area black-bg-5">
+    <div class="container">
+        <div class="brand-logo-active owl-carousel border-top-2 ptb-60">
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-1.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-2.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-3.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-4.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-5.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-2.png">
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'shop/include/shop-service-page.html' %}
+{% endblock %}
+<!-- Nav-bar Area End Here-->

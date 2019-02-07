@@ -1,0 +1,146 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+{% block title%}<title>Checkout</title>{% endblock %}
+{% block navbar %}
+<div class="breadcrumb-area black-bg-4">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <ul>
+                <li><a href="{% url 'shop:homepage' %}">HOME</a></li>
+                <li><a href="{% url 'carts:cart' %}">CART</a></li>
+                <li class="active"> CHECKOUT</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- checkout-area start -->
+<div class="checkout-area pb-45 pt-65 black-bg-5 ">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9-1">
+                <div class="checkout-wrapper">
+                    <div id="faq" class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h5 class="panel-title"><span></span> <a data-toggle="collapse" data-parent="#faq">
+                                    Shipping Details</a></h5>
+                            </div>
+                            <div id="payment-1" class="panel-collapse collapse show">
+                                <div class="panel-body">
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <div class="billing-information-wrapper">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="billing-info">
+                                                        <label>First Name</label>
+                                                        {{ form.first_name }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="billing-info">
+                                                        <label>Last Name</label>
+                                                        {{ form.last_name }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="billing-info">
+                                                        <label>Email Address</label>
+                                                        <input type="email" placeholder="Email" readonly="readonly"
+                                                               value="{{ request.user.email }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="billing-info">
+                                                        <label>Mobile</label>
+                                                        {{ form.mobile }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12">
+                                                    <div class="billing-info">
+                                                        <label>Address</label>
+                                                        {{ form.shipping_address }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="billing-info">
+                                                        <label>city</label>
+                                                        {{ form.city }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="billing-info">
+                                                        <label>state</label>
+                                                        {{ form.state }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="billing-info">
+                                                        <label>Pin Code</label>
+                                                        {{ form.pincode }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="ship-wrapper">
+                                                <div class="single-ship">
+                                                    <input type="radio" name="address" value="address" checked="True">
+                                                    <label>Ship to this address</label>
+                                                </div>
+                                            </div>
+                                            <div class="billing-back-btn">
+                                                <div class="billing-back">
+                                                    <button type="submit">Pay Online</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3-1">
+                <div class="checkout-progress">
+                    <h4>Order Summary</h4>
+                    <ul>
+                        <li>Product {% for cart in carts %}<span>{{ cart.name }}</span>{% endfor %}</li>
+                        <li>Price<span>$260.00</span></li>
+                        <li>Cart Subtotal<span>₹ {{ cart.total_selling_price }}</span></li>
+                        <li>Discount<b><span>₹ 0</span></b></li>
+                        <li>Shipping<b><span>Free!</span></b></li>
+                        <b>
+                            <li>Order Total<span>₹ {{ cart.total_selling_price }}</span></li>
+                        </b>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="brand-logo-area black-bg-5">
+    <div class="container">
+        <div class="brand-logo-active owl-carousel border-top-2 ptb-60">
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-1.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-2.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-3.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-4.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-5.png">
+            </div>
+            <div class="single-brand-logo">
+                <img alt="" src="assets/img/brand-logo/brand-logo-2.png">
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'shop/include/shop-service-page.html' %}
+{% endblock %}

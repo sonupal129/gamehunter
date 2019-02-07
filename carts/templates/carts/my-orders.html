@@ -1,0 +1,88 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+
+{% block title%}<title>Thank You for Placing Order with us</title>{% endblock %}
+{% block navbar %}
+<div class="breadcrumb-area black-bg-4">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <ul>
+                <li><a href="{% url 'shop:homepage' %}">HOME</a></li>
+                <li class="active">MY ORDERS</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- shopping-cart-area start -->
+<div class="cart-main-area pt-60 pb-65 black-bg-5 ">
+    {% if cart.products.all %}
+    <div class="container">
+        <h3 class="page-title" align="center">My Orders</h3>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="table-content table-responsive">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Product Name</th>
+                            <th>₹ Price</th>
+                            <th>Status</th>
+                            <th>Track Order</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for cart in carts %}
+                        <tr>
+                            <td class="product-thumbnail">
+                                <a href="{{ cart.get_absolute_url }}"><img
+                                        src="{{ cart.get_default_photo.file.url }}" alt="" width="80"
+                                        height="80"></a>
+                            </td>
+                            <td class="product-name"><a href="{{ cart.get_absolute_url }}">{{ cart.name|title }} for
+                                {{ cart.category }}</a></td>
+                            <td class="product-subtotal">₹ {{ cart.get_mrp_and_selling_price|first }}</td>
+                            <td class="product-price-cart"><span
+                                    class="amount">In Process</span>
+                            </td>
+                            <td class="product-price-cart"><a href="#">Track Order >>></a></td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <h3 class="page-title" align="center">Nothing here to show, to continue shopping. <a
+                href="{% url 'shop:homepage' %}">Click
+            here </a></h3>
+        {% endif %}
+    </div>
+    <div class="brand-logo-area black-bg-5">
+        <div class="container">
+            <div class="brand-logo-active owl-carousel border-top-2 ptb-60">
+                <div class="single-brand-logo">
+                    <img alt="" src="assets/img/brand-logo/brand-logo-1.png">
+                </div>
+                <div class="single-brand-logo">
+                    <img alt="" src="assets/img/brand-logo/brand-logo-2.png">
+                </div>
+                <div class="single-brand-logo">
+                    <img alt="" src="assets/img/brand-logo/brand-logo-3.png">
+                </div>
+                <div class="single-brand-logo">
+                    <img alt="" src="assets/img/brand-logo/brand-logo-4.png">
+                </div>
+                <div class="single-brand-logo">
+                    <img alt="" src="assets/img/brand-logo/brand-logo-5.png">
+                </div>
+                <div class="single-brand-logo">
+                    <img alt="" src="assets/img/brand-logo/brand-logo-2.png">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'shop/include/shop-service-page.html' %}
+    {% endblock %}
+    <!-- Nav-bar Area End Here-->

@@ -1,0 +1,13 @@
+{% extends django_slack %}
+{% load django_slack %}
+{% block channel %}orders{% endblock %}
+{% block text %}
+Yay! New Order Received 😍 🕺 🍻 👏
+Order ID : {{ order.suborder_id }}
+Status : {{ order.status }}
+Payment Method : {{ order.payment_method }}😘
+Selling Price : {{ order.selling_price }}
+MRP : {{ order.mrp }}
+
+Please Verify Order Details & Inform Customer
+{% endblock %}

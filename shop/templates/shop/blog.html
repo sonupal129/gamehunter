@@ -1,0 +1,115 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+
+
+<!-- Site Title -->
+{% block title%}<title>Hunter News</title>{% endblock %}
+
+{% block navbar %}
+{% if articles %}
+<div class="breadcrumb-area black-bg-4">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <ul>
+                <li><a href="{% url 'shop:homepage' %}">HOME</a></li>
+                <li class="active">BLOG</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="blog-area pt-65 pb-65 black-bg-5 blog-game">
+    <div class="container">
+        <div class="row">
+            {% for article in articles %}
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="blog-wrapper mb-30 main-blog">
+                    <div class="blog-img mb-20">
+                        <a href="{% url 'shop:article-detail' article.slug %}">
+                            <img src="{{ article.card_image.url }}" width="370" height="220">
+                        </a>
+                    </div>
+                    <span>{{article.blog_type|title}}</span>
+                    <h3><a href="{% url 'shop:article-detail' article.slug %}">{{article.blog_title_name}}</a></h3>
+                    <p>{{ article.blog_description|striptags|safe }}</p>
+                    <div class="blog-meta-bundle">
+                        <div class="blog-meta">
+                            <ul>
+                                <li>{{article.date_created}}</li>
+                                <!--<li>{{blog.date_created}}</li>-->
+                            </ul>
+                        </div>
+                        <div class="blog-readmore">
+                            <a href="{% url 'shop:article-detail' article.slug %}">Read more <i
+                                    class="fa fa-angle-double-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% include 'shop/include/lower_paginator.html' %}
+    </div>
+</div>
+<div class="shop-service-area black-bg pt-65">
+    <div class="container">
+        <div class="shop-service-wrapper black-bg-2">
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
+                    <div class="shop-service-content text-center">
+                        <h4>Free Shipping</h4>
+                        <p>Free shipping on all order</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="shop-service-content text-center">
+                        <h4>Money Return</h4>
+                        <p>30 days for free return</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="shop-service-content text-center border-none">
+                        <h4>Online Support</h4>
+                        <p>Support 24 hours a day</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+<!-- Nav-bar Area End Here-->
+
+<!-- Coverpage Area Starts Here-->
+{% block coverpage %}
+{% endblock %}
+<!-- Coverpage Area End Here-->
+
+<!-- Featured Product Area Starts Here-->
+{% block featuredproducts %}
+{% endblock %}
+<!-- Featured Product Area Ends Here-->
+
+<!-- Banner-1 Area Starts Here-->
+{% block banner1 %}
+{% endblock %}
+<!-- Banner-1 Area Ends Here-->
+
+<!-- Homepage-Console-Category Area Starts Here-->
+{% block consolecategory %}
+{% endblock %}
+<!-- Homepage-Console-Category Area Ends Here-->
+
+<!-- Banner-2 Area Starts Here-->
+{% block banner2 %}
+{% endblock %}
+<!-- Banner-2 Area Ends Here-->
+
+<!-- Homepage-Blogs Area Starts Here-->
+{% block blogging %}
+{% endblock %}
+<!-- Homepage-Blogs Area Ends Here-->
+<!-- Footer Area Start Here -->
+{% block footer %}
+{% endblock %}
+<!-- Footer Area Ends -->

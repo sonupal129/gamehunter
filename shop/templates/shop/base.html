@@ -1,0 +1,401 @@
+{% load staticfiles %}
+{% url 'carts:cart' as cart_url %}
+
+<!doctype html>
+<html class="no-js" lang="zxx">
+<!-- header start -->
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132433608-1"></script>
+    <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-132433608-1');
+
+    </script>
+<!-- Global site tag (gtag.js) - Google Analytics Code Ends Here-->
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!-- Site Title -->
+    {% block title%}
+    {% endblock %}
+    <meta name="description" content="">
+    <meta name="robots" content="noindex, follow"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
+
+    <!-- all css here -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chosen.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pe-icon-7-stroke.css' %}">
+    <link rel="stylesheet" href="{% static 'css/meanmenu.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
+    <script src="{% static 'js/vendor/modernizr-2.8.3.min.js' %}"></script>
+</head>
+<body>
+<header class="header-area bg-img" style='background-image: url({% static "img/bg/bg-14.jpg" %}' );>
+    <div class="header-top pt-10 pb-13 border-bottom-4 header-top-red">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-12">
+                    <div class="header-top-left">
+                        <div class="language-currency lang-curr-border-4">
+                            <span>Language:</span>
+                            <div class="lang-curr-dropdown">
+                                <ul>
+                                    <li><a class="language-click" href="#">English </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="language-currency lang-curr-border-4">
+                            <span>Country:</span>
+                            <div class="lang-curr-dropdown">
+                                <ul>
+                                    <li><a class="language-click" href="#">India </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="language-currency lang-curr-mrg">
+                            <span>Currency: </span>
+                            <div class="lang-curr-dropdown">
+                                <ul>
+                                    <li><a class="language-click" href="#">INR</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-12">
+                    <div class="header-top-right">
+                        <ul>
+                            {% if user.is_authenticated %}
+                            <li>
+                                {% if user.first_name %}
+                                <a href="#">Hi <b>{{user.first_name|title }} {{user.last_name|title }}<i class="ion-chevron-down"></i></b></a>
+                                {% else %}
+                                <a href="#">Hi <b>Hunter<i class="ion-chevron-down"></i></b></a>
+                                {% endif %}
+                            </li>
+                            <li>
+                                <a href="#">Sell Your Games</a>
+                            </li>
+                            <!--<li>-->
+                                <!--<a href="my-account.html">Checkout</a>-->
+                            <!--</li>-->
+                            <li>
+                                <a href="{% url 'shop:logout' %}">Logout</a>
+                            </li>
+                            {% else %}
+                            <li>
+                                <a href="{% url 'shop:signup' %}">Sign Up </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'shop:login' %}">Sign In </a>
+                            </li>
+                            <li>
+                                <a href="#">Sell Your Games</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-middle ptb-37">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-12">
+                    <div class="logo logo-mrg">
+                        <a href="{% url 'shop:homepage' %}">
+                            <img src="{% static 'img/logo/logo.png' %}" alt="">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-12 col-12">
+                    <div class="header-contact-search-wrapper f-right">
+                        <div class="header-contact middle-same">
+                            <div class="header-contact-icon">
+                                <!--<i class="pe-7s-headphones"></i>-->
+                                <a href="https://web.whatsapp.com/send?phone=919873327995&text=I%20am%20interested,%20please%20send%20details!">
+                                    <img src="{% static 'img/logo/whatsapp.svg' %}" alt="" width="35px" height="35px"></a>
+                            </div>
+                            <div class="header-contact-content">
+                                <p>Whatsapp us<br>Free Support: (098) 733 27 995</p>
+                            </div>
+                        </div>
+                        <div class="header-search-4 middle-same header-search-4-red">
+                            <form class="header-search-form" action="{% url 'shop:search' %}" method="GET">
+                                <input name="keywords" type="text" placeholder="Search for products here ..." required >
+                                <button>
+                                    <i class="ion-ios-search-strong"></i>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="header-cart middle-same construction-cart game-cart">
+                            <a href="{{ cart_url }}">
+                                <button class="icon-cart">
+                                    <i class="ion-ios-cart cart-bag"></i>
+                                    {% if request.session.cart_total %}
+                                    <span class="count-amount">₹ {{ request.session.cart_total }}</span>
+                                    {% else %}
+                                    <span class="count-amount">₹ 0</span>
+                                    {% endif %}
+                                    <i class="ion-chevron-down cart-down"></i>
+                                    {% if request.session.cart_items %}
+                                    <span class="count-style">{{ request.session.cart_items }}</span>
+                                    {% endif %}
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-bottom header-bottom-color-4 theme-bg-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="logo mobile-logo">
+                        <a href="index.html">
+                            <img alt="" src="{% static 'img/logo/logo-4.png' %}">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mobile-menu-area">
+                        <div class="mobile-menu">
+                            <nav id="mobile-menu-active">
+                                <ul class="menu-overflow">
+                                    <li><a href="{% url 'shop:subscription-list' %}">Subscriptions</a></li>
+                                    <li><a href="/products/games/ps-4">PS 4</a></li>
+                                    <li><a href="/products/games/ps-3"> PS 3 </a></li>
+                                    <li><a href="/products/games/xbox-one">Xbox One</a></li>
+                                    <li><a href="/products/games/xbox-360"> Xbox 360 </a></li>
+                                    <li><a href="#"> PC Games </a></li>
+                                    <li><a href="#"> Consoles </a></li>
+                                    <li><a href="#"> Gaming Accessories </a></li>
+                                    <li><a href="{% url 'shop:articles' %}"> Articles </a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-menu main-none">
+                <nav>
+                    <ul>
+                        <li><a href="{% url 'shop:subscription-list' %}">Subscriptions</i> </a></li>
+                        <li><a href="/products/games/ps-4">PS 4</a></li>
+                        <li><a href="/products/games/ps-3">PS 3</a></li>
+                        <li><a href="/products/games/xbox-one">Xbox One</a></li>
+                        <li><a href="/products/games/xbox-360">Xbox 360</a></li>
+                        <li><a href="#">consoles</a></li>
+                        <li><a href="#">accessories</a></li>
+                        <li><a href="#">community</a></li>
+                        <li><a href="{% url 'shop:articles' %}">blogs</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Header Area End -->
+{% block navbar %}
+{% endblock %}
+<!-- Nav-bar Area End Here-->
+
+<!-- Coverpage Area Starts Here-->
+{% block coverpage %}
+{% endblock %}
+<!-- Coverpage Area End Here-->
+
+<!-- Featured Product Area Starts Here-->
+{% block featuredproducts %}
+{% endblock %}
+<!-- Featured Product Area Ends Here-->
+
+<!-- Banner-1 Area Starts Here-->
+{% block banner1 %}
+{% endblock %}
+<!-- Banner-1 Area Ends Here-->
+
+<!-- Homepage-Console-Category Area Starts Here-->
+{% block consolecategory %}
+{% endblock %}
+<!-- Homepage-Console-Category Area Ends Here-->
+
+<!-- Banner-2 Area Starts Here-->
+{% block banner2 %}
+{% endblock %}
+<!-- Banner-2 Area Ends Here-->
+
+<!-- Homepage-Blogs Area Starts Here-->
+{% block blogging %}
+{% endblock %}
+<!-- Homepage-Blogs Area Ends Here-->
+
+<!-- Footer Area Starts -->
+<footer class="footer-area pt-60 bg-img" style='background-image: url({% static "img/bg/bg-15.jpg" %}' );>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="footer-widget mb-40">
+                    <div class="footer-title mb-30">
+                        <h4>About Us</h4>
+                    </div>
+                    <div class="footer-about">
+                        <p>GameHunter.In is a channel to provide multiple games under one subscription package. Just
+                            suppose you have your own gaming library from where you can select any game and same will
+                            get delivered to your door. GameHunter help you create one. One subscription can get you
+                            access to all the game you ever wanted to play in a price of 2-3 high end games.</p>
+                        <div class="footer-contact mt-20">
+                            <ul>
+                                <li>Email: <a href="#">hunt@gamehunter.in</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="social-icon mr-40">
+                        <ul>
+                            <li><a class="facebook" target="_blank" href="https://www.facebook.com/gamehunter.in/"><i
+                                    class="ion-social-facebook"></i></a></li>
+                            <li><a class="twitter" href="#"><i class="ion-social-twitter"></i></a></li>
+                            <li><a class="instagram" href="#"><i class="ion-social-instagram-outline"></i></a></li>
+                            <li><a class="youtube" href="#"><i class="ion-social-youtube-outline"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-widget mb-40">
+                    <div class="footer-title mb-30">
+                        <h4>Information</h4>
+                    </div>
+                    <div class="footer-content">
+                        <ul>
+                            <li><a href="{% url 'shop:about-us' %}">About Us</a></li>
+                            <li><a href="{% url 'shop:shipping' %}">Shipping Information</a></li>
+                            <li><a href="{% url 'shop:term-condition' %}">Terms & Conditions</a></li>
+                            <li><a href="{% url 'shop:privacy-policy' %}">Privacy Policy</a></li>
+                            <li><a href="{% url 'shop:return-cancellation' %}">Cancellation & Return Policy</a></li>
+                            <li><a href="{% url 'shop:contact-us' %}">Contact us</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-widget mb-40">
+                    <div class="footer-title mb-30">
+                        <h4>My Account</h4>
+                    </div>
+                    <div class="footer-content">
+                        <ul>
+                            <li><a href="#">My Account</a></li>
+                            <li><a href="#">My Orders</a></li>
+                            <li><a href="#">My Subscriptions</a></li>
+                            <li><a href="{% url 'shop:faq' %}">Faqs</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="footer-widget mb-40">
+                    <div class="footer-title mb-30">
+                        <h4>Join Our Hunterletter Now</h4>
+                    </div>
+                    <div class="footer-newsletter newsletter-game">
+                        <p>Get Discount Coupon</p>
+                        <!--<div id="mc_embed_signup" class="subscribe-form-2">-->
+                            <!--<form action="http://devitems.us11.list-manage.com/subscribe/post?u=6bbb9b6f5827bd842d9640c82&amp;id=05d85f18ef"-->
+                                  <!--method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"-->
+                                  <!--class="validate" target="_blank" novalidate>-->
+                                <!--<div id="mc_embed_signup_scroll" class="mc-form">-->
+                                    <!--<input type="email" value="" name="EMAIL" class="email"-->
+                                           <!--placeholder="Your Email Address..." required>-->
+                                    <!--&lt;!&ndash; real people should not fill this in and expect good things - do not remove this or risk form bot signups&ndash;&gt;-->
+                                    <!--<div class="mc-news" aria-hidden="true"><input type="text"-->
+                                                                                   <!--name="b_6bbb9b6f5827bd842d9640c82_05d85f18ef"-->
+                                                                                   <!--tabindex="-1" value=""></div>-->
+                                    <!--<div class="clear-2"><input type="submit" value="Subscribe" name="subscribe"-->
+                                                                <!--id="mc-embedded-subscribe" class="button"></div>-->
+                                <!--</div>-->
+                            <!--</form>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="pt-60 pb-65 border-top-8">
+            <div class="row">
+                <div class="col-12">
+                    <div class="footer-middle text-center">
+                        <div class="footer-tag">
+                            <ul>
+                                <li><a href="#">New Arrival </a></li>
+                                <li><a href="#">Console </a></li>
+                                <li><a href="#">Gaming Accessories </a></li>
+                                <li><a href="{% url 'shop:subscription-list' %}">Plans </a></li>
+                                <li><a href="/products/games/ps-4">PS 4 Games </a></li>
+                                <li><a href="/products/games/ps-3">PS 3 Games </a></li>
+                                <li><a href="/products/games/xbox-one">Xbox One Games </a></li>
+                                <li><a href="/products/games/xbox-360">Xbox 360 Games </a></li>
+                                <li><a href="{% url 'shop:articles' %}">Articles </a></li>
+                                <li><a href="{% url 'shop:shipping' %}">Shipping </a></li>
+                                <li><a href="{% url 'shop:return-cancellation' %}">Cancellation & Return </a></li>
+                                <li><a href="{% url 'shop:term-condition' %}">Terms & Conditions </a></li>
+                                <li><a href="{% url 'shop:faq' %}">FAQs </a></li>
+                                <li><a href="{% url 'shop:about-us' %}">About us </a></li>
+                                <li><a href="{% url 'shop:contact-us' %}">Career </a></li>
+                            </ul>
+                        </div>
+                        <div class="payment-icon mt-20">
+                            <img src="{% static 'img/icon-img/payment.png' %}" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom pb-25 pt-25 border-top-8 game-footer-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="copyright text-center copyright-white">
+                        <p>Copyright © <a href="{% url 'shop:homepage' %}">Gamehunter.in</a>. All Right Reserved. -- Beta
+                            Version</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- all js here -->
+<script src="{% static 'js/vendor/jquery-1.12.0.min.js' %}"></script>
+<script src="{% static 'js/popper.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/ajax-mail.js' %}"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'js/plugins.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+
+
+</body>
+
+</html>
+
+{% block footer %}
+{% endblock %}
+<!-- Footer Area Ends -->
