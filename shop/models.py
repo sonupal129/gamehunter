@@ -37,15 +37,20 @@ def get_product_photo_path(instance, filename):
 
 def other_file_upload_location(instance, filename):
     print(instance)
-    print(instance.id)
+    print(instance)
     print(filename)
+    id = 0
     if isinstance(instance, Brand):
-        return os.path.join("uploads/brands/%d" % instance.id, filename)
+        id += Brand.objects.count()+1
+        return os.path.join("uploads/brands/%d" % id, filename)
     elif isinstance(instance, Plan):
+        id += Plan.objects.count() + 1
         return os.path.join("uploads/plans/%d" % instance.id, filename)
     elif isinstance(instance, Blog):
+        id += Blog.objects.count() + 1
         return os.path.join("uploads/blogs/%d" % instance.id, filename)
     elif isinstance(instance, CSVImporter):
+        id += CSVImporter.objects.count() + 1
         return os.path.join("uploads/csvimporters/%d" % instance.id, filename)
     else:
         pass
@@ -60,7 +65,7 @@ class BaseModel(models.Model):
 
 class Category(MP_Node):
     class Meta:
-        verbose_name_plural = ("Categories")
+        verbose_name_plural = "Categories"
 
     name = models.CharField(max_length=50, unique=True, default='')
     slug = models.SlugField(null=True, blank=True)
@@ -222,7 +227,10 @@ class Product(BaseModel):
             self.total_discount
         super(Product, self).save(*args, **kwargs)
 
-        self.slug = slugify(self.name + '-by-' + self.publisher.name + '-for-' + self.category.name)
+        if not self.publisher:
+            self.slug = slugify(self.name + '-for-' + self.category.name)
+        else:
+            self.slug = slugify(self.name + '-by-' + self.publisher.name + '-for-' + self.category.name)
         super(Product, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
