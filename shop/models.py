@@ -11,15 +11,23 @@ from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
 from django.contrib.auth.models import User
 from carts.signals import new_user_profile_created
-
+from uuid import uuid4
 
 # Create your models here.
+
 
 def validate_csv_file(value):
     ext = os.path.splitext(value.name)[1]
     valid_extension = ['.csv']
     if not ext.lower() in valid_extension:
         raise ValidationError("Unsupported file extension type, Please use .csv format file only")
+
+
+def validate_image_file(value):
+    ext = os.path.splitext(value.name)[1]
+    valid_extension = ['.jpg', '.jpeg']
+    if not ext.lower() in valid_extension:
+        raise ValidationError("Unsupported file extension type, Please use JPG files only")
 
 
 def min_value_validator(value):
@@ -30,18 +38,18 @@ def min_value_validator(value):
 
 def get_product_photo_path(instance, filename):
     if instance.product:
+        filename = str(uuid4()) + '.jpg'
         return os.path.join("uploads/products/%d" % instance.product.id, filename)
     if instance.promocard:
         return os.path.join("uploads/promocards/%d" % instance.promocard.id, filename)
 
 
 def other_file_upload_location(instance, filename):
-    print(instance)
-    print(instance)
     print(filename)
     id = 0
     if isinstance(instance, Brand):
         id += Brand.objects.count()+1
+        filename = str(uuid4()) + '.jpg'
         return os.path.join("uploads/brands/%d" % id, filename)
     elif isinstance(instance, Plan):
         id += Plan.objects.count() + 1
@@ -271,7 +279,7 @@ class ProductAttribute(models.Model):
 
 
 class Photo(models.Model):
-    file = models.ImageField(upload_to=get_product_photo_path, null=False, blank=False)
+    file = models.ImageField(upload_to=get_product_photo_path, null=False, blank=False, validators=[validate_image_file])
     item_order = models.PositiveSmallIntegerField(default=0, blank=False, null=False)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
     promocard = models.ForeignKey(PromoCard, on_delete=models.CASCADE, blank=True, null=True)

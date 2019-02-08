@@ -3,11 +3,14 @@
 # qs = ["PS4", "Playstation 4 Consoles", "Xbox 360"]
 
 
-publishers = [{"name": "sonu", "age": 24},
-              {"name": "shilpi", "age": 25},
-              {"name": "nikki", "age": 27}
-              ]
+# publishers = [{"name": "sonu", "age": 24},
+#               {"name": "shilpi", "age": 25},
+#               {"name": "nikki", "age": 27}
+#               ]
+#
+# for key, value in publishers:
+#     print(value)
 
-for key, value in publishers:
-    print(value)
+import uuid
 
+print(str(uuid.uuid4()))
