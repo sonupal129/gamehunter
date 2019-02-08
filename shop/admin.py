@@ -52,9 +52,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'item_status', 'active')
     inlines = [ProductAttributeInline, PhotoInline]
     filter_horizontal = ('plan',)
-
-
-admin.site.register(Product, ProductAdmin)
+    search_fields = ["name"]
 
 
 class BlogAttributeInline(admin.TabularInline):
@@ -97,6 +95,7 @@ class AddressAdmin(admin.ModelAdmin):
 
 class BrandAdmin(admin.ModelAdmin):
     fields = ['name', 'description', 'image', ('is_developer', 'is_publisher', 'is_manufacturer')]
+    search_fields = ["name"]
 
 
 class CSVImporterAdmin(ModelAdmin):
@@ -125,3 +124,4 @@ admin.site.register(Genre)
 admin.site.register(Photo)
 admin.site.register(BaseModel)
 admin.site.register(ProductAttribute)
+admin.site.register(Product, ProductAdmin)

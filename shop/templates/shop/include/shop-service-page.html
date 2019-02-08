@@ -8,12 +8,21 @@
                         <p>Free shipping on all order</p>
                     </div>
                 </div>
+                {% if plans %}
                 <div class="col-lg-4 col-md-4">
                     <div class="shop-service-content text-center">
-                        <h4>Money Return</h4>
-                        <p>30 days for free return</p>
+                        <h4>Unlimited Games</h4>
+                        <p>Subscribe to gaming library</p>
                     </div>
                 </div>
+                {% else %}
+                <div class="col-lg-4 col-md-4">
+                    <div class="shop-service-content text-center">
+                        <h4>Easy Returns</h4>
+                        <p>48 hours easy returns</p>
+                    </div>
+                </div>
+                {% endif %}
                 <div class="col-lg-4 col-md-4">
                     <div class="shop-service-content text-center border-none">
                         <h4>Online Support</h4>

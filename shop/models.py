@@ -107,7 +107,7 @@ class Attribute(MP_Node):
 class Brand(models.Model):
     name = models.CharField(max_length=50, blank=False, null=False)
     description = models.TextField(max_length=1000, blank=False, null=False)
-    image = models.ImageField(upload_to=other_file_upload_location, blank=False, null=False)
+    image = models.ImageField(upload_to=other_file_upload_location, blank=True, null=True)
     is_developer = models.BooleanField('Developer', blank=True, default=True)
     is_publisher = models.BooleanField('Publisher', blank=True, default=True)
     is_manufacturer = models.BooleanField('Manufacturer', blank=True, default=True)
@@ -166,7 +166,7 @@ class Plan(models.Model):
     def get_security_deposit(self):
         return self.security_deposit
 
-    def is_object_of_class(self):
+    def is_object_of_plan_class(self):
         if isinstance(self, Plan):
             return True
         else:
