@@ -21,22 +21,27 @@
             <div class="col-lg-6 col-md-7 d-flex align-items-center">
                 <div class="overview-content-2">
                     <h1>GameHunter | A Gaming Store</h1>
-                    <p class="peragraph-blog">In this growing world of games, we came across multiple issues faces by
-                        our Indian gamers and one of the main downstream is expensive games. Gaming is not crime but
-                        it’s too expensive that restrict big amount of gamers to play multiple games.</p>
-                    <p>Being passionate about games, we came across a solution to give our Indian Gaming community the
-                        best we can. We created an online library as similar as the any shop around you with a small
-                        difference “Not to buy limited games, just subscribe to multiple”. </p>
-                    <p>GameHunter.In is a channel to provide multiple games under one subscription package. Just suppose
-                        you have your own gaming library from where you can select any game and same will get delivered
-                        to your door. GameHunter help you create one. One subscription can get you access to all the
-                        game you ever wanted to play in a price of 2-3 high end games.</p>
-                    <p>We wish to break the purchasing habit of our customer, we understand it’s too painful to pay high
-                        amount of money for a game and after completing all the mission you have no other options rather
-                        than selling it or keep it. Don’t create a pile of games which you will never play again, just
-                        change it with another and start fresh.</p>
-                    <p>We invite you to check complete library and make you wise decision to subscribe from us.</p>
-                    <p>Let’s create a gaming world better together. </p>
+                    <p class="peragraph-blog">We had a vision and the vision is to create something a gamer can relate
+                        too. Gamehunter’s entire website is dedicated to gaming. </p>
+                    <h4 align="center">What does a gamer truly want?</h4>
+                    <p>Gamer wants to play as many as games as they can; however, gaming is India is way too expensive.
+                        They always say “Gaming is not a crime but too expensive”, and that’s really a true thing. </p>
+                    <p>GameHunter help gamer to create way to play unlimited games. A subscription package allows access
+                        to user to play hundreds of games displayed on website library.</p>
+                    <h4 align="center">Products | Gaming Accessories | Merchandise</h4>
+                    <p>Looking for something related to gaming, we are trying to establish ourselves to be one focused
+                        gaming company, “Everything is under one roof”. We as You, always has trouble finding gaming
+                        stuff online, jumping from one webpage to another. Checkout our website for more and more
+                        products (Video Games | Game accessories | Merchandise | Collective stuff | and many more. Well
+                        if you do not find what you are looking for, just let us know, we will find that for you (Things
+                        related to gaming only).</p>
+                    <h4 align="center">Story | Blogs | Gaming News</h4>
+                    <p>We believe, every gamer is a perfect storyteller. We welcome all gamers to publish their kind of
+                        story and be part of GameHunter’s story board, let other gamers know about you.</p>
+                    <p>One focused gaming store also includes – Gaming Charcha | News, blogs, your stories, our stories
+                        and everything. </p>
+                    <p>We are trying to create one big gaming community: GameHunter’s Family – let’s hunt down the
+                        game.</p>
                     <div class="overview-btn mt-45">
                         <a class="btn-style-2" href="{% url 'shop:homepage' %}">Shop now!</a>
                     </div>
@@ -44,9 +49,7 @@
             </div>
             <div class="col-lg-6 col-md-5">
                 <div class="overview-img text-center">
-                    <a href="#">
-                        <img src="{% static 'img/banner/about-us.jpg' %}" alt="">
-                    </a>
+                    <img src="{% static 'img/images/about-us.jpg' %}" alt="About Us" width="650" height="540">
                 </div>
             </div>
         </div>
@@ -287,32 +290,7 @@
     </div>
 </div>
 </div>
-<div class="shop-service-area black-bg pt-65">
-    <div class="container">
-        <div class="shop-service-wrapper black-bg-2">
-            <div class="row">
-                <div class="col-lg-4 col-md-4">
-                    <div class="shop-service-content text-center">
-                        <h4>Free Shipping</h4>
-                        <p>Free shipping on all order</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-4">
-                    <div class="shop-service-content text-center">
-                        <h4>Money Return</h4>
-                        <p>30 days for free return</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-4">
-                    <div class="shop-service-content text-center border-none">
-                        <h4>Online Support</h4>
-                        <p>Support 24 hours a day</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% include 'shop/include/shop-service-page.html' %}
 {% endblock %}
 <!-- Nav-bar Area End Here-->
 

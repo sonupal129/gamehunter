@@ -71,7 +71,7 @@ def cart_checkout(request):
     cart_obj, new_obj = Cart.objects.create_or_get_cart(request)
     checkout_form = CheckoutForm(request.POST or None)
     context = {
-        "carts": cart_obj.products.all,
+        "products": cart_obj.total_items_list(),
         "cart": cart_obj,
         "form": checkout_form
     }

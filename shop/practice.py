@@ -1,16 +1,16 @@
-# category = {"Games": [{"category": "PS 4"}, {"category": "Xbox One"}, {"category": "Xbox 360"}]}
-# # "Console": {"category": "Playstation 4 Consoles", "category": "Xbox One Consoles"}}
-# qs = ["PS4", "Playstation 4 Consoles", "Xbox 360"]
+from shop.models import Brand
+
+import csv
 
 
-# publishers = [{"name": "sonu", "age": 24},
-#               {"name": "shilpi", "age": 25},
-#               {"name": "nikki", "age": 27}
-#               ]
-#
-# for key, value in publishers:
-#     print(value)
+file_path = r'C:\Users\Sonu\Desktop\Python Test\pt.csv'
+with open(file_path, 'r', encoding='utf-8', errors='ignore') as output_file:
+        fields = ['Developer', 'Description']
+        csv_file = csv.DictReader(output_file, fieldnames=fields)
+        next(csv_file)
 
-import uuid
-
-print(str(uuid.uuid4()))
+        for i in csv_file:
+            developer = i.get("Developer").strip()
+            description = i.get("Description").strip()
+            obj = Brand.objects.create(name=developer, description=description, is_developer=True)
+        print("All Data Save Successfully")
