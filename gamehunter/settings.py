@@ -162,10 +162,10 @@ POST_OFFICE = {
     'DEFAULT_PRIORITY': 'now',
 }
 
-AWS_ACCESS_KEY_ID = 'AKIAJSJM6MPPHIX4D5GQ'
-AWS_SECRET_ACCESS_KEY = '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'
-# AWS_SES_REGION_NAME = 'us-east-1'
-# AWS_SES_REGION_ENDPOINT = 'email-smtp.us-east-1.amazonaws.com'
+AWS_ACCESS_KEY_ID = 'AKIAIXJMBDAJVH6XYS6A'
+AWS_SECRET_ACCESS_KEY = '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'
+# AWS_SES_REGION_NAME = 'eu-west-1'
+# AWS_SES_REGION_ENDPOINT = 'email-smtp.eu-west-1.amazonaws.com'
 
 
 # Slack API Token & Information for Notification

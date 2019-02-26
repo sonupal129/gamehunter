@@ -115,7 +115,7 @@ class SubscriptionPlanView(ListView):
     context_object_name = 'plans'
 
     def get_queryset(self):
-        return Plan.objects.all()
+        return Plan.objects.all().order_by('duration')
 
 
 class SubscriptionDetailView(DetailView):

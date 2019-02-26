@@ -48,11 +48,11 @@ def redirect_payment_complete(request):
             if cart_obj:
                 get_payment_id = request.GET.get("payment_id", "")
                 get_payment_status = request.GET.get("payment_status", "")
-
                 context = {
                     "cart": cart_obj,
                 }
-                if get_payment_status == "Credit" and get_payment_id:
+
+                if get_payment_status == "Credit" and cart_obj.payment_request and get_payment_id:
                     cart_obj.payment_id = get_payment_id
                     cart_obj.payment_status = get_payment_status
                     cart_obj.save(update_fields=["payment_id", "payment_status"])

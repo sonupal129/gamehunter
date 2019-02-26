@@ -43,7 +43,7 @@ class ProductAttributeInline(admin.TabularInline):
             try:
                 kwargs["queryset"] = Attribute.objects.get(attribute="Product").get_children()
             except IndexError:
-                print("PRODUCT attribute is not available in attribute Model, kidly add it with it's children ")
+                print("PRODUCT attribute is not available in attribute Model, kindly add it with it's children ")
         return super(ProductAttributeInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 
@@ -52,12 +52,22 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'item_status', 'active')
     inlines = [ProductAttributeInline, PhotoInline]
     filter_horizontal = ('plan',)
-    search_fields = ["name"]
+    search_fields = ["name", "description"]
+    list_filter = ["item_status", "active", "category", "condition"]
 
 
 class BlogAttributeInline(admin.TabularInline):
-    model = Blog_Attribute
+    model = BlogAttribute
     fields = ['attribute', 'value']
+    extra = 1
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field is self.model.attribute.field:
+            try:
+                kwargs["queryset"] = Attribute.objects.get(attribute="Blogs").get_children()
+            except IndexError:
+                print("BLOG attribute is not available in attribute Model, kindly add it with it's children ")
+        return super(BlogAttributeInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class BlogAdmin(admin.ModelAdmin):
@@ -96,14 +106,16 @@ class AddressAdmin(admin.ModelAdmin):
 class BrandAdmin(admin.ModelAdmin):
     fields = ['name', 'description', 'image', ('is_developer', 'is_publisher', 'is_manufacturer')]
     search_fields = ["name"]
+    list_display = ["name", "is_developer", "is_publisher", "is_manufacturer"]
+    list_filter = ["is_developer", "is_publisher", "is_manufacturer"]
 
 
 class CSVImporterAdmin(ModelAdmin):
     list_display = ["data_type", "path", "date"]
     fields = ["data_type", "path"]
-    actions = ['upload_data']
+    actions = ['upload_or_update_data']
 
-    def upload_data(self, request, queryset):
+    def upload_or_update_data(self, request, queryset):
         message = ""
         for q in queryset:
             file_path = q.path.path
@@ -111,7 +123,7 @@ class CSVImporterAdmin(ModelAdmin):
                 message = upload_products(file_path)
             else:
                 message = "Invalid Data Type"
-        return message
+        return self.message_user(request, message)
 
 
 admin.site.register(CSVImporter, CSVImporterAdmin)
@@ -121,7 +133,4 @@ admin.site.register(PromoCard, PromoCardAdmin)
 admin.site.register(Plan, PlanAdmin)
 admin.site.register(Brand, BrandAdmin)
 admin.site.register(Genre)
-admin.site.register(Photo)
-admin.site.register(BaseModel)
-admin.site.register(ProductAttribute)
 admin.site.register(Product, ProductAdmin)

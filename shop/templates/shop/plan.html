@@ -26,7 +26,11 @@
                 <div class="subscription-wrapper mb-30 main-subscription">
                     <div class="blog-img mb-20">
                         <a href="{{ plan.get_absolute_url }}">
-                            <img src="{{plan.image.url}}" height="250">
+                            {% if plan.image.url %}
+                                <img src="{{plan.image.url}}" height="250">
+                            {% else %}
+                                <img src="{% static 'img/images/no-image.jpg' %}" height="250">
+                            {% endif %}
                         </a>
                     </div>
                 </div>
