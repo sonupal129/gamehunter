@@ -11,7 +11,7 @@
             <ul>
                 <li><a href="{% url 'shop:homepage' %}">HOME</a></li>
                 <li><a href="{% url 'shop:subscription-list' %}">SUBSCRIPTION</a></li>
-                <li class="active">{{ plan.name }}</li>
+                <li class="active">{{ plan.name|upper }}</li>
             </ul>
         </div>
     </div>
@@ -22,13 +22,19 @@
             <div class="col-lg-6 col-md-12">
                 <div class="product-details-img">
                     <div class="zoompro-span">
+                        {% if plan.image.url %}
                         <img src="{{ plan.image.url }}" data-zoom-image="{{ plan.image.url }}" alt=""
                              height="560" width="560">
+                        {% else %}
+                        <img src="{% static 'img/images/no-image.jpg' %}"
+                             data-zoom-image="{% static 'img/images/no-image.jpg' %}" alt=""
+                             height="560" width="560">
+                        {% endif %}
                         <!--<div class="product-video">-->
-                            <!--<a class="video-popup" href="https://www.youtube.com/watch?v=tce_Ap96b0c">-->
-                                <!--<i class="fa fa-video-camera"></i>-->
-                                <!--View Video-->
-                            <!--</a>-->
+                        <!--<a class="video-popup" href="https://www.youtube.com/watch?v=tce_Ap96b0c">-->
+                        <!--<i class="fa fa-video-camera"></i>-->
+                        <!--View Video-->
+                        <!--</a>-->
                         <!--</div>-->
                     </div>
                     <div id="gallery" class="mt-20 product-dec-slider owl-carousel">
@@ -69,12 +75,18 @@
                     <span>₹ {{ plan.subscription_amount }} for {{ plan.duration }} Months</span>
                     {% endif %}
                     <div class="in-stock">
-                        <p>Monthly Subscription Amount: <span>{{ plan.get_monthly_subscription_amount }} </span></p>
+                        <p>Monthly Subscription Amount: <span>₹ {{ plan.get_monthly_subscription_amount }} </span></p>
                         {% if plan.additional_month > 0 %}
                         <p>Subscription Duration: <span>{{ plan.duration }} Month + {{ plan.additional_month }} Month Extra!</span>
                         </p>
                         {% else %}
                         <p>Subscription Duration: <span>{{ plan.duration }} Month</span></p>
+                        {% endif %}
+                        {% if plan.swaps > 0 %}
+                        <p>Available Swaps: <span>{{ plan.monthly_available_swaps }} Swap in Month</span>
+                        {% endif %}
+                        {% if plan.security_deposit > 0 %}
+                        <p>Security Deposit: <span>₹ {{ plan.security_deposit }} Refundable!</span>
                         {% endif %}
                     </div>
                     {% else %}
@@ -157,7 +169,7 @@
             <div class="tab-content description-review-bottom">
                 <div id="des-details1" class="tab-pane active">
                     <div class="product-description-wrapper">
-                        {{plan.description|safe}}
+                    {{ plan.description|safe }}
                     </div>
                 </div>
                 <div id="des-details2" class="tab-pane">

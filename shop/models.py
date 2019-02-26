@@ -91,7 +91,7 @@ class Category(MP_Node):
 
     def get_absolute_url(self):
         """Returns the url to access a particular instance of Family."""
-        return reverse("product-list", kwargs={'slug': self.slug})
+        return reverse("shop:product-list", kwargs={'slug': self.slug})
 
 
 class Attribute(MP_Node):
@@ -172,6 +172,9 @@ class Plan(models.Model):
         else:
             return False
 
+    def monthly_available_swaps(self):
+        return self.swaps//self.duration
+
 
 class PromoCard(BaseModel):
     card_type = {('coverpage_top', 'Coverpage Top'),
@@ -202,7 +205,7 @@ class Product(BaseModel):
     slug = models.SlugField('Slug', max_length=120, blank=False, default='')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = RichTextField(config_name='default')
-    launch_date = models.DateField(blank=False)
+    launch_date = models.DateField(blank=True, null=True)
     item_status = models.CharField(choices={('I', 'In Stock'), ('O', 'Out of Stock')}, max_length=20,
                                    default='O')
     developer = models.ForeignKey(Brand, limit_choices_to={'is_developer': True}, null=True, blank=True,
@@ -337,7 +340,7 @@ class Blog(BaseModel):
         return self.description
 
 
-class Blog_Attribute(models.Model):
+class BlogAttribute(models.Model):
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE, )
     value = models.CharField(max_length=200, help_text='Will Update Soon', blank=True)
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, blank=True, null=True)

@@ -5,6 +5,8 @@
 <html class="no-js" lang="zxx">
 <!-- header start -->
 <head>
+    <!-- jQuery CDN by Google -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132433608-1"></script>
     <script>
@@ -27,7 +29,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
-
     <!-- all css here -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/animate.css' %}">
@@ -125,16 +126,20 @@
                 </div>
                 <div class="col-lg-9 col-md-12 col-12">
                     <div class="header-contact-search-wrapper f-right">
-                        <div class="header-contact middle-same">
-                            <div class="header-contact-icon">
-                                <!--<i class="pe-7s-headphones"></i>-->
-                                <a href="https://web.whatsapp.com/send?phone=919873327995&text=I%20am%20interested,%20please%20send%20details!">
-                                    <img src="{% static 'img/logo/whatsapp.svg' %}" alt="" width="35px" height="35px"></a>
+                        <a href="https://web.whatsapp.com/send?phone=919873327995&text=I%20am%20interested,%20please%20send%20details!"
+                           target="_blank">
+                            <div class="header-contact middle-same">
+                                <div class="header-contact-icon">
+                                    <!--<i class="pe-7s-headphones"></i>-->
+
+                                    <img src="{% static 'img/logo/whatsapp.svg' %}" alt="" width="35px"
+                                         height="35px">
+                                </div>
+                                <div class="header-contact-content">
+                                    <p>Whatsapp us<br>Free Support: (098) 733 27 995</p>
+                                </div>
                             </div>
-                            <div class="header-contact-content">
-                                <p>Whatsapp us<br>Free Support: (098) 733 27 995</p>
-                            </div>
-                        </div>
+                        </a>
                         <div class="header-search-4 middle-same header-search-4-red">
                             <form class="header-search-form" action="{% url 'shop:search' %}" method="GET">
                                 <input name="keywords" type="text" placeholder="Search for products here ..." required >
@@ -169,8 +174,8 @@
             <div class="row">
                 <div class="col-12">
                     <div class="logo mobile-logo">
-                        <a href="index.html">
-                            <img alt="" src="{% static 'img/logo/logo-4.png' %}">
+                        <a href="{% url 'shop:homepage' %}">
+                            <img alt="" src="{% static 'img/logo/logo.png' %}">
                         </a>
                     </div>
                 </div>
@@ -179,15 +184,29 @@
                         <div class="mobile-menu">
                             <nav id="mobile-menu-active">
                                 <ul class="menu-overflow">
-                                    <li><a href="{% url 'shop:subscription-list' %}">Subscriptions</a></li>
-                                    <li><a href="/products/games/ps-4">PS 4</a></li>
-                                    <li><a href="/products/games/ps-3"> PS 3 </a></li>
-                                    <li><a href="/products/games/xbox-one">Xbox One</a></li>
-                                    <li><a href="/products/games/xbox-360"> Xbox 360 </a></li>
-                                    <li><a href="#"> PC Games </a></li>
-                                    <li><a href="#"> Consoles </a></li>
-                                    <li><a href="#"> Gaming Accessories </a></li>
-                                    <li><a href="{% url 'shop:articles' %}"> Articles </a></li>
+                                    <li><a href="#">Playstation Games</a>
+                                        <ul>
+                                            <li><a href="/products/playstation-games/ps-4">Playstation 4</a></li>
+                                            <li><a href="/products/playstation-games/ps-3"> Playstation 3</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Xbox Games</a>
+                                        <ul>
+                                            <li><a href="/products/xbox-games/xbox-one">Xbox One</a></li>
+                                            <li><a href="/products/xbox-games/xbox-360"> Xbox 360 </a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Consoles</a>
+                                        <ul>
+                                            <li><a href="#"> Playstation </a></li>
+                                            <li><a href="#"> Xbox </a></li>
+                                            <li><a href="#">Nintendo</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="{% url 'shop:subscription-list' %}"><b><u>Subscriptions</u></b></a></li>
+                                    <li><a href="#"> Collective/Accessories </a></li>
+                                    <li><a href="#"> Community </a></li>
+                                    <li><a href="{% url 'shop:articles' %}"> Gaming Charcha </a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -197,12 +216,26 @@
             <div class="main-menu main-none">
                 <nav>
                     <ul>
-                        <li><a href="{% url 'shop:subscription-list' %}">Subscriptions</i> </a></li>
-                        <li><a href="/products/games/ps-4">PS 4</a></li>
-                        <li><a href="/products/games/ps-3">PS 3</a></li>
-                        <li><a href="/products/games/xbox-one">Xbox One</a></li>
-                        <li><a href="/products/games/xbox-360">Xbox 360</a></li>
-                        <li><a href="#">consoles</a></li>
+                        <li><a href="#">Playstation Games<i class="ion-chevron-down"></i></a>
+                            <ul class="submenu">
+                                <li><a href="/products/playstation-games/ps-3">Playstation 3</a></li>
+                                <li><a href="/products/playstation-games/ps-4">Playstation 4</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Xbox Games<i class="ion-chevron-down"></i></a>
+                            <ul class="submenu">
+                                <li><a href="/products/xbox-games/xbox-360">Xbox 360</a></li>
+                                <li><a href="/products/xbox-games/xbox-one">Xbox One</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">consoles<i class="ion-chevron-down"></i></a>
+                            <ul class="submenu">
+                                <li><a href="#">Playstation</a></li>
+                                <li><a href="#">Xbox</a></li>
+                                <li><a href="#">Nintendo</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'shop:subscription-list' %}"><b><u>Subscriptions</u></b></a></li>
                         <li><a href="#">collectives/accessories</a></li>
                         <li><a href="#">community</a></li>
                         <li><a href="{% url 'shop:articles' %}">gaming charcha</a></li>
@@ -257,10 +290,13 @@
                         <h4>About Us</h4>
                     </div>
                     <div class="footer-about">
-                        <p>GameHunter.In is a channel to provide multiple games under one subscription package. Just
-                            suppose you have your own gaming library from where you can select any game and same will
-                            get delivered to your door. GameHunter help you create one. One subscription can get you
-                            access to all the game you ever wanted to play in a price of 2-3 high end games.</p>
+                        <p>We had a vision and the vision is to create something a gamer can relate too. Gamehunter’s
+                            entire website is dedicated to gaming.</p>
+                        <p>Gamer wants to play as many as games as they can; however, gaming is India is way too
+                            expensive. They always say “Gaming is not a crime but too expensive”, and that’s really a
+                            true thing.</p>
+                        <p>GameHunter help gamer to create way to play unlimited games. A subscription package allows
+                            access to user to play hundreds of games displayed on website library.</p>
                         <div class="footer-contact mt-20">
                             <ul>
                                 <li>Email: <a href="mailto:hunt@gamehunter.in">hunt@gamehunter.in</a></li>
@@ -349,10 +385,10 @@
                                 <li><a href="#">Console </a></li>
                                 <li><a href="#">Accessories </a></li>
                                 <li><a href="{% url 'shop:subscription-list' %}">Plans </a></li>
-                                <li><a href="/products/games/ps-4">PS 4 Games </a></li>
-                                <li><a href="/products/games/ps-3">PS 3 Games </a></li>
-                                <li><a href="/products/games/xbox-one">Xbox One Games </a></li>
-                                <li><a href="/products/games/xbox-360">Xbox 360 Games </a></li>
+                                <li><a href="/products/playstation-games/ps-4">PS 4 Games </a></li>
+                                <li><a href="/products/playstation-games/ps-3">PS 3 Games </a></li>
+                                <li><a href="/products/xbox-games/xbox-one">Xbox One Games </a></li>
+                                <li><a href="/products/xbox-games/xbox-360">Xbox 360 Games </a></li>
                                 <li><a href="{% url 'shop:articles' %}">Gaming Charcha </a></li>
                                 <li><a href="{% url 'shop:shipping' %}">Shipping </a></li>
                                 <li><a href="{% url 'shop:return-cancellation' %}">Cancellation & Return </a></li>
