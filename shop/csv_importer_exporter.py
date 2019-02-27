@@ -27,19 +27,19 @@ def upload_products(filepath):
         else:
             data["is_featured"] = False
         if row.get("Developer"):
-            data["developer"] = Brand.objects.get(name=row.get("Developer"), is_developer=True)
+            data["developer"] = Brand.objects.get(name__iexact=row.get("Developer"), is_developer=True)
         else:
             data["developer"] = ""
         if row.get("Publisher"):
-            data["publisher"] = Brand.objects.get(name=row.get("Publisher"), is_publisher=True)
+            data["publisher"] = Brand.objects.get(name__iexact=row.get("Publisher"), is_publisher=True)
         else:
             data["publisher"] = ""
         if row.get("Manufacturer"):
-            data["manufacturer"] = Brand.objects.get(name=row.get("Manufacturer"), is_manufacturer=True)
+            data["manufacturer"] = Brand.objects.get(name__iexact=row.get("Manufacturer"), is_manufacturer=True)
         else:
             data["manufacturer"] = None
         if row.get("Genre"):
-            data["genre"] = Genre.objects.get(genre=row.get("Genre"))
+            data["genre"] = Genre.objects.get(genre__iexact=row.get("Genre"))
         else:
             data["genre"] = None
         if row.get("Category") in games_category:
