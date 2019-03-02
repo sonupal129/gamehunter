@@ -5,6 +5,7 @@ from treebeard.forms import movenodeform_factory
 from .models import *
 from django.contrib.admin import ModelAdmin
 from .csv_importer_exporter import *
+from shop.debug import ExceptionLog
 
 # Register your models here.
 
@@ -126,6 +127,11 @@ class CSVImporterAdmin(ModelAdmin):
         return self.message_user(request, message)
 
 
+class ExceptionAdmin(ModelAdmin):
+    list_display = ["views", "message", "timestamp"]
+    readonly_fields = ("views", "message", "timestamp", "exceptionclass",)
+
+
 admin.site.register(CSVImporter, CSVImporterAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Address, AddressAdmin)
@@ -134,3 +140,4 @@ admin.site.register(Plan, PlanAdmin)
 admin.site.register(Brand, BrandAdmin)
 admin.site.register(Genre)
 admin.site.register(Product, ProductAdmin)
+admin.site.register(ExceptionLog, ExceptionAdmin)

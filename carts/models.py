@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from shop.models import BaseModel, Address, Product, Plan
+from shop.models import Address, Product, Plan
 import random, datetime
 from jsonfield import JSONField
 from django.shortcuts import HttpResponseRedirect, redirect
@@ -35,7 +35,8 @@ class ProductCartManager(models.Manager):
         return self.model.objects.create(user=user_obj)
 
 
-class Cart(BaseModel):
+class Cart(models.Model):
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     cart_id = models.CharField(max_length=17, blank=True)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True)
     products = models.ManyToManyField(Product, related_name='products', blank=True)

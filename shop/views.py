@@ -8,7 +8,7 @@ from .forms import UserLoginForm, SignUpForm
 from carts.models import Cart
 from django.http import HttpResponseRedirect
 from django.db.models import Q
-
+from shop.debug import log_exceptions
 # Create your views here.
 
 
@@ -51,6 +51,7 @@ class ProductListView(ListView):
     template_name = 'shop/product-list.html'
     context_object_name = "products"
 
+    @log_exceptions("Category View")
     def get_queryset(self):
         try:
             queryset = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True)

@@ -12,7 +12,8 @@ from django.core.files.images import get_image_dimensions
 from django.contrib.auth.models import User
 from carts.signals import new_user_profile_created
 from uuid import uuid4
-
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
 # Create your models here.
 
 
@@ -45,30 +46,17 @@ def get_product_photo_path(instance, filename):
 
 
 def other_file_upload_location(instance, filename):
-    print(filename)
-    id = 0
     if isinstance(instance, Brand):
-        id += Brand.objects.count()+1
         filename = str(uuid4()) + '.jpg'
-        return os.path.join("uploads/brands/%d" % id, filename)
+        return os.path.join("uploads/brands/", filename)
     elif isinstance(instance, Plan):
-        id += Plan.objects.count() + 1
-        return os.path.join("uploads/plans/%d" % instance.id, filename)
+        filename = str(uuid4()) + '.jpg'
+        return os.path.join("uploads/plans/", filename)
     elif isinstance(instance, Blog):
-        id += Blog.objects.count() + 1
-        return os.path.join("uploads/blogs/%d" % instance.id, filename)
-    elif isinstance(instance, CSVImporter):
-        id += CSVImporter.objects.count() + 1
-        return os.path.join("uploads/csvimporters/%d" % instance.id, filename)
+        filename = str(uuid4()) + '.jpg'
+        return os.path.join("uploads/blogs/", filename)
     else:
         pass
-
-
-class BaseModel(models.Model):
-    date = models.DateTimeField(auto_now_add=True, auto_created=True, editable=False, )
-
-    def __str__(self):
-        return str(self.date)
 
 
 class Category(MP_Node):
@@ -107,7 +95,8 @@ class Attribute(MP_Node):
 class Brand(models.Model):
     name = models.CharField(max_length=50, blank=False, null=False)
     description = models.TextField(max_length=1000, blank=False, null=False)
-    image = models.ImageField(upload_to=other_file_upload_location, blank=True, null=True)
+    image = models.ImageField(upload_to=other_file_upload_location, blank=True, null=True,
+                              validators=[validate_image_file])
     is_developer = models.BooleanField('Developer', blank=True, default=True)
     is_publisher = models.BooleanField('Publisher', blank=True, default=True)
     is_manufacturer = models.BooleanField('Manufacturer', blank=True, default=True)
@@ -138,8 +127,8 @@ class Plan(models.Model):
     security_deposit = models.DecimalField(default=0, blank=False, max_digits=5, decimal_places=0,
                                            validators=[min_value_validator])
     term_condition = RichTextField(config_name='default')
-    image = models.ImageField(upload_to=other_file_upload_location, blank=True, null=True)
-    image1 = models.ImageField(upload_to=other_file_upload_location, blank=True, null=True)
+    image = models.ImageField(upload_to=other_file_upload_location, blank=True, null=True, validators=[validate_image_file])
+    image1 = models.ImageField(upload_to=other_file_upload_location, blank=True, null=True, validators=[validate_image_file])
     slug = models.SlugField('Slug', max_length=120, blank=False, default="")
     discount = models.DecimalField(default=0, blank=True, max_digits=2, decimal_places=0,
                                    validators=[min_value_validator])
@@ -176,7 +165,8 @@ class Plan(models.Model):
         return self.swaps//self.duration
 
 
-class PromoCard(BaseModel):
+class PromoCard(models.Model):
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     card_type = {('coverpage_top', 'Coverpage Top'),
                  ('coverpage_center', 'Coverpage Center'),
                  ('coverpage_bottom', 'Coverpage Bottom'),
@@ -199,12 +189,13 @@ class PromoCard(BaseModel):
 # class PrductManager(models.Manager):
 
 
-class Product(BaseModel):
+class Product(models.Model):
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     name = models.CharField(max_length=100)
     plan = models.ManyToManyField(Plan, related_name='products', blank=True)
     slug = models.SlugField('Slug', max_length=120, blank=False, default='')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    description = RichTextField(config_name='default')
+    description = RichTextField(config_name='default', blank=True)
     launch_date = models.DateField(blank=True, null=True)
     item_status = models.CharField(choices={('I', 'In Stock'), ('O', 'Out of Stock')}, max_length=20,
                                    default='O')
@@ -215,7 +206,7 @@ class Product(BaseModel):
     manufacturer = models.ForeignKey(Brand, limit_choices_to={'is_manufacturer': True}, null=True, blank=True,
                                      on_delete=models.CASCADE, related_name='manufacturer')
     genre = models.ForeignKey(Genre, null=True, blank=True, on_delete=models.CASCADE)
-    condition = models.CharField(max_length=10, choices={('U', 'Used'), ('N', 'New')}, default='N')
+    condition = models.CharField(max_length=10, choices={('U', 'Used'), ('N', 'New')}, default='N', null=True, blank=True)
     mrp = models.DecimalField(default=0, blank=False, max_digits=5, decimal_places=0,
                               validators=[min_value_validator])
     discount = models.DecimalField(default=0, blank=True, max_digits=2, decimal_places=0,
@@ -294,7 +285,8 @@ class Photo(models.Model):
         ordering = ["item_order"]
 
 
-class Blog(BaseModel):
+class Blog(models.Model):
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     title = models.CharField(max_length=150, help_text='Title Name of Blog/Article')
     blog_type = models.CharField(max_length=10, choices={('news', 'News'), ('blog', 'Blog'), ('deals', 'Deals')},
                                  default='blog')
@@ -349,7 +341,8 @@ class BlogAttribute(models.Model):
         verbose_name_plural = "Blog Attribute"
 
 
-class UserProfile(BaseModel):
+class UserProfile(models.Model):
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_number = models.BigIntegerField(null=True, blank=True)
     subscribed = models.BooleanField(blank=True)
@@ -399,9 +392,12 @@ class Address(models.Model):
         return self.address
 
 
-class CSVImporter(BaseModel):
+
+class CSVImporter(models.Model):
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     data_type = models.CharField("Data Type", choices=(("PD", "Product"),), max_length=10)
-    path = models.FileField(upload_to=other_file_upload_location, blank=False, null=False, validators=[validate_csv_file])
+    path = models.FileField(upload_to='csv_file_uploads', storage=FileSystemStorage(location=settings.MEDIA_ROOT),
+                            blank=False, null=False, validators=[validate_csv_file])
 
     class Meta:
         verbose_name_plural = "CSV Importer"
@@ -410,4 +406,10 @@ class CSVImporter(BaseModel):
         return str(self.path)
 
 
+class ExceptionLog(models.Model):
+    """ Model for catching exception when debug is False """
 
+    timestamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    views = models.CharField("View", max_length=60)
+    exceptionclass = models.CharField("Exception Class", max_length=120)
+    message = models.TextField("Exception Message", max_length=1000)
