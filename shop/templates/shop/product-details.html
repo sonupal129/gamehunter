@@ -65,6 +65,8 @@
                     <span class="product-old-price">₹{{product.get_mrp_and_selling_price|last}}</span>
                     {% endif %}
                     <span>₹ {{product.get_mrp_and_selling_price|first}}</span>
+                    {% elif product.item_status == 'S' %}
+                    <span>Game is Available in Subscription Only</span>
                     {% else %}
                     <span>Sorry! Item is Out of Stock</span>
                     {% endif %}
@@ -125,7 +127,8 @@
                         </div>
                         {% else %}
                         <div class="product-action">
-                            <a id="add-to-cart" class="action-cart" title="Add To Cart" href="{% url 'carts:add' product.slug %}">Add to
+                            <a id="add-to-cart" class="action-cart" title="Add To Cart"
+                               href="{% url 'carts:add' product.slug %}">Add to
                                 Cart</a>
                             <!--<a class="same-action" title="Wishlist" href="#">dsfsdfsd</a>-->
                             <!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
@@ -134,6 +137,12 @@
                             <!--</a>-->
                         </div>
                         {% endif %}
+                        {% endif %}
+                        {% if product.item_status == 'S' %}
+                        <div class="product-action">
+                            <a class="action-cart" title="Buy Subscription" href="{% url 'shop:subscription-list' %}">Buy
+                                Subscription</a>
+                        </div>
                         {% endif %}
                     </div>
                     <!--<div class="pro-dec-categories">-->

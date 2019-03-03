@@ -186,19 +186,17 @@ class PromoCard(models.Model):
             self.__default_photo = self.photo_set.first()
         return self.__default_photo
 
-# class PrductManager(models.Manager):
-
 
 class Product(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     name = models.CharField(max_length=100)
     plan = models.ManyToManyField(Plan, related_name='products', blank=True)
     slug = models.SlugField('Slug', max_length=120, blank=False, default='')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     description = RichTextField(config_name='default', blank=True)
     launch_date = models.DateField(blank=True, null=True)
-    item_status = models.CharField(choices={('I', 'In Stock'), ('O', 'Out of Stock')}, max_length=20,
-                                   default='O')
+    item_status = models.CharField(choices={('I', 'In Stock'), ('O', 'Out of Stock'), ('S', 'Subscription Only'),},
+                                   max_length=20, default='O')
     developer = models.ForeignKey(Brand, limit_choices_to={'is_developer': True}, null=True, blank=True,
                                   on_delete=models.CASCADE, related_name='developer')
     publisher = models.ForeignKey(Brand, limit_choices_to={'is_publisher': True}, null=True, blank=True,
