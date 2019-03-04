@@ -1,6 +1,5 @@
 import csv
 from .models import *
-from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 import time
 
@@ -14,7 +13,8 @@ def upload_products(filepath):
     data = {}
     for row in reader:
         data["description"] = row.get("Description")
-        data["launch_date"] = row.get("Launch Date", "")
+        if row.get("Launch Date"):
+            data["launch_date"] = row.get("Launch Date", "")
         data["condition"] = row.get("Condition")
         data["discount"] = int(row.get("Discount"))
         data["hunter_discount"] = int(row.get("Hunter Discount"))
@@ -82,7 +82,8 @@ def upload_products(filepath):
                                                  publisher=data.get("publisher"), active=data.get("active"))
                 product.save()
                 product.description = data.get("description")
-                product.launch_date = data.get("launch_date")
+                if row.get("Launch Date"):
+                    product.launch_date = data.get("launch_date")
                 product.genre = data.get("genre")
                 product.condition = data.get("condition")
                 product.discount = data.get("discount")
