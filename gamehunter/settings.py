@@ -175,8 +175,12 @@ AWS_SECRET_ACCESS_KEY = 'LKad/Y/bb5p5WhX0Vlw+8TNqvlf5CZzfLhXhfKgA'
 # Slack API Token & Information for Notification
 SLACK_TOKEN = 'xoxb-402668290307-541515247091-5kxEPnxOQ0dQSLy334WoENDE'
 
+# Instamojo Payment Gateway Link Url
 INSTAMOJO_API_KEY = "test_830b282750b49d50fb88d7e72c9"
 INSTAMOJO_AUTH_TOKEN = "test_f544367f6405aa31283a4605731"
+BASE_PAYMENT_URL = "https://test.instamojo.com/api/1.1/payment-requests/"
+PAYEMENT_REDIRECT_URL = "http://127.0.0.1:8000/cart/payment/successful"
+
 
 try:
     from .local_settings import *

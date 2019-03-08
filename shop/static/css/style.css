@@ -50,7 +50,7 @@ body {
     font-weight: 400;
     font-style: normal;
     font-size: 14px;
-    color: #454545;
+    color: #fff;
 }
 
 .img {
@@ -8153,6 +8153,7 @@ h4.shop-sidebar-title {
 
 .shop-sidebar-border {
     border-top: 1px solid #ebebeb;
+    
 }
 
 .sidebar-list-style ul li {

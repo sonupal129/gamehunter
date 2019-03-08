@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from carts.signals import order_payment_received
 from django.dispatch import receiver
-from gamehunter.settings import INSTAMOJO_API_KEY, INSTAMOJO_AUTH_TOKEN
+from gamehunter.settings import INSTAMOJO_API_KEY, INSTAMOJO_AUTH_TOKEN, BASE_PAYMENT_URL, PAYEMENT_REDIRECT_URL
 # Code Starts from Below
 
 headers = {"X-Api-Key": INSTAMOJO_API_KEY, "X-Auth-Token": INSTAMOJO_AUTH_TOKEN}
@@ -22,9 +22,11 @@ def send_payment_request(request):
                    "buyer_name": cart_obj.user.first_name,
                    "email": cart_obj.user.email,
                    "phone": str(cart_obj.user.userprofile.phone_number),
-                   "redirect_url": "http://127.0.0.1:8000/cart/payment/successful",
+                   "redirect_url": PAYEMENT_REDIRECT_URL,
+                   "send_email": False,
+                   "send_sms": False,
                    }
-        response = requests.post("https://test.instamojo.com/api/1.1/payment-requests/", data=payload, headers=headers)
+        response = requests.post(BASE_PAYMENT_URL, data=payload, headers=headers)
         if response:
             payment_detail = response.json()["payment_request"]
             cart_obj.payment_request = payment_detail

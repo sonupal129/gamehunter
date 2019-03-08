@@ -228,7 +228,8 @@ def product_search(request):
             'categories': Product.objects.filter(name__icontains=keywords, active=True,
                                                  category__name__isnull=False).values(
                 "category__name").distinct(),
-            'products': Product.objects.filter(Q(name__icontains=keywords) | Q(description__icontains=keywords))
+            'products': Product.objects.filter(
+                Q(name__icontains=keywords) | Q(description__icontains=keywords)).exclude(active=False)
         }
         return render(request, "shop/search-product-list.html", context)
     return render(request, "shop/no-search-product-list-found.html")
