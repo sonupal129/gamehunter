@@ -17,5 +17,5 @@ urlpatterns = [
     path('payment/successful', instamojo.redirect_payment_complete, name='payment-successful'),
     path('add/plan/<slug:slug>', views.cart_add_plan, name='add-plan'),
     path('remove/plan/<slug:slug>', views.cart_remove_plan, name='remove-plan'),
-    path('test/', emails.send_cart_order_place_email, name='test'),
+    path('test/', emails.new_user_signup_email, name='test'),
 ]

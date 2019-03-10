@@ -50,11 +50,54 @@ class ProductAttributeInline(admin.TabularInline):
 
 class ProductAdmin(admin.ModelAdmin):
     exclude = ('slug',)
-    list_display = ('name', 'item_status', 'active')
+    list_display = ('name', 'category', 'item_status', 'active')
     inlines = [ProductAttributeInline, PhotoInline]
     filter_horizontal = ('plan',)
-    search_fields = ["name", "description"]
+    search_fields = ["name"]
     list_filter = ["item_status", "active", "category", "condition"]
+    actions = ["out_of_stock_selected_products", "in_stock_selected_products", "subscription_only_selected_products",
+               "make_active_selected_products", "make_inactive_selected_products"]
+
+    def out_of_stock_selected_products(self, request, queryset):
+        count = 0
+        for q in queryset:
+            q.item_status = 'O'
+            count += 1
+            q.save()
+        return self.message_user(request, f"{count} products marked out of stock")
+
+    def in_stock_selected_products(self, request, queryset):
+        count = 0
+        for q in queryset:
+            q.item_status = 'I'
+            count += 1
+            q.save()
+        return self.message_user(request, f"{count} products marked in stock")
+
+    def subscription_only_selected_products(self, request, queryset):
+        count = 0
+        for q in queryset:
+            q.item_status = 'S'
+            count += 1
+            q.save()
+        return self.message_user(request, f"{count} products marked subscription only")
+
+    def make_active_selected_products(self, request, queryset):
+        count = 0
+        for q in queryset:
+            if q.item_status == "I" or q.item_status == "S":
+                q.active = True
+                count += 1
+                q.save()
+        return self.message_user(request, f"{count} products marked active")
+
+    def make_inactive_selected_products(self, request, queryset):
+        count = 0
+        for q in queryset:
+            q.active = False
+            count += 1
+            q.save()
+        return self.message_user(request, f"{count} products marked inactive")
 
 
 class BlogAttributeInline(admin.TabularInline):

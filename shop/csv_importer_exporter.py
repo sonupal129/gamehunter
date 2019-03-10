@@ -21,6 +21,8 @@ def upload_products(filepath):
         data["delivery_charges"] = int(row.get("Delivery Charges"))
         if row.get("Item Status") == "I":
             item_status = "I"
+        elif row.get("Item Status") == "S":
+            item_status = "S"
         else:
             item_status = "O"
         if row.get("Active") == "Yes":

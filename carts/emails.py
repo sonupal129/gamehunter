@@ -23,10 +23,11 @@ def send_cart_order_place_email(sender, **kwargs):
         return ""
 
 
-@receiver(new_user_profile_created)
+# @receiver(new_user_profile_created)
 def new_user_signup_email(sender, **kwargs):
-    print(kwargs)
-    user = kwargs.get("user")
+
+    # user = kwargs.get("user")
+    user = User.objects.get(id=2)
     mail.send(
         recipients=user.email,
         sender="no-reply@gamehunter.in",

@@ -24,12 +24,14 @@
                     <div class="zoompro-span">
                         <img class="zoompro" src="{{ product.get_default_photo.file.url }}"
                              alt="{{ product.name|upper }}" width="570" height="570"/>
-                        <!--<div class="product-video">-->
-                        <!--<a class="video-popup" href="https://www.youtube.com/watch?v=Lfek7Kcq16g">-->
-                        <!--<i class="fa fa-video-camera"></i>-->
-                        <!--Watch Trailor-->
-                        <!--</a>-->
-                        <!--</div>-->
+                        {% if product.game_trailer %}
+                        <div class="product-video">
+                            <a target="_blank" class="video-popup" href="{{ product.game_trailer }}">
+                                <i class="fa fa-video-camera"></i>
+                                Watch Trailor
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                     <div id="gallery" class="mt-20 product-dec-slider owl-carousel">
                         {% for photo in product.photo_set.all %}
@@ -80,7 +82,9 @@
                         {% if product.manufacturer %}
                         <p>Manufacturer: <span>{{ product.manufacturer }}</span></p>
                         {% endif %}
+                        {% if product.launch_date %}
                         <p>Release Date: <span>{{ product.launch_date|date:"b Y"|title }}</span></p>
+                        {% endif %}
                         {% if product.plan.count > 0 %}
                         <p>Available for Subscription: <span>Yes</span></p>
                         {% else %}

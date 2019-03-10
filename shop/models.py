@@ -257,11 +257,18 @@ class Product(models.Model):
         mrp = (selling_price * 100) // (100 - self.total_discount)
         return selling_price, mrp
 
+    def game_trailer(self):
+        trailer = ProductAttribute.objects.filter(attribute__attribute="game_trailer", product=self.id).first()
+        if trailer:
+            return trailer.value
+        return False
+
 
 class ProductAttribute(models.Model):
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE, )
     value = models.CharField(max_length=200, help_text='Enter Value of Attribute', blank=False)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True,
+                                related_name="productattribute")
 
     def __str__(self):
         return str(self.attribute) + "-" + str(self.product)
