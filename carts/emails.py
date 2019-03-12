@@ -8,26 +8,30 @@ from django.dispatch import receiver
 
 @receiver(order_payment_received)
 def send_cart_order_place_email(sender, **kwargs):
+    # cart = Cart.objects.get(id=13)
+    # print(cart)
+    # print(cart.total_items_list())
     cart = kwargs.get("cart_id")
+    print(cart.user.email)
     if cart.payment_status == "Credit":
         mail.send(
             recipients=cart.user.email,
             sender="no-reply@gamehunter.in",
-            template="new_user_welcome_email",
+            template="new_order_received",
             priority="now",
             backend="django_ses",
             context={
-                "cart": cart
+                "products": cart.total_items_list(),
+                "cart": cart,
+
             },
         )
         return ""
 
 
-# @receiver(new_user_profile_created)
+@receiver(new_user_profile_created)
 def new_user_signup_email(sender, **kwargs):
-
-    # user = kwargs.get("user")
-    user = User.objects.get(id=2)
+    user = kwargs.get("user")
     mail.send(
         recipients=user.email,
         sender="no-reply@gamehunter.in",
@@ -38,3 +42,4 @@ def new_user_signup_email(sender, **kwargs):
             "user": user
         },
     )
+    return ""

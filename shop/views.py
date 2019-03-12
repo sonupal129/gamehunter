@@ -5,8 +5,8 @@ from .models import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login
 from .forms import UserLoginForm, SignUpForm
-from carts.models import Cart
 from django.http import HttpResponseRedirect
+from carts.models import *
 from django.db.models import Q
 from shop.debug import log_exceptions
 # Create your views here.
@@ -21,6 +21,8 @@ class HomePageView(ListView):
         context = super(HomePageView, self).get_context_data(**kwargs)
         try:
             context['articles'] = Blog.objects.order_by('-date_created')[:5]
+            context['new_released_games'] = Product.objects.filter(active=True, item_status="I").order_by("-launch_date")[
+                                              :12]
             context['new_arrived_products'] = Product.objects.filter(active=True, item_status="I").order_by("-date")[
                                               :12]
             context['featured_playstation_games'] = Product.objects.filter(category__name__in=['PS 4', 'PS 3'],
@@ -135,7 +137,6 @@ class AboutUsView(TemplateView):
     template_name = 'shop/about-us.html'
 
 
-
 def contact_us(request):
      return render(request, 'shop/contact.html')
 
@@ -234,3 +235,17 @@ def product_search(request):
         return render(request, "shop/search-product-list.html", context)
     return render(request, "shop/no-search-product-list-found.html")
 
+
+def myorders(request):
+    user = request.user
+    carts = Cart.objects.filter(user=user, payment_status="Credit")
+    received_orders = []
+    for cart in carts:
+        orders = cart.orders.all()
+        for order in orders:
+            received_orders.append(order)
+    print(received_orders)
+    context = {
+        "orders": received_orders,
+    }
+    return render(request, "shop/my-orders.html", context)

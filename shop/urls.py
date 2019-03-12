@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
+from django.contrib.auth.decorators import login_required
 
 
 app_name = 'shop'
@@ -27,5 +28,5 @@ urlpatterns = [
     path('<slug:slug>', views.ProductDetailView.as_view(), name='product-detail'),
     path('products/<path:slug>', views.ProductListView.as_view(), name='product-list'),
     path('subscription-plans/<slug:slug>', views.SubscriptionDetailView.as_view(), name='subscription-detail'),
-
+    path('my-orders/', login_required(views.myorders), name='orders'),
 ]

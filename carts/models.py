@@ -37,7 +37,7 @@ class ProductCartManager(models.Manager):
 
 class Cart(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    cart_id = models.CharField(max_length=17, blank=True)
+    cart_id = models.CharField(max_length=20, blank=True)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True)
     products = models.ManyToManyField(Product, related_name='products', blank=True)
     plan = models.ForeignKey(Plan, on_delete=models.DO_NOTHING, blank=True, null=True, related_name="plan")
@@ -176,8 +176,8 @@ class ProductOrders(models.Model):
         ("CO", "Order Completed"),
     }
 
-    cart = models.ForeignKey(Cart, null=True, blank=True, on_delete=models.CASCADE)
-    suborder_id = models.CharField(max_length=20, null=True, blank=True)
+    cart = models.ForeignKey(Cart, null=True, blank=True, on_delete=models.CASCADE, related_name="orders")
+    suborder_id = models.CharField(max_length=30, null=True, blank=True)
     status = models.CharField(max_length=20, choices=status_choices, null=True, blank=True, default="UO")
     payment_method = models.CharField(max_length=10, null=True, blank=True)
     order_date = models.DateTimeField(auto_now_add=True)
@@ -205,7 +205,7 @@ class ProductOrders(models.Model):
 class SubscriptionOrders(models.Model):
     cart = models.ForeignKey(Cart, null=True, blank=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="subscription")
-    suborder_id = models.CharField(max_length=20, null=True, blank=True)
+    suborder_id = models.CharField(max_length=25, null=True, blank=True)
     active = models.BooleanField(blank=False, default=True)
     payment_method = models.CharField(max_length=10, null=True, blank=True)
     order_date = models.DateTimeField(auto_now_add=True)

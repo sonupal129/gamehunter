@@ -45,6 +45,26 @@
 </head>
 <body>
 <header class="header-area bg-img" style='background-image: url({% static "img/bg/bg-14.jpg" %}' );>
+    <!-- Facebook Pixel Code -->
+    <script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+ fbq('init', '318214158839092');
+fbq('track', 'PageView');
+
+    </script>
+    <noscript>
+        <img height="1" width="1"
+             src="https://www.facebook.com/tr?id=318214158839092&ev=PageView
+&noscript=1"/>
+    </noscript>
+    <!-- End Facebook Pixel Code -->
     <div class="header-top pt-10 pb-13 border-bottom-4 header-top-red">
         <div class="container">
             <div class="row">
@@ -82,9 +102,9 @@
                             {% if user.is_authenticated %}
                             <li>
                                 {% if user.first_name %}
-                                <a href="#">Hi <b>{{user.first_name|title }} {{user.last_name|title }}<i class="ion-chevron-down"></i></b></a>
+                                <a href="{% url 'shop:orders' %}">Hi <b>{{user.first_name|title }} {{user.last_name|title }}<i class="ion-chevron-down"></i></b></a>
                                 {% else %}
-                                <a href="#">Hi <b>Hunter<i class="ion-chevron-down"></i></b></a>
+                                <a href="{% url 'shop:orders' %}">Hi <b>Hunter<i class="ion-chevron-down"></i></b></a>
                                 {% endif %}
                             </li>
                             <li>
@@ -338,7 +358,7 @@
                     <div class="footer-content">
                         <ul>
                             <li><a href="#">My Account</a></li>
-                            <li><a href="#">My Orders</a></li>
+                            <li><a href="{% url 'shop:orders' %}">My Orders</a></li>
                             <li><a href="#">My Subscriptions</a></li>
                             <li><a href="{% url 'shop:faq' %}">Faqs</a></li>
                         </ul>

@@ -284,7 +284,7 @@ class Photo(models.Model):
     promocard = models.ForeignKey(PromoCard, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.id}"
+        return str(self.id)
 
     class Meta:
         ordering = ["item_order"]
