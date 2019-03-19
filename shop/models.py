@@ -149,7 +149,7 @@ class Plan(models.Model):
         return final_selling_price
 
     def get_monthly_subscription_amount(self):
-        monthly_price = self.subscription_amount // self.duration
+        monthly_price = self.get_plan_selling_price() // self.duration
         return monthly_price
 
     def get_security_deposit(self):
@@ -299,6 +299,7 @@ class Blog(models.Model):
     date_created = models.DateField(auto_created=True)
     slug = models.SlugField(blank=False, default='', max_length=120)
     product = models.ManyToManyField(Product, related_name='blog', blank=True)
+    status = models.CharField(choices={("P", "Published"), ("U", "Unpublished")}, max_length=15, default="U")
 
     def validate_card_image(self):
         limit = 372 * 222
@@ -311,7 +312,7 @@ class Blog(models.Model):
             raise ValidationError(f"Uploaded Image W*H Should be {limit} in size")
 
     card_image = models.ImageField(
-        help_text='For Better Viewing Experience Please make sure Image size should be 370W x 220H',
+        help_text='For Better Viewing Experience Please make sure Image size should be 250W x 250H',
         upload_to=other_file_upload_location, blank=False, null=True, validators=[validate_card_image])
     cover_image = models.ImageField(upload_to=other_file_upload_location, blank=False, null=True, validators=[validate_cover_image],
                                     help_text='For Better Viewing Experience Please make sure Image size should be 872W x 472H')
@@ -326,15 +327,17 @@ class Blog(models.Model):
         self.slug = slugify(self.title)
         super(Blog, self).save(*args, **kwargs)
 
-    def blog_title_name(self):
+    def get_blog_title_name(self):
         if len(self.title) > 40:
-            return (self.title[:35] + '...').title()
-        return self.title.title()
+            title = (self.title[:35] + '...').title()
+            return title.strip()
+        return self.title.title().strip()
 
-    def blog_description(self):
+    def get_blog_description(self):
         if len(self.description) > 100:
-            return self.description[:130] + '...'
-        return self.description
+            description = self.description[:130] + '...'
+            return description.strip()
+        return self.description.strip()
 
 
 class BlogAttribute(models.Model):

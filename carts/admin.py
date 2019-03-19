@@ -10,6 +10,7 @@ class CartAdmin(admin.ModelAdmin):
         "cart_id", "date", "updated", "payment_request", "total_mrp", "total_selling_price", "total_discount",
         "address",
         "products", "user", "payment_id", "payment_status", "plan",)
+    list_filter = ["payment_status", "date"]
 
 
 class ProductOrdersAdmin(admin.ModelAdmin):

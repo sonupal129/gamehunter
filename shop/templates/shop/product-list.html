@@ -135,13 +135,13 @@
                             <!--<option value=""> 30</option>-->
                             <!--</select>-->
                             <!--</div>-->
-                            <form action="{% url 'shop:search' %}" method="GET">
+                            <form action="{{ request.path }}" method="GET">
                             <div class="product-show shorting-style">
                                 <label>Sort by:</label>
-                                <select>
-                                    <option name="date" value="price"> Date</option>
-                                    <option name="name" value="name"> Name</option>
-                                    <option name="price" value="price"> Price</option>
+                                <select onchange="this.form.submit();" name="sort_by">
+                                    <option name="date" value="date"> Date (Default)</option>
+                                    <option name="name" value="name"> Name (A-Z)</option>
+                                    <option name="price" value="price"> Price (low to high)</option>
                                 </select>
                             </div>
                             </form>

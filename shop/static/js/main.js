@@ -819,10 +819,10 @@
     $(".zoompro").elevateZoom({
         gallery: "gallery",
         galleryActiveClass: "active",
-        zoomWindowWidth: 300,
+        zoomWindowWidth: 100,
         zoomWindowHeight: 100,
         scrollZoom: false,
-        zoomType: "inner",
+        zoomType: "outer",
         cursor: "crosshair"
     });
     

@@ -5,6 +5,9 @@
 {% block title%}<title>Gamehunter.in | The Game Store</title>{% endblock %}
 
 {% block navbar %}
+<meta name="keywords" content="Games Online, Games on Subscription, Game Rental, Games on Rent, Consoles on Rent"/>
+<meta name="description"
+      content="We had a vision and the vision is to create something a gamer can relate too. Gamehunter’s entire website is dedicated to gaming. Gamer wants to play as many as games as they can; however, gaming is India is way too expensive. They always say “Gaming is not a crime but too expensive”, and that’s really a true thing. GameHunter help gamer to create way to play unlimited games. A subscription package allows access to user to play hundreds of games displayed on website library."/>
 {% endblock %}
 <!-- Nav-bar Area End Here-->
 
@@ -1048,17 +1051,17 @@
             <div class="blog-wrapper-4">
                 <div class="blog-img">
                     <a href="{{ article.get_absolute_url }}">
-                        <img alt="" src="{{ article.card_image.url }}">
+                        <img alt="" src="{{ article.card_image.url }}" height="250px" width="250px">
                     </a>
                 </div>
                 <div class="blog-content-4">
                     <h4>
-                        <a href="{{ article.get_absolute_url }}">{{ article.blog_title_name }}</a>
+                        <a href="{{ article.get_absolute_url }}">{{ article.get_blog_title_name }}</a>
                     </h4>
-                    <p>{{ article.blog_description|striptags|safe }}</p>
+                    <p>{{ article.get_blog_description|striptags }}</p>
                     <div class="blog-meta-4">
                         <ul>
-                            <li>{{article.date_created}}</li>
+                            <li>{{ article.date_created }}</li>
                         </ul>
                     </div>
                 </div>

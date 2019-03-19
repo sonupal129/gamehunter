@@ -5,6 +5,14 @@
 {% block title%}<title>{{ product.name|title }} Available at GameHunter.in</title>{% endblock %}
 
 {% block navbar %}
+<meta property="og:url" content="{{ request.get_raw_uri }}"/>
+<meta property="og:type" content="product"/>
+<meta property="og:title" content="{{ product.get_product_title_name }}"/>
+<meta property="og:description" content="{{ product.get_product_description }}"/>
+<meta property="og:image" content="{{ product.get_default_photo }}"/>
+<meta name="keywords" content="{{ product.category|upper }} Games, Consoles, Accessories, Collectives">
+<meta name="title" content="{{ product.name|title }} for {{ product.category|upper }} available at Gamehunter">
+<meta name="description" content="{{ product.get_product_description|striptags }}"/>
 <div class="breadcrumb-area black-bg-4">
     <div class="container">
         <div class="breadcrumb-content">
@@ -26,7 +34,7 @@
                              alt="{{ product.name|upper }}" width="570" height="570"/>
                         {% if product.game_trailer %}
                         <div class="product-video">
-                            <a target="_blank" class="video-popup" href="{{ product.game_trailer }}">
+                            <a target="_blank" class="popup-youtube" href="{{ product.game_trailer }}">
                                 <i class="fa fa-video-camera"></i>
                                 Watch Trailor
                             </a>
@@ -169,10 +177,9 @@
                     <div class="pro-dec-social">
                         <ul>
                             <li><a class="tweet" href="#"><i class="ion-social-twitter"></i> Tweet</a></li>
-                            <li><a class="share" href="{{ product.get_absolute_url }}"><i
-                                    class="ion-social-facebook"></i> Share</a></li>
-                            <li><a class="google" href="#"><i class="ion-social-googleplus-outline"></i> Google+</a>
-                            </li>
+                            <li><a class="share"
+                                   onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('{{ request.get_raw_uri }}'),'facebook-share-dialog','width=626,height=436'); return false;"></i>
+                                Share</a></li>
                             <li><a class="pinterest" href="#"><i class="ion-social-pinterest"></i> Pinterest</a>
                             </li>
                         </ul>

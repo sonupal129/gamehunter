@@ -83,6 +83,7 @@ a:focus, .btn:focus {
 a:hover {
     color: #df2121;
     text-decoration: none;
+
 }
 
 a:focus {
@@ -2956,10 +2957,13 @@ button.icon-cart span.count-style {
 .product-price-wrapper > span {
     color: #fff;
     margin: 0 2px;
+    font-size: 18px;
+    
 }
 
 .product-price-wrapper > span.product-price-old {
     text-decoration: line-through;
+    color: #b2b2b2;
 }
 
 .product-rating i {
@@ -8153,13 +8157,19 @@ h4.shop-sidebar-title {
 
 .shop-sidebar-border {
     border-top: 1px solid #ebebeb;
+
     
+}
+.sidebar-list-style{
+    overflow-y: auto;
+    max-height: 200px;
 }
 
 .sidebar-list-style ul li {
     display: block;
     list-style: outside none none;
     padding: 0 0 6px;
+
 }
 
 .sidebar-list-style ul li a {
@@ -8382,12 +8392,12 @@ h4.shop-sidebar-title {
 }
 
 .product-list-content > span {
-    color: #242424;
-    font-size: 13px;
+    color: #df2121;
+    font-size: 14px;
 }
 
 .product-list-content > h4 {
-    font-size: 14px;
+    font-size: 20px;
     line-height: 18px;
     margin: 8px 0 7px;
 }
@@ -8397,7 +8407,7 @@ h4.shop-sidebar-title {
 }
 
 .product-list-content > p {
-    color: #242424;
+    color: #fff;
     margin: 0 0 29px;
 }
 
@@ -9071,6 +9081,11 @@ h4.shop-sidebar-title {
 
 .table-content table td.product-quantity {
     width: 130px;
+}
+
+.table-content table td.track-order {
+    width: 130px;
+    text-transform: uppercase;    
 }
 
 .table-content table td.product-remove {
@@ -10599,4 +10614,15 @@ h4.section-title-about::before {
 
 .overview-img.text-center img {
     max-width: 100%;
+}
+
+/*---------------------------
+    Custom CSS By Sonu Pal
+-----------------------------*/
+
+/*---------------------------
+   My Order List View Page CSS
+-----------------------------*/
+.track-order{
+
 }

@@ -117,14 +117,17 @@
                             <!--<option value=""> 30</option>-->
                             <!--</select>-->
                             <!--</div>-->
+                            <form action="#" method="GET">
                             <div class="product-show shorting-style">
                                 <label>Sort by:</label>
-                                <select>
-                                    <option value="">Default</option>
-                                    <option value=""> Name</option>
-                                    <option value=""> price</option>
+                                <select onchange="this.form.submit();" name="sort_by">
+                                    <option selected> Default</option>
+                                    <option name="date" value="date"> Date</option>
+                                    <option name="name" value="name"> Name</option>
+                                    <option name="price" value="price"> Price</option>
                                 </select>
                             </div>
+                            </form>
                         </div>
                     </div>
                     <div class="tab-content jump">

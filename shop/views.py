@@ -17,10 +17,14 @@ class HomePageView(ListView):
     context_object_name = 'products'
     model = Product
 
+    def blogs_list(self):
+        blogs = Blog.objects.filter(status="P").order_by('-date_created')[:5]
+        return blogs
+
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
         try:
-            context['articles'] = Blog.objects.order_by('-date_created')[:5]
+            context['articles'] = self.blogs_list()
             context['new_released_games'] = Product.objects.filter(active=True, item_status="I").order_by("-launch_date")[
                                               :12]
             context['new_arrived_products'] = Product.objects.filter(active=True, item_status="I").order_by("-date")[
@@ -55,11 +59,34 @@ class ProductListView(ListView):
 
     @log_exceptions("Category View")
     def get_queryset(self):
+        sort_by = self.request.GET.get("sort_by")
         try:
             queryset = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True)
         except IndexError:
-            print("Category Not Available")
-        return queryset
+            pass
+        if self.request.method == "GET":
+            if sort_by == "name":
+                return queryset.order_by("name")
+            elif sort_by == "price":
+                return queryset.order_by("mrp")
+            else:
+                return queryset.order_by("-date")
+
+    def get_publishers(self):
+        publishers = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
+                                            publisher__name__isnull=False).values(
+            "publisher__name").distinct()
+        return publishers
+
+    def get_developers(self):
+        developers = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
+                                            developer__name__isnull=False).values("developer__name").distinct()
+        return developers
+
+    def get_genres(self):
+        genres = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
+                                        genre__genre__isnull=False).values("genre__genre").distinct()
+        return genres
 
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
@@ -68,14 +95,9 @@ class ProductListView(ListView):
         except IndexError:
             print("category not available")
 
-        context['developers'] = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
-                                                       developer__name__isnull=False).values(
-            "developer__name").distinct()
-        context['publishers'] = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
-                                                       publisher__name__isnull=False).values(
-            "publisher__name").distinct()
-        context['genres'] = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
-                                                   genre__genre__isnull=False).values("genre__genre").distinct()
+        context['developers'] = self.get_developers()
+        context['publishers'] = self.get_publishers()
+        context['genres'] = self.get_genres()
         cart_obj, new_obj = Cart.objects.create_or_get_cart(self.request)
         context["cart"] = cart_obj
         return context
@@ -118,6 +140,7 @@ class SubscriptionPlanView(ListView):
     context_object_name = 'plans'
 
     def get_queryset(self):
+        self.request.get_raw_uri()
         return Plan.objects.all().order_by('duration')
 
 
@@ -244,7 +267,6 @@ def myorders(request):
         orders = cart.orders.all()
         for order in orders:
             received_orders.append(order)
-    print(received_orders)
     context = {
         "orders": received_orders,
     }

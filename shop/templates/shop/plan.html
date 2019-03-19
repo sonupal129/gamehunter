@@ -7,6 +7,7 @@
 
 {% block navbar %}
 {% if plans %}
+<meta name="description" content="low price subscription plans for consoles games, play unlimited consoles games, games at cheap price">
 <div class="breadcrumb-area black-bg-4">
     <div class="container">
         <div class="breadcrumb-content">
@@ -21,23 +22,61 @@
 <div class="blog-area pt-65 pb-65 black-bg-5 blog-game">
     <div class="container">
         <div class="row">
-            {% for plan in plans %}
-            <div class="col-lg-4 col-md-6 col-12">
-                <div class="subscription-wrapper mb-30 main-subscription">
-                    <div class="blog-img mb-20">
-                        <a href="{{ plan.get_absolute_url }}">
-                            {% if plan.image.url %}
-                                <img src="{{plan.image.url}}" height="250">
-                            {% else %}
-                                <img src="{% static 'img/images/no-image.jpg' %}" height="250">
-                            {% endif %}
-                        </a>
+            <div class="col-lg-12">
+                <div class="tab-content jump">
+                    <div class="tab-pane active" id="product-list">
+                        <div class="row">
+                            {% for plan in plans %}
+                            <div class="col-lg-12">
+                                <div class="product-list-wrapper shop-border mb-40 pb-40">
+                                    <div class="product-img">
+                                        <a href="{{ plan.get_absolute_url }}"><img src="{{ plan.image.url }}"
+                                                                                   width="240"
+                                                                                   height="240" alt=""></a>
+                                        {% if plan.discount %}
+                                        <span> {{ plan.discount }}% Off!</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="product-list-content">
+                                        <span>₹ {{ plan.get_monthly_subscription_amount }} Monthly</span>
+                                        <h4><a href="{{ plan.get_absolute_url }}">{{ plan.name }}</a></h4>
+                                        <div class="product-rating">
+                                            <i class="ion-android-star-outline theme-star"></i>
+                                            <i class="ion-android-star-outline theme-star"></i>
+                                            <i class="ion-android-star-outline theme-star"></i>
+                                            <i class="ion-android-star-outline theme-star"></i>
+                                            <i class="ion-android-star-outline"></i>
+                                        </div>
+                                        <div class="product-price-wrapper">
+                                            {% if plan.discount != 0 %}
+                                            <span class="product-price-old">₹ {{ plan.subscription_amount }}</span>
+                                            <span>₹ {{ plan.get_plan_selling_price }} for {{ plan.duration }} Months</span>
+                                            {% else %}
+                                            <span>₹ {{ plan.subscription_amount }} for {{ plan.duration }} Months</span>
+                                            {% endif %}
+                                        </div>
+                                        <p>{{ plan.description|striptags }}</p>
+                                        {% if plan.active %}
+                                        {% if user.userprofile.has_subscription %}
+                                        <h3>Hi! You already started hunting.</h3>
+                                        {% else %}
+                                        <div class="product-action">
+                                            <a class="action-cart" href="#"
+                                               title="{% url 'carts:add-plan' plan.slug %}"> Add to Cart </a>
+                                        </div>
+                                        {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
     </div>
+</div>
 </div>
 {% include 'shop/include/shop-service-page.html' %}
 {% endblock %}

@@ -29,13 +29,13 @@
                             <img src="{{ article.card_image.url }}" width="370" height="220">
                         </a>
                     </div>
-                    <span>{{article.blog_type|title}}</span>
-                    <h3><a href="{% url 'shop:article-detail' article.slug %}">{{article.blog_title_name}}</a></h3>
-                    <p>{{ article.blog_description|striptags|safe }}</p>
+                    <span>{{ article.blog_type|title }}</span>
+                    <h3><a href="{{ article.get_absolute_url }}">{{ article.get_blog_title_name }}</a></h3>
+                    <p>{{ article.get_blog_description|striptags }}</p>
                     <div class="blog-meta-bundle">
                         <div class="blog-meta">
                             <ul>
-                                <li>{{article.date_created}}</li>
+                                <li>{{ article.date_created }}</li>
                                 <!--<li>{{blog.date_created}}</li>-->
                             </ul>
                         </div>
