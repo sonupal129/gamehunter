@@ -65,9 +65,9 @@
                         Publisher</h4>
                         <div class="sidebar-list-style mt-20">
                             <ul>
-                                {% for p, q in publishers.items %}
+                                {% for publisher in publishers %}
                                 {% if publisher.publisher__name != None %}
-                                <li><input type="checkbox" value="{{ p.publisher__name }}"><a href="#">{{ q }}</a></li>
+                                <li><input type="checkbox" value="{{ p.publisher__name }}"><a href="#">{{ publisher.publisher__name }}</a></li>
                                 {% endif %}
                                 {% endfor %}
                             </ul>
@@ -120,7 +120,7 @@
                             <form action="#" method="GET">
                             <div class="product-show shorting-style">
                                 <label>Sort by:</label>
-                                <select onchange="this.form.submit();" name="sort_by">
+                                <select onchange="this.form.submit();" name="sort_by" disabled>
                                     <option selected> Default</option>
                                     <option name="date" value="date"> Date</option>
                                     <option name="name" value="name"> Name</option>

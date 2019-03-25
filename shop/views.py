@@ -258,29 +258,25 @@ def signup_page(request):
     return render(request, 'shop/register.html', context)
 
 
-def product_search(request):
-    keywords = request.GET.get("keywords")
+class ProductSearchView(ListView):
+    template_name = "shop/search-product-list.html"
+    context_object_name = "products"
 
-    if keywords == "":
-        return render(request, "shop/no-search-product-list-found.html")
-    elif keywords is not None:
-        context = {
-            'developers': Product.objects.filter(name__icontains=keywords, active=True,
-                                                 developer__name__isnull=False).values(
-                "developer__name").distinct(),
-            'publishers': Product.objects.filter(name__icontains=keywords, active=True,
-                                                 publisher__name__isnull=False).values(
-                "publisher__name").distinct(),
-            'genres': Product.objects.filter(name__icontains=keywords, active=True,
-                                             genre__genre__isnull=False).values("genre__genre").distinct(),
-            'categories': Product.objects.filter(name__icontains=keywords, active=True,
-                                                 category__name__isnull=False).values(
-                "category__name").distinct(),
-            'products': Product.objects.filter(
-                Q(name__icontains=keywords) | Q(description__icontains=keywords)).exclude(active=False)
-        }
-        return render(request, "shop/search-product-list.html", context)
-    return render(request, "shop/no-search-product-list-found.html")
+    def get_queryset(self):
+        keywords = self.request.GET.get("keywords")
+        qs = Product.objects.filter(active=True)
+        if keywords:
+            return qs.filter(Q(name__icontains=keywords))
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductSearchView, self).get_context_data(**kwargs)
+        keywords = self.request.GET.get("keywords")
+        qs = Product.objects.filter(Q(name__icontains=keywords)).exclude(active=False)
+        if keywords:
+            context["developers"] = qs.filter(developer__name__isnull=False).values("developer__name").distinct()
+            context["publishers"] = qs.filter(publisher__name__isnull=False).values("publisher__name").distinct()
+            context["genres"] = qs.filter(genre__genre__isnull=False).values("genre__genre").distinct()
+            return context
 
 
 class MyOrderView(ListView):
