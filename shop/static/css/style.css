@@ -1743,7 +1743,7 @@ textarea:focus {
 .bg-img {
     background-position: center center;
     background-size: cover;
-    
+        
 }
 
 :focus {
@@ -9532,7 +9532,7 @@ h4.grand-totall-title span {
 }
 
 h5.panel-title {
-    background-color: #514f4f;
+    background-color: #fff;
     border-bottom: 1px solid #ebebeb;
     color: #fff;
     font-size: 14px;
@@ -9551,7 +9551,7 @@ h5.panel-title a {
 }
 
 h5.panel-title a:hover {
-    color: #047afe;
+    color: #df2121;
 }
 
 h5.panel-title a::before {
@@ -10006,7 +10006,7 @@ h5.panel-title span {
 }
 
 .entries-info > p {
-    color: #242424;
+    color: #fff;
     font-size: 15px;
     margin: 0;
     text-transform: capitalize;
@@ -10024,11 +10024,11 @@ h5.panel-title span {
 }
 
 .entries-edit-delete > a.edit {
-    background-color: #df5c39;
+    background-color: #b4ad0b;
 }
 
 .entries-edit-delete > a:hover, .entries-edit-delete > a.edit:hover {
-    background-color: #047afe;
+    background-color: #df2121;
 }
 
 /*---------------------------

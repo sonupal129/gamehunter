@@ -145,8 +145,10 @@ class Plan(models.Model):
         return reverse("shop:subscription-detail", kwargs={'slug': self.slug})
 
     def get_plan_selling_price(self):
-        final_selling_price = self.subscription_amount - (self.subscription_amount * self.discount // 100)
-        return final_selling_price
+        if self.discount != 0:
+            final_selling_price = self.subscription_amount - (self.subscription_amount * self.discount // 100)
+            return final_selling_price
+        return self.subscription_amount
 
     def get_monthly_subscription_amount(self):
         monthly_price = self.get_plan_selling_price() // self.duration
@@ -161,8 +163,18 @@ class Plan(models.Model):
         else:
             return False
 
+    def get_plan_total_duration(self):
+        total_months = self.duration + self.additional_month
+        return total_months
+
     def monthly_available_swaps(self):
         return self.swaps//self.duration
+
+    def get_plan_description(self):
+        if len(self.description) > 250:
+            description = self.description[:260] + '...'
+            return description.strip()
+        return self.description.strip()
 
 
 class PromoCard(models.Model):
@@ -249,7 +261,7 @@ class Product(models.Model):
 
     def get_default_photo(self):
         if not hasattr(self, '__default_photo'):
-            self.__default_photo = self.photo_set.first()
+            self.__default_photo = self.photo_set.all().order_by("id").first()
         return self.__default_photo
 
     def get_mrp_and_selling_price(self):
@@ -262,6 +274,10 @@ class Product(models.Model):
         if trailer:
             return trailer.value
         return False
+
+    def photos_in_ascendant(self):
+        if self.photo_set.all():
+            return self.photo_set.all().order_by("id")
 
 
 class ProductAttribute(models.Model):
@@ -302,7 +318,7 @@ class Blog(models.Model):
     status = models.CharField(choices={("P", "Published"), ("U", "Unpublished")}, max_length=15, default="U")
 
     def validate_card_image(self):
-        limit = 372 * 222
+        limit = 300 * 300
         if self.size > limit:
             raise ValidationError(f"Uploaded Image W*H Should be {limit} in size")
 

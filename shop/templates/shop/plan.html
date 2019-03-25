@@ -52,10 +52,10 @@
                                             <span class="product-price-old">₹ {{ plan.subscription_amount }}</span>
                                             <span>₹ {{ plan.get_plan_selling_price }} for {{ plan.duration }} Months</span>
                                             {% else %}
-                                            <span>₹ {{ plan.subscription_amount }} for {{ plan.duration }} Months</span>
+                                            <span>₹ {{ plan.get_plan_selling_price }} for {{ plan.duration }} Months</span>
                                             {% endif %}
                                         </div>
-                                        <p>{{ plan.description|striptags }}</p>
+                                        <p>{{ plan.get_plan_description|striptags }}</p>
                                         {% if plan.active %}
                                         {% if user.userprofile.has_subscription %}
                                         <h3>Hi! You already started hunting.</h3>

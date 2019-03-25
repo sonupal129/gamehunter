@@ -1,23 +1,32 @@
-import csv
-from shop.models import Brand
+# import csv
+# from shop.models import Product, Attribute
+# file_path = r'D:\GH Operation\Product CSV Files for Upload\Subscription Only Product Uploading\games_trailor.csv'
+#
+#
+# def upload_trailer(file):
+#     with open(file, 'r', encoding='utf-8', errors='ignore') as input_file:
+#             fields = ['Name', 'Trailer', 'Category']
+#             csv_file = csv.DictReader(input_file, fieldnames=fields)
+#             next(csv_file)
+#             count = 0
+#             for row in csv_file:
+#                 if row.get("Trailer") and row.get("Name"):
+#                     print(row.get("Trailer"))
+#                     print(row.get("Name"))
+#                     print(row.get("Category"))
+#                     pd = Product.objects.filter(name__iexact=row.get("Name"), category__name__iexact=row.get("Category")).first()
+#                     attribute = Attribute.objects.get(attribute="game_trailer")
+#                     if pd:
+#                         print(pd)
+#                         print(pd.category)
+#                         pd.productattribute.create(attribute=attribute, product=pd, value=row.get("Trailer"))
+#                         count += 1
+#                     continue
+#                 continue
+#             print(f"{count} Products Trailer Saved in System")
 
-file_path = r'D:\Game Hunter\hunterbackend\Game Hunter\Product CSV Files for Upload\product for upload - 1.csv'
-with open(file_path, 'r', encoding='utf-8', errors='ignore') as output_file:
-        fields = ['Developer', 'Description', "Is_Developer", "Is_Publisher"]
-        csv_file = csv.DictReader(output_file, fieldnames=fields)
-        next(csv_file)
 
-        for row in csv_file:
-            if row.get("Developer"):
-                if row.get("Is_Developer") == "Yes":
-                    dev = True
-                else:
-                    dev = False
-                if row.get("Is_Publisher") == "Yes":
-                    pub = True
-                else:
-                    pub = False
-                developer = row.get("Developer").strip()
-                description = row.get("Description").strip()
-                obj = Brand.objects.create(name=developer, description=description, is_developer=dev, is_publisher=pub)
-        print("All Data Save Successfully")
+
+name = "/assassins-creed-syndicate-by-ubisoft-for-ps-4"
+
+print(name.replace("/", ""))

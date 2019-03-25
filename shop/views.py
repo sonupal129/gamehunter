@@ -4,46 +4,58 @@ from django.views import generic
 from .models import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login
-from .forms import UserLoginForm, SignUpForm
+from .forms import UserLoginForm, SignUpForm, SellGamesForm
 from django.http import HttpResponseRedirect
 from carts.models import *
 from django.db.models import Q
 from shop.debug import log_exceptions
+from django.views.generic.edit import FormView
 # Create your views here.
 
 
 class HomePageView(ListView):
     template_name = 'shop/index.html'
     context_object_name = 'products'
-    model = Product
 
     def blogs_list(self):
         blogs = Blog.objects.filter(status="P").order_by('-date_created')[:5]
         return blogs
 
+    def get_home_page_products(self):
+        products = Product.objects.filter(active=True, item_status="I")
+        new_released_games = products.order_by("-launch_date")[:12]
+        featured_playstation_games = products.filter(category__name__in=['PS 4', 'PS 3'],
+                                                     is_featured=True).order_by("-date")[:10]
+        featured_xbox_games = products.filter(category__name__in=['Xbox One', 'Xbox 360'],
+                                              is_featured=True).order_by("-date")[:10]
+        new_arrived_products = products.order_by("-date")[:12]
+
+        return new_released_games, featured_playstation_games, featured_xbox_games, new_arrived_products
+
+    def get_home_page_banner(self):
+        qs = PromoCard.objects.filter(active=True).order_by("-date")
+        top_coverpage = qs.filter(type="coverpage_top").first()
+        center_coverpage = qs.filter(type="coverpage_center").first()
+        bottom_coverpage = qs.filter(type="coverpage_bottom").first()
+        left_banner = qs.filter(type="banner_left").first()
+        right_banner = qs.filter(type="banner_right").first()
+        return top_coverpage, center_coverpage, bottom_coverpage, left_banner, right_banner
+
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
         try:
+            new_released_games, featured_playstation_games, featured_xbox_games, new_arrived_products = self.get_home_page_products()
+            top_coverpage, center_coverpage, bottom_coverpage, left_banner, right_banner = self.get_home_page_banner()
             context['articles'] = self.blogs_list()
-            context['new_released_games'] = Product.objects.filter(active=True, item_status="I").order_by("-launch_date")[
-                                              :12]
-            context['new_arrived_products'] = Product.objects.filter(active=True, item_status="I").order_by("-date")[
-                                              :12]
-            context['featured_playstation_games'] = Product.objects.filter(category__name__in=['PS 4', 'PS 3'],
-                                                                           active=True, item_status='I',
-                                                                           is_featured=True).order_by('-date')[:10]
-            context['featured_xbox_games'] = Product.objects.filter(category__name__in=['Xbox One', 'Xbox 360'],
-                                                                    item_status='I', active=True,
-                                                                    is_featured=True).order_by('-date')[:10]
-            context['coverpage_top'] = PromoCard.objects.filter(active=True, type="coverpage_top").order_by(
-                "-date").first()
-            context['center_coverpage'] = \
-                PromoCard.objects.filter(active=True, type="coverpage_center").order_by("-date").first()
-            context['bottom_coverpage'] = \
-                PromoCard.objects.filter(active=True, type="coverpage_bottom").order_by("-date").first()
-            context['banner_left'] = PromoCard.objects.filter(active=True, type="banner_left").order_by("-date").first()
-            context['banner_right'] = PromoCard.objects.filter(active=True, type="banner_right").order_by(
-                "-date").first()
+            context['new_released_games'] = new_released_games
+            context['new_arrived_products'] = new_arrived_products
+            context['featured_playstation_games'] = featured_playstation_games
+            context['featured_xbox_games'] = featured_xbox_games
+            context['coverpage_top'] = top_coverpage
+            context['center_coverpage'] = center_coverpage
+            context['bottom_coverpage'] = bottom_coverpage
+            context['banner_left'] = left_banner
+            context['banner_right'] = right_banner
         except IndexError:
             print("Product, Blog, Banner Objects Not Available")
         return context
@@ -72,21 +84,12 @@ class ProductListView(ListView):
             else:
                 return queryset.order_by("-date")
 
-    def get_publishers(self):
-        publishers = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
-                                            publisher__name__isnull=False).values(
-            "publisher__name").distinct()
-        return publishers
-
-    def get_developers(self):
-        developers = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
-                                            developer__name__isnull=False).values("developer__name").distinct()
-        return developers
-
-    def get_genres(self):
-        genres = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
-                                        genre__genre__isnull=False).values("genre__genre").distinct()
-        return genres
+    def get_side_list_filter(self):
+        products = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True)
+        publishers = products.filter(publisher__name__isnull=False).values("publisher__name").distinct()
+        developers = products.filter(developer__name__isnull=False).values("developer__name").distinct()
+        genres = products.filter(genre__genre__isnull=False).values("genre__genre").distinct()
+        return publishers, developers, genres
 
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
@@ -95,9 +98,10 @@ class ProductListView(ListView):
         except IndexError:
             print("category not available")
 
-        context['developers'] = self.get_developers()
-        context['publishers'] = self.get_publishers()
-        context['genres'] = self.get_genres()
+        publishers, developers, genres = self.get_side_list_filter()
+        context['developers'] = developers
+        context['publishers'] = publishers
+        context['genres'] = genres
         cart_obj, new_obj = Cart.objects.create_or_get_cart(self.request)
         context["cart"] = cart_obj
         return context
@@ -108,10 +112,26 @@ class ProductDetailView(DetailView):
     context_object_name = "product"
     template_name = 'shop/product-details.html'
 
+    def related_product(self):
+        slug = self.request.path
+        count = 4
+        relatedproducts = []
+        products = Product.objects.filter(active=True)
+        product = products.filter(slug=slug.replace("/", "")).first()
+
+        for pub in products.filter(publisher=product.publisher, item_status="I").order_by("-launch_date")[:count]:
+            relatedproducts.append(pub)
+        for dev in products.filter(developer=product.developer, item_status="I").order_by("-launch_date")[:count]:
+            relatedproducts.append(dev)
+        for cat in products.filter(category=product.category, item_status="I").order_by("-date")[:count]:
+            relatedproducts.append(cat)
+        return relatedproducts
+
     def get_context_data(self, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
         cart_obj, new_obj = Cart.objects.create_or_get_cart(self.request)
         context["cart"] = cart_obj
+        context["related_products"] = self.related_product()
         return context
 
 
@@ -119,6 +139,10 @@ class ArticleListView(ListView):
     template_name = 'shop/blog.html'
     model = Blog
     context_object_name = "articles"
+
+    def get_queryset(self):
+        articles = Blog.objects.filter(status="P").order_by("-date")
+        return articles
 
 
 class ArticleDetailView(DetailView):
@@ -129,7 +153,7 @@ class ArticleDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ArticleDetailView, self).get_context_data(**kwargs)
         try:
-            context['recent_articles'] = Blog.objects.all().order_by('-date')[:10]
+            context['recent_articles'] = Blog.objects.filter(status="P").order_by('-date')[:10]
         except IndexError:
             print("Article Not Available or Minimum 5 Articles required to render")
         return context
@@ -259,15 +283,32 @@ def product_search(request):
     return render(request, "shop/no-search-product-list-found.html")
 
 
-def myorders(request):
-    user = request.user
-    carts = Cart.objects.filter(user=user, payment_status="Credit")
-    received_orders = []
-    for cart in carts:
-        orders = cart.orders.all()
-        for order in orders:
-            received_orders.append(order)
-    context = {
-        "orders": received_orders,
-    }
-    return render(request, "shop/my-orders.html", context)
+class MyOrderView(ListView):
+    template_name = "shop/my-orders.html"
+    context_object_name = "orders"
+
+    def get_queryset(self):
+        user = self.request.user
+        carts = Cart.objects.filter(user=user, payment_status="Credit")
+        received_orders = []
+        for cart in carts:
+            orders = cart.orders.order_by("-order_date")
+            for order in orders:
+                received_orders.append(order)
+        return received_orders
+
+
+class ComingSoonView(TemplateView):
+    template_name = "shop/coming-soon.html"
+
+
+class MyAccountView(TemplateView):
+    template_name = "shop/my-account.html"
+
+
+class SellYourGamesView(FormView):
+    template_name = "shop/sell-your-games.html"
+    form_class = SellGamesForm
+    success_url = "shop/successful/game-sell-query-submitted-successfuly.html"
+
+    print(form_class)

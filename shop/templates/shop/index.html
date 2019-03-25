@@ -36,26 +36,28 @@
             {% if banner_left.link %}
             <div class="col-lg-6 col-md-6">
                 <div class="banner-img banner-hover banner-mrg">
-                    <a href="{{ banner_left.link }}"><img alt="" src="{{ banner_left.get_promo_image.file.url }}"></a>
+                    <a href="{{ banner_left.link }}"><img alt="" src="{{ banner_left.get_promo_image.file.url }}"
+                                                          height="160" width="570"></a>
                 </div>
             </div>
             {% else %}
             <div class="col-lg-6 col-md-6">
-                <div class="banner-img banner-hover banner-mrg">
-                    <img alt="" src="{{ banner_left.get_promo_image.file.url }}">
+                <div class="banner-img banner-mrg">
+                    <img alt="" src="{{ banner_left.get_promo_image.file.url }}" height="160" width="570">
                 </div>
             </div>
             {% endif %}
             {% if banner_right.link %}
             <div class="col-lg-6 col-md-6">
                 <div class="banner-img banner-hover">
-                    <a href="{{ banner_right.link }}"><img alt="" src="{{ banner_right.get_promo_image.file.url }}"></a>
+                    <a href="{{ banner_right.link }}"><img alt="" src="{{ banner_right.get_promo_image.file.url }}"
+                                                           height="160" width="570"></a>
                 </div>
             </div>
             {% else %}
             <div class="col-lg-6 col-md-6">
-                <div class="banner-img banner-hover">
-                    <img alt="" src="{{ banner_right.get_promo_image.file.url }}">
+                <div class="banner-img">
+                    <img alt="" src="{{ banner_right.get_promo_image.file.url }}" height="160" width="570">
                 </div>
             </div>
             {% endif %}

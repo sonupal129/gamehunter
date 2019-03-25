@@ -49,7 +49,9 @@
                             <td class="product-price-cart"><span
                                     class="amount">{{ order.get_status_display }}</span>
                             </td>
-                            <td class="track-order"><a href="#">Track Order >>></a></td>
+                            <td class="track-order">{% if order.order_tracking_url %}<b><a
+                                    href="{{ order.order_tracking_url }}" target="_blank">{% endif %} Track Order
+                                >>></a></b></td>
                         </tr>
                         {% endfor %}
                         </tbody>

@@ -116,10 +116,11 @@ class BlogAttributeInline(admin.TabularInline):
 
 class BlogAdmin(admin.ModelAdmin):
     exclude = ('slug',)
-    list_display = ('title', 'date_created')
+    list_display = ('title', 'date_created', 'status',)
     inlines = [BlogAttributeInline]
     raw_id_fields = ['product']
-
+    search_fields = ("title",)
+    list_filter = ("status", "blog_type",)
 
 admin.site.register(Blog, BlogAdmin)
 

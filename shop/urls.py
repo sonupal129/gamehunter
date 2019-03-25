@@ -28,5 +28,8 @@ urlpatterns = [
     path('<slug:slug>', views.ProductDetailView.as_view(), name='product-detail'),
     path('products/<path:slug>/', views.ProductListView.as_view(), name='product-list'),
     path('subscription-plans/<slug:slug>', views.SubscriptionDetailView.as_view(), name='subscription-detail'),
-    path('my-orders/', login_required(views.myorders), name='orders'),
+    path('my-orders/', login_required(views.MyOrderView.as_view()), name='orders'),
+    path('coming-soon/', views.ComingSoonView.as_view(), name='coming-soon'),
+    path('my-account/', views.MyAccountView.as_view(), name='my-account'),
+    path('sell-ur-games/', views.SellYourGamesView.as_view(), name='sell-games'),
 ]

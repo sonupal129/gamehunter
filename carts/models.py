@@ -184,10 +184,10 @@ class ProductOrders(models.Model):
     confirmed_date = models.DateTimeField(blank=True, null=True)
     delivery_date = models.DateTimeField(blank=True, null=True)
     product = models.ForeignKey(Product, blank=True, null=True, on_delete=models.CASCADE)
-    shipping_link = models.CharField(max_length=10, blank=True, null=True)
+    shipping_link = models.CharField(max_length=100, blank=True, null=True)
     condition = models.CharField(max_length=10, blank=True, null=True)
     mrp = models.DecimalField(default=0, blank=False, max_digits=5, decimal_places=0)
-    tracking_id = models.CharField(max_length=10, blank=True, null=True)
+    tracking_id = models.CharField(max_length=30, blank=True, null=True)
     hunter_discount = models.CharField(max_length=10, blank=True, null=True)
     total_discount = models.CharField(max_length=10, blank=True, null=True)
     selling_price = models.DecimalField(default=0, blank=False, max_digits=5, decimal_places=0)
@@ -200,6 +200,13 @@ class ProductOrders(models.Model):
 
     class Meta:
         verbose_name_plural = "Product Orders"
+
+    def order_tracking_url(self):
+        if self.status == "SP":
+            if self.shipping_link:
+                return self.shipping_link
+            return ""
+        return ""
 
 
 class SubscriptionOrders(models.Model):

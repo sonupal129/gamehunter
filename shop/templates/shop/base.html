@@ -70,14 +70,23 @@ fbq('track', 'PageView');
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-12">
                     <div class="header-top-left">
+                        {% if user.is_authenticated %}
                         <div class="language-currency lang-curr-border-4">
-                            <span>Language:</span>
                             <div class="lang-curr-dropdown">
                                 <ul>
-                                    <li><a class="language-click" href="#">English </a></li>
+                                    <li><a class="language-click" href="#">Hi, {% if user.first_name %}
+                                        {{ user.first_name }} {{ user.last_name }} {% else %} Hunter {% endif %}<i
+                                                class="ion-chevron-down"></i></a>
+                                        <ul class="language-dropdown">
+                                            <li><a href="{% url 'shop:my-account' %}">My Account </a></li>
+                                            <li><a href="{% url 'shop:orders' %}">My Orders </a></li>
+                                            <li><a href="#">Subscriptions </a></li>
+                                        </ul>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
+                        {% endif %}
                         <div class="language-currency lang-curr-border-4">
                             <span>Country:</span>
                             <div class="lang-curr-dropdown">
@@ -101,18 +110,11 @@ fbq('track', 'PageView');
                         <ul>
                             {% if user.is_authenticated %}
                             <li>
-                                {% if user.first_name %}
-                                <a href="{% url 'shop:orders' %}">Hi <b>{{user.first_name|title }} {{user.last_name|title }}<i class="ion-chevron-down"></i></b></a>
-                                {% else %}
-                                <a href="{% url 'shop:orders' %}">Hi <b>Hunter<i class="ion-chevron-down"></i></b></a>
-                                {% endif %}
+                                <a href="{% url 'shop:orders' %}">My Orders</a>
                             </li>
                             <li>
-                                <a href="#">Sell Your Games</a>
+                                <a href="{% url 'shop:sell-games' %}">Sell Your Games</a>
                             </li>
-                            <!--<li>-->
-                                <!--<a href="my-account.html">Checkout</a>-->
-                            <!--</li>-->
                             <li>
                                 <a href="{% url 'shop:logout' %}">Logout</a>
                             </li>
@@ -124,7 +126,7 @@ fbq('track', 'PageView');
                                 <a href="{% url 'shop:login' %}">Sign In </a>
                             </li>
                             <li>
-                                <a href="#">Sell Your Games</a>
+                                <a href="{% url 'shop:sell-games' %}">Sell Your Games</a>
                             </li>
                             {% endif %}
                         </ul>
@@ -215,7 +217,7 @@ fbq('track', 'PageView');
                                             <li><a href="#"> Xbox 360 </a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="#">Consoles</a>
+                                    <li><a href="{% url 'shop:coming-soon' %}">Consoles</a>
                                         <ul>
                                             <li><a href="#"> Playstation </a></li>
                                             <li><a href="#"> Xbox </a></li>
@@ -223,8 +225,8 @@ fbq('track', 'PageView');
                                         </ul>
                                     </li>
                                     <li><a href="{% url 'shop:subscription-list' %}"><b><u>Subscriptions</u></b></a></li>
-                                    <li><a href="#"> Collective/Accessories </a></li>
-                                    <li><a href="#"> Community </a></li>
+                                    <li><a href="{% url 'shop:coming-soon' %}"> Collective/Accessories </a></li>
+                                    <li><a href="{% url 'shop:coming-soon' %}"> Community </a></li>
                                     <li><a href="{% url 'shop:articles' %}"> Gaming Charcha </a></li>
                                 </ul>
                             </nav>
@@ -247,7 +249,7 @@ fbq('track', 'PageView');
                                 <li><a href="/products/xbox-games/xbox-one">Xbox One</a></li>
                             </ul>
                         </li>
-                        <li><a href="#">consoles<i class="ion-chevron-down"></i></a>
+                        <li><a href="{% url 'shop:coming-soon' %}">consoles<i class="ion-chevron-down"></i></a>
                             <ul class="submenu">
                                 <li><a href="#">Playstation</a></li>
                                 <li><a href="#">Xbox</a></li>
@@ -255,8 +257,8 @@ fbq('track', 'PageView');
                             </ul>
                         </li>
                         <li><a href="{% url 'shop:subscription-list' %}"><b><u>Subscriptions</u></b></a></li>
-                        <li><a href="#">collectives/accessories</a></li>
-                        <li><a href="#">community</a></li>
+                        <li><a href="{% url 'shop:coming-soon' %}">collectives/accessories</a></li>
+                        <li><a href="{% url 'shop:coming-soon' %}">community</a></li>
                         <li><a href="{% url 'shop:articles' %}">gaming charcha</a></li>
                     </ul>
                 </nav>
@@ -357,7 +359,7 @@ fbq('track', 'PageView');
                     </div>
                     <div class="footer-content">
                         <ul>
-                            <li><a href="#">My Account</a></li>
+                            <li><a href="{% url 'shop:my-account' %}">My Account</a></li>
                             <li><a href="{% url 'shop:orders' %}">My Orders</a></li>
                             <li><a href="#">My Subscriptions</a></li>
                             <li><a href="{% url 'shop:faq' %}">Faqs</a></li>
@@ -401,7 +403,7 @@ fbq('track', 'PageView');
                         <div class="footer-tag">
                             <ul>
                                 <li><a href="#">New Arrival </a></li>
-                                <li><a href="#">Console </a></li>
+                                <li><a href="{% url 'shop:coming-soon' %}">Console </a></li>
                                 <li><a href="#">Accessories </a></li>
                                 <li><a href="{% url 'shop:subscription-list' %}">Plans </a></li>
                                 <li><a href="/products/playstation-games/ps-4">PS 4 Games </a></li>
@@ -430,7 +432,7 @@ fbq('track', 'PageView');
             <div class="row">
                 <div class="col-12">
                     <div class="copyright text-center copyright-white">
-                        <p>Copyright © <a href="{% url 'shop:homepage' %}">Gamehunter.in</a>. All Right Reserved. -- Beta
+                        <p>Copyright © 2019<a href="{% url 'shop:homepage' %}">Gamehunter.in</a>. All Right Reserved. -- Beta
                             Version</p>
                     </div>
                 </div>

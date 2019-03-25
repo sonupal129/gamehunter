@@ -100,3 +100,5 @@ def cart_checkout(request):
     return render(request, "carts/checkout.html", context)
 
 
+class TestView(TemplateView):
+    template_name = "shop/coming-soon.html"
