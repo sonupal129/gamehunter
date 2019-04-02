@@ -21,7 +21,7 @@ def log_exceptions(view_name):
             """
             try:
                 response = actual_view(request)
-                print("Try Successfully Done")
+                print(actual_view)
                 return response
             except Exception as e:
                 debug_entry = ExceptionLog(timestamp=timezone.now(), views=view_name,

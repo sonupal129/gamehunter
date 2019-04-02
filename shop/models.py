@@ -64,7 +64,9 @@ class Category(MP_Node):
         verbose_name_plural = "Categories"
 
     name = models.CharField(max_length=50, unique=True, default='')
-    slug = models.SlugField(null=True, blank=True)
+    slug = models.SlugField(db_index=True, null=True, blank=True)
+    category_title_meta = models.CharField(max_length=50, null=True, blank=True)
+    category_description_meta = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -93,7 +95,7 @@ class Attribute(MP_Node):
 
 
 class Brand(models.Model):
-    name = models.CharField(max_length=50, blank=False, null=False)
+    name = models.CharField(db_index=True, max_length=50, blank=False, null=False)
     description = models.TextField(max_length=1000, blank=False, null=False)
     image = models.ImageField(upload_to=other_file_upload_location, blank=True, null=True,
                               validators=[validate_image_file])
@@ -106,7 +108,7 @@ class Brand(models.Model):
 
 
 class Genre(models.Model):
-    genre = models.CharField(max_length=20, blank=False, null=False)
+    genre = models.CharField(db_index=True, max_length=20, blank=False, null=False)
     description = models.TextField(max_length=500, blank=False, null=False)
 
     class Meta:
@@ -117,19 +119,26 @@ class Genre(models.Model):
 
 
 class Plan(models.Model):
+    type_choices = {
+        ("SB", "Subscription Based"),
+        ("GB", "Game Based"),
+    }
+
     name = models.CharField(max_length=200)
+    type = models.CharField(max_length=20, choices=type_choices, default="SB")
     duration = models.PositiveSmallIntegerField(default=0)
     additional_month = models.PositiveSmallIntegerField(default=0)
-    swaps = models.PositiveSmallIntegerField('Total Swaps', default=0)
+    swaps = models.PositiveSmallIntegerField('Available Swaps', default=0)
     description = RichTextField(config_name='default')
     subscription_amount = models.DecimalField(default=0, blank=False, max_digits=5, decimal_places=0,
                                               validators=[min_value_validator])
     security_deposit = models.DecimalField(default=0, blank=False, max_digits=5, decimal_places=0,
                                            validators=[min_value_validator])
+    refundable = models.BooleanField(blank=True, default=True)
     term_condition = RichTextField(config_name='default')
     image = models.ImageField(upload_to=other_file_upload_location, blank=True, null=True, validators=[validate_image_file])
     image1 = models.ImageField(upload_to=other_file_upload_location, blank=True, null=True, validators=[validate_image_file])
-    slug = models.SlugField('Slug', max_length=120, blank=False, default="")
+    slug = models.SlugField('Slug', max_length=120, blank=False, default="", db_index=True)
     discount = models.DecimalField(default=0, blank=True, max_digits=2, decimal_places=0,
                                    validators=[min_value_validator])
     active = models.BooleanField(blank=True, default=False)
@@ -145,17 +154,21 @@ class Plan(models.Model):
         return reverse("shop:subscription-detail", kwargs={'slug': self.slug})
 
     def get_plan_selling_price(self):
-        if self.discount != 0:
-            final_selling_price = self.subscription_amount - (self.subscription_amount * self.discount // 100)
-            return final_selling_price
+        if self.type == "SB":
+            if self.discount != 0:
+                final_selling_price = self.subscription_amount - (self.subscription_amount * self.discount // 100)
+                return final_selling_price
+            return self.subscription_amount
         return self.subscription_amount
 
-    def get_monthly_subscription_amount(self):
-        monthly_price = self.get_plan_selling_price() // self.duration
-        return monthly_price
+    def get_monthly_subscription_selling_price(self):
+        if self.type == "SB":
+            monthly_selling_price = self.get_plan_selling_price() // self.duration
+            return monthly_selling_price
 
-    def get_security_deposit(self):
-        return self.security_deposit
+    def get_monthly_subscription_mrp(self):
+        monthly_selling_mrp = self.subscription_amount // self.duration
+        return monthly_selling_mrp
 
     def is_object_of_plan_class(self):
         if isinstance(self, Plan):
@@ -163,12 +176,22 @@ class Plan(models.Model):
         else:
             return False
 
-    def get_plan_total_duration(self):
-        total_months = self.duration + self.additional_month
-        return total_months
+    def get_security_deposit(self):
+        return self.security_deposit
 
-    def monthly_available_swaps(self):
-        return self.swaps//self.duration
+    def get_plan_total_duration(self):
+        if self.type == "SB":
+            total_months = self.duration + self.additional_month
+            return total_months
+        else:
+            if self.duration >= 99:
+                return "Lifetime!"
+            return self.duration
+
+    def available_swaps(self):
+        if self.type == "SB":
+            return self.swaps//self.duration
+        return self.swaps
 
     def get_plan_description(self):
         if len(self.description) > 250:
@@ -185,7 +208,8 @@ class PromoCard(models.Model):
                  ('banner_left', 'Banner Left'),
                  ('banner_right', 'Banner Right'), }
 
-    name = models.CharField(max_length=150, blank=True, )
+    name = models.CharField(max_length=70, blank=True,)
+    description = models.CharField(max_length=120, blank=True, null=True)
     type = models.CharField(choices=card_type, max_length=100, default='coverpage_top')
     active = models.BooleanField(blank=True)
     link = models.CharField(max_length=200, null=True, default='', blank=True)
@@ -200,13 +224,13 @@ class PromoCard(models.Model):
 
 
 class Product(models.Model):
-    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    name = models.CharField(max_length=100)
-    plan = models.ManyToManyField(Plan, related_name='products', blank=True)
-    slug = models.SlugField('Slug', max_length=120, blank=False, default='')
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True, db_index=True)
+    name = models.CharField(max_length=100, db_index=True)
+    plan = models.ManyToManyField(Plan, related_name='plans', blank=True)
+    slug = models.SlugField('Slug', max_length=120, blank=False, default='', db_index=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     description = RichTextField(config_name='default', blank=True)
-    launch_date = models.DateField(blank=True, null=True)
+    launch_date = models.DateField(blank=True, null=True, db_index=True)
     item_status = models.CharField(choices={('I', 'In Stock'), ('O', 'Out of Stock'), ('S', 'Subscription Only'),},
                                    max_length=20, default='O')
     developer = models.ForeignKey(Brand, limit_choices_to={'is_developer': True}, null=True, blank=True,
@@ -244,6 +268,7 @@ class Product(models.Model):
         else:
             self.slug = slugify(self.name + '-by-' + self.publisher.name + '-for-' + self.category.name)
         super(Product, self).save(*args, **kwargs)
+        post_save.connect(ProductAttribute.add_delete_pay_per_game_price, sender=Product)
 
     def get_absolute_url(self):
         """Returns the url to access a particular instance of Family."""
@@ -258,6 +283,13 @@ class Product(models.Model):
         if len(self.description) > 95:
             return self.description[:95] + '...'
         return self.description
+
+    def get_pay_per_game_subscription_price(self):
+        if self.plan.filter(type="GB"):
+            attr = Attribute.objects.get(attribute="game_based_plan_price")
+            game_price_attribute = ProductAttribute.objects.filter(product=self, attribute=attr).first()
+            if game_price_attribute:
+                return game_price_attribute.value
 
     def get_default_photo(self):
         if not hasattr(self, '__default_photo'):
@@ -281,7 +313,7 @@ class Product(models.Model):
 
 
 class ProductAttribute(models.Model):
-    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE, )
+    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE, db_index=True)
     value = models.CharField(max_length=200, help_text='Enter Value of Attribute', blank=False)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True,
                                 related_name="productattribute")
@@ -291,6 +323,29 @@ class ProductAttribute(models.Model):
 
     class Meta:
         verbose_name = "Product Attribute"
+
+    def add_delete_pay_per_game_price(sender, instance, **kwargs):
+        attr = Attribute.objects.get(attribute="game_based_plan_price")
+        print(sender)
+        print(instance)
+        if instance.plan.filter(type="GB"):
+            game_price_attribute = ProductAttribute.objects.filter(product=instance, attribute=attr).first()
+            if game_price_attribute:
+                if instance.mrp >= 1000:
+                    game_price_attribute.value = 500
+                else:
+                    game_price_attribute.value = 300
+                game_price_attribute.save()
+            else:
+                if instance.mrp >= 1000:
+                    subscription_game_price = ProductAttribute(attribute=attr, value=500, product=instance)
+                else:
+                    subscription_game_price = ProductAttribute(attribute=attr, value=300, product=instance)
+                subscription_game_price.save()
+        else:
+            game_price_attribute = ProductAttribute.objects.filter(product=instance, attribute=attr)
+            if game_price_attribute:
+                game_price_attribute.delete()
 
 
 class Photo(models.Model):
@@ -307,13 +362,13 @@ class Photo(models.Model):
 
 
 class Blog(models.Model):
-    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    title = models.CharField(max_length=150, help_text='Title Name of Blog/Article')
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True, db_index=True)
+    title = models.CharField(max_length=150, help_text='Title Name of Blog/Article', db_index=True)
     blog_type = models.CharField(max_length=10, choices={('news', 'News'), ('blog', 'Blog'), ('deals', 'Deals')},
                                  default='blog')
     description = RichTextField(config_name='default')
     date_created = models.DateField(auto_created=True)
-    slug = models.SlugField(blank=False, default='', max_length=120)
+    slug = models.SlugField(blank=False, default='', max_length=120, db_index=True)
     product = models.ManyToManyField(Product, related_name='blog', blank=True)
     status = models.CharField(choices={("P", "Published"), ("U", "Unpublished")}, max_length=15, default="U")
 
@@ -357,7 +412,7 @@ class Blog(models.Model):
 
 
 class BlogAttribute(models.Model):
-    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE, )
+    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE, db_index=True)
     value = models.CharField(max_length=200, help_text='Will Update Soon', blank=True)
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, blank=True, null=True)
 
@@ -414,7 +469,6 @@ class Address(models.Model):
 
     def __str__(self):
         return self.address
-
 
 
 class CSVImporter(models.Model):

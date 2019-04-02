@@ -2,33 +2,41 @@
 {% load staticfiles %}
 
 <!-- Site Title -->
-{% block title%}<title>Gamehunter.in | The Game Store</title>{% endblock %}
+{% block title%}<title>Gamehunter game store for console games subscriptions/rent, console games, consoles, collectives and many
+    more</title>{% endblock %}
 
 {% block navbar %}
 <meta name="keywords" content="Games Online, Games on Subscription, Game Rental, Games on Rent, Consoles on Rent"/>
 <meta name="description"
-      content="We had a vision and the vision is to create something a gamer can relate too. Gamehunter’s entire website is dedicated to gaming. Gamer wants to play as many as games as they can; however, gaming is India is way too expensive. They always say “Gaming is not a crime but too expensive”, and that’s really a true thing. GameHunter help gamer to create way to play unlimited games. A subscription package allows access to user to play hundreds of games displayed on website library."/>
+      content="GameHunter help gamer to create way to play unlimited games. A subscription package allows access to user to play hundreds of games displayed on website library."/>
 {% endblock %}
 <!-- Nav-bar Area End Here-->
 
 <!-- Coverpage Area Starts Here-->
 {% block coverpage %}
 {% if coverpage_top %}
-<div class="slider-area black-bg-5 ">
-    {% if coverpage_top.link %}
-    <a href="{{ coverpage_top.link }}">
-        <div class="single-slider pt-280 pb-280 bg-img"
-             style="background-image:url({{ coverpage_top.get_promo_image.file.url }});">
-        </div>
-    </a>
-    {% else %}
-    <div class="single-slider pt-280 pb-280 bg-img"
+<div class="slider-active owl-dot-style-2 owl-dot-red owl-carousel">
+    <div class="single-slider pt-130 pb-140 bg-img"
          style="background-image:url({{ coverpage_top.get_promo_image.file.url }});">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="slider-content-5 slider-animated-1 text-center">
+                        {% if coverpage_top.name %}<h2 class="animated">{{ coverpage_top.name }}</h2>{% endif %}
+                        {% if coverpage_top.description %}<h4 class="animated">{{ coverpage_top.description }}</h4>
+                        {% endif %}
+                        {% if coverpage_top.link %}
+                        <div class="slider-btn red-color-2 mt-75">
+                            <a class="animated" href="{{ coverpage_top.link }}">Shop Now</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    {% endif %}
 </div>
 {% endif %}
-
 {% if banner_left and banner_right %}
 <div class="banner-area black-bg-5 pt-65">
     <div class="container">
@@ -81,9 +89,11 @@
                 <a class="active" href="#game1" data-toggle="tab">
                     <h4>Playstation Games </h4>
                 </a>
+                {% if featured_xbox_games %}
                 <a href="#game2" data-toggle="tab">
                     <h4>Xbox Games </h4>
                 </a>
+                {% endif %}
                 <!--<a href="#game3" data-toggle="tab">-->
                 <!--<h4> Consoles </h4>-->
                 <!--</a>-->
@@ -105,8 +115,10 @@
                                                       {% else %}
                                                         {% static 'img/product/default-product-image.png' %}
                                                       {% endif %}" alt=""></a>
+                            {% if playstationgame.item_status == "I" %}
                             {% if playstationgame.total_discount %}
                             <span>{{ playstationgame.total_discount }}%</span>
+                            {% endif %}
                             {% endif %}
                         </div>
                         <div class="list-col">
@@ -116,6 +128,7 @@
                                     <h4>
                                         <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.get_product_title_name|title}}</a>
                                     </h4>
+                                    {% if playstationgame.item_status == "I" %}
                                     {% ifequal playstationgame.total_discount 0 %}
                                     <div class="product-price-wrapper">
                                         <span>₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
@@ -126,6 +139,11 @@
                                         <span class="product-price-old">₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
                                     </div>
                                     {% endifequal %}
+                                    {% elif playstationgame.item_status == "S" %}
+                                    <div class="product-price-wrapper">
+                                        <span>Subscription Only</span>
+                                    </div>
+                                    {% endif %}
                                 </div>
                                 <div class="product-action-wrapper-2 text-center">
                                     <div class="product-rating">
@@ -136,11 +154,34 @@
                                         <i class="ion-android-star-outline"></i>
                                     </div>
                                     <p> {{ playstationgame.get_product_description|safe|title }}</p>
+                                    {% if playstationgame in cart.products.all or product in cart.pay_game_products.all %}
+                                    <div class="product-action">
+                                        <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">
+                                            Go to Cart
+                                        </a>
+                                    </div>
+                                    {% else %}
+                                    {% if playstationgame.item_status == "I" %}
                                     <div class="product-action">
                                         <a class="action-cart" title="Add To Cart" href="{% url 'carts:add' playstationgame.slug %}">
                                             Add to Cart
                                         </a>
                                     </div>
+                                    {% elif playstationgame.get_pay_per_game_subscription_price %}
+                                    <div class="product-action">
+                                        <a class="action-cart"
+                                           title="Get This Game on Subscription at rupee {{ playstationgame.get_pay_per_game_subscription_price }} Only"
+                                           href="{% url 'carts:pay-per-game-product' playstationgame.slug %}">
+                                            Get @ ₹{{ playstationgame.get_pay_per_game_subscription_price }} Only </a>
+                                    </div>
+                                    {% else %}
+                                    <div class="product-action">
+                                        <a class="action-cart" title="Buy Subscription"
+                                           href="{% url 'shop:subscription-list' %}">
+                                            Buy Subscription </a>
+                                    </div>
+                                    {% endif %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -148,6 +189,7 @@
                     {% endfor %}
                 </div>
             </div>
+            {% if featured_xbox_games %}
             <div class="tab-pane" id="game2">
                 <div class="height-empty"></div>
                 <div class="product-slider-nav-2 nav-style-res nav-style nav-style-game"></div>
@@ -160,16 +202,20 @@
                                                       {% else %}
                                                         {% static 'img/product/default-product-image.png' %}
                                                       {% endif %}" alt=""></a>
+                            {% if xboxgame.item_status == "I" %}
                             {% if xboxgame.total_discount %}
                             <span>{{ xboxgame.total_discount }}%</span>
+                            {% endif %}
                             {% endif %}
                         </div>
                         <div class="list-col">
                             <div class="gridview">
                                 <div class="product-content text-center">
                                     <span>For {{ xboxgame.category.name|upper }}</span>
-                                    <h4><a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.get_product_title_name|title }}</a>
+                                    <h4><a href="{{ xboxgame.get_absolute_url }}">
+                                        {{xboxgame.get_product_title_name|title }}</a>
                                     </h4>
+                                    {% if xboxgame.item_status == "I" %}
                                     {% ifequal xboxgame.total_discount 0 %}
                                     <div class="product-price-wrapper">
                                         <span>₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
@@ -180,6 +226,11 @@
                                         <span class="product-price-old">₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
                                     </div>
                                     {% endifequal %}
+                                    {% elif xboxgame.item_status == "S" %}
+                                    <div class="product-price-wrapper">
+                                        <span>Subscription Only</span>
+                                    </div>
+                                    {% endif %}
                                 </div>
                                 <div class="product-action-wrapper-2 text-center">
                                     <div class="product-rating">
@@ -190,11 +241,28 @@
                                         <i class="ion-android-star-outline"></i>
                                     </div>
                                     <p> {{ xboxgame.get_product_description|safe|title }}</p>
+                                    {% if xboxgame.item_status == "I" %}
                                     <div class="product-action">
                                         <a class="action-cart" title="Add To Cart" href="{% url 'carts:add' xboxgame.slug %}">
                                             Add to Cart
                                         </a>
                                     </div>
+                                    {% else %}
+                                    {% if xboxgame.get_pay_per_game_subscription_price %}
+                                    <div class="product-action">
+                                        <a class="action-cart"
+                                           title="Get This Game on Subscription at rupee {{ xboxgame.get_pay_per_game_subscription_price }} Only"
+                                           href="{% url 'carts:pay-per-game-product' xboxgame.slug %}">
+                                            Get @ ₹{{ xboxgame.get_pay_per_game_subscription_price }} Only </a>
+                                    </div>
+                                    {% else %}
+                                    <div class="product-action">
+                                        <a class="action-cart" title="Buy Subscription"
+                                           href="{% url 'shop:subscription-list' %}">
+                                            Buy Subscription </a>
+                                    </div>
+                                    {% endif %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -202,6 +270,7 @@
                     {% endfor %}
                 </div>
             </div>
+            {% endif %}
             <!--<div class="tab-pane" id="game3">-->
             <!--<div class="height-empty"></div>-->
             <!--<div class="product-slider-nav-2 nav-style-res nav-style nav-style-game"></div>-->
@@ -701,21 +770,29 @@
 
 <!-- Coverpage Center Area Starts Here-->
 {% block banner1 %}
+{% if center_coverpage %}
 <div class="banner-area">
-    {% if center_coverpage %}
-    {% if center_coverpage.link %}
-    <a href="{{ center_coverpage.link }}">
-        <div class="banner-content-2">
-            <img alt="" src="{{ center_coverpage.get_promo_image.file.url }}" width="960" height="330">
+    <div class="container">
+        <div class="bg-img pt-55 pb-60" style="background-image:url({{ center_coverpage.get_promo_image.file.url }});">
+            <div class="row">
+                <div class="col-lg-8 col-md-7">
+                    <div class="construction-discount-content pl-90">
+                        {% if center_coverpage.name %}<h3>{{ center_coverpage.name }}</h3>{% endif %}
+                        {% if center_coverpage.description %}<p>{{ center_coverpage.description }}</p>{% endif %}
+                    </div>
+                </div>
+                {% if center_coverpage.link %}
+                <div class="col-lg-4 col-md-5">
+                    <div class="construction-discount-btn mt-10 pr-90">
+                        <a class="btn-style" href="{{ center_coverpage.link }}">Shop Now</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
         </div>
-    </a>
-    {% else %}
-    <div class="banner-content-2">
-        <img alt="" src="{{ center_coverpage.get_promo_image.file.url }}" width="960" height="330">
     </div>
-    {% endif %}
-    {% endif %}
 </div>
+{% endif %}
 {% endblock %}
 <!-- Coverpage Center Area Ends Here-->
 
@@ -749,9 +826,9 @@
                                         <a href="{{ product.get_absolute_url }}">
                                             {{product.get_product_title_name|title}}</a>
                                     </h4>
-                                    <div class="product-price-wrapper">
-                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
-                                    </div>
+                                    <!--<div class="product-price-wrapper">-->
+                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
+                                    <!--</div>-->
                                 </div>
                             </div>
                             {% endfor %}
@@ -775,9 +852,9 @@
                                         <a href="{{ product.get_absolute_url }}">
                                             {{product.get_product_title_name|title}}</a>
                                     </h4>
-                                    <div class="product-price-wrapper">
-                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
-                                    </div>
+                                    <!--<div class="product-price-wrapper">-->
+                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
+                                    <!--</div>-->
                                 </div>
                             </div>
                             {% endfor %}
@@ -802,9 +879,9 @@
                                         <a href="{{ product.get_absolute_url }}">
                                             {{product.get_product_title_name|title}}</a>
                                     </h4>
-                                    <div class="product-price-wrapper">
-                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
-                                    </div>
+                                    <!--<div class="product-price-wrapper">-->
+                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
+                                    <!--</div>-->
                                 </div>
                             </div>
                             {% endfor %}
@@ -829,9 +906,9 @@
                                         <a href="{{ product.get_absolute_url }}">
                                             {{product.get_product_title_name|title}}</a>
                                     </h4>
-                                    <div class="product-price-wrapper">
-                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
-                                    </div>
+                                    <!--<div class="product-price-wrapper">-->
+                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
+                                    <!--</div>-->
                                 </div>
                             </div>
                             {% endfor %}
@@ -864,9 +941,9 @@
                                         <a href="{{ product.get_absolute_url }}">
                                             {{product.get_product_title_name|title}}</a>
                                     </h4>
-                                    <div class="product-price-wrapper">
-                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
-                                    </div>
+                                    <!--<div class="product-price-wrapper">-->
+                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
+                                    <!--</div>-->
                                 </div>
                             </div>
                             {% endfor %}
@@ -890,9 +967,9 @@
                                         <a href="{{ product.get_absolute_url }}">
                                             {{product.get_product_title_name|title}}</a>
                                     </h4>
-                                    <div class="product-price-wrapper">
-                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
-                                    </div>
+                                    <!--<div class="product-price-wrapper">-->
+                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
+                                    <!--</div>-->
                                 </div>
                             </div>
                             {% endfor %}
@@ -917,9 +994,9 @@
                                         <a href="{{ product.get_absolute_url }}">
                                             {{product.get_product_title_name|title}}</a>
                                     </h4>
-                                    <div class="product-price-wrapper">
-                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
-                                    </div>
+                                    <!--<div class="product-price-wrapper">-->
+                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
+                                    <!--</div>-->
                                 </div>
                             </div>
                             {% endfor %}
@@ -944,9 +1021,9 @@
                                         <a href="{{ product.get_absolute_url }}">
                                             {{product.get_product_title_name|title}}</a>
                                     </h4>
-                                    <div class="product-price-wrapper">
-                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
-                                    </div>
+                                    <!--<div class="product-price-wrapper">-->
+                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
+                                    <!--</div>-->
                                 </div>
                             </div>
                             {% endfor %}

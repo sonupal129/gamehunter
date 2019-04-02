@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 
+
 class SignUpForm(forms.Form):
     email = forms.EmailField(max_length=30, required=True, widget=forms.EmailInput(attrs={
         "placeholder": "Email",
@@ -22,13 +23,14 @@ class UserLoginForm(forms.Form):
 
 
 class PersonalDetailForm(forms.Form):
-    firstname = forms.CharField(max_length=30, widget=forms.TextInput(attrs={
+
+    first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={
         "placeholder": "First Name"
     }))
-    lastname = forms.CharField(max_length=30, widget=forms.TextInput(attrs={
+    last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={
         "placeholder": "Last Name"
     }))
-    mobie = forms.CharField(max_length=10, widget=forms.TextInput(attrs={
+    mobile = forms.CharField(max_length=10, widget=forms.TextInput(attrs={
         "placeholder": "Mobile"
     }))
 

@@ -35,40 +35,44 @@
                                             <h4>My Account Information</h4>
                                             <h5>Your Personal Details</h5>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-6">
-                                                <div class="billing-info">
-                                                    <label>First Name</label>
-                                                    <input type="text">
+                                        <form method="POST">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="billing-info">
+                                                        <label>First Name</label>
+                                                        {{ form.first_name }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="billing-info">
+                                                        <label>Last Name</label>
+                                                        {{ form.last_name }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12">
+                                                    <div class="billing-info">
+                                                        <label>Email Address</label>
+                                                        <input type="email" placeholder="Email" readonly="readonly"
+                                                               value="{{ request.user.email }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="billing-info">
+                                                        <label>Mobile</label>
+                                                        {{ form.mobile }}
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 col-md-6">
-                                                <div class="billing-info">
-                                                    <label>Last Name</label>
-                                                    <input type="text">
+                                            <div class="billing-back-btn">
+                                                <div class="billing-back">
+                                                    <a href="#"><i class="ion-arrow-up-c"></i> back</a>
+                                                </div>
+                                                <div class="billing-btn">
+                                                    <button type="submit">Save</button>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-12 col-md-12">
-                                                <div class="billing-info">
-                                                    <label>Email Address</label>
-                                                    <input type="email">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6">
-                                                <div class="billing-info">
-                                                    <label>Mobile</label>
-                                                    <input type="text">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="billing-back-btn">
-                                            <div class="billing-back">
-                                                <a href="#"><i class="ion-arrow-up-c"></i> back</a>
-                                            </div>
-                                            <div class="billing-btn">
-                                                <button type="submit">Continue</button>
-                                            </div>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

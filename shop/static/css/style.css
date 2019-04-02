@@ -2567,6 +2567,7 @@ button.icon-cart span.count-style {
     animation-delay: 1.0s;
     -webkit-animation-name: fadeInLeft;
     animation-name: fadeInLeft;
+    color: #df2121;
 }
 
 .owl-item.active .slider-animated-1 h4 {
@@ -2574,6 +2575,7 @@ button.icon-cart span.count-style {
     animation-delay: 1.3s;
     -webkit-animation-name: fadeInLeft;
     animation-name: fadeInLeft;
+    color: #ff9900;
 }
 
 .owl-item.active .slider-animated-1 p {
@@ -3008,7 +3010,7 @@ button.icon-cart span.count-style {
     width: 35px;
 }
 
-.product-action > a.action-cart {
+.product-action > a.action-cart{
     background-color: #eef0f1;
     border-radius: 3px;
     color: #242424;
@@ -4985,7 +4987,8 @@ h4.sidebar-title.sidebar-title-width-2::before {
 
 .slider-btn.red-color-2 a {
     border: 2px solid #242424;
-    color: #242424;
+    color: #000000;
+    background-color: #ff9900;
 }
 
 .owl-dot-style-2.owl-dot-red .owl-dots {
@@ -6771,7 +6774,7 @@ h4.setting-title {
 }
 
 .construction-discount-btn .btn-style:hover {
-    background-color: #fff;
+    background-color: #df2121;
     color: #242424;
 }
 
@@ -8469,24 +8472,15 @@ h4.shop-sidebar-title {
     margin: 10px;
 }
 .product-video a {
-    background-color: #df2121;
-    border-radius: 3px;
+    background-color: #ff9900;
+    border-radius: 5px;
     color: #fff;
     display: inline-block;
     padding: 7px 20px 7px;
 }
 .product-video a:hover {
-    background-color: #242424;
-}
-.product-video.pro-video-style-2 a {
-    padding: 12px 26px;
-    display: block;
-}
-.product-video.pro-video-style-2 a i {
-    margin-right: 2px;
-}
-.product-video.pro-video-style-2 {
-    margin: 24px 0 0;
+    background-color: #df2121;
+
 }
 
 .product-dec-slider.slick-initialized .slick-slide {
@@ -8645,6 +8639,7 @@ h4.shop-sidebar-title {
 
 .in-stock > p span {
     color: #df2121;
+    
 }
 
 .product-details-content > p {
@@ -8652,14 +8647,18 @@ h4.shop-sidebar-title {
     margin: 0;
     margin-top: 18px;
     text-align: justify;
+
 }
 
 .in-stock > p {
     margin: 0;
+    text-indent: 10px;
+    font-size: 16px
 }
 
 .in-stock {
     margin: 27px 0 3px;
+    
 }
 
 .pro-dec-feature li {
@@ -8731,7 +8730,7 @@ h4.shop-sidebar-title {
     border-top: 1px solid #ebebeb;
     display: block;
     overflow: hidden;
-    padding: 40px 0 37px;
+    padding: 40px 0 37px 10px;
 }
 
 .quality-add-to-cart .product-action {
@@ -9534,7 +9533,7 @@ h4.grand-totall-title span {
 h5.panel-title {
     background-color: #fff;
     border-bottom: 1px solid #ebebeb;
-    color: #fff;
+    color: #242424;
     font-size: 14px;
     font-weight: 500;
     margin: 0;
@@ -9840,13 +9839,13 @@ h5.panel-title span {
 }
 
 .billing-back > button {
-    background-color: #f2f2f2;
+    background-color: #ff9900;
     border: medium none;
     border-radius: 3px;
-    color: #242424;
+    color: #000000;
     display: inline-block;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 800;
     line-height: 1;
     padding: 17px 35px;
     text-transform: uppercase;

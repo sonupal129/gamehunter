@@ -7,7 +7,9 @@
 
 {% block navbar %}
 {% if plans %}
-<meta name="description" content="low price subscription plans for consoles games, play unlimited consoles games, games at cheap price">
+<meta name="title" content="Subscriber for unlimited console games">
+<meta name="description"
+      content="Play Unlimited PlayStation 4 & Xbox one Games| Buy Subscription and get access to hundreds of games and get fast delivery to your door step. Buy 3 Months, 6 Months & 12 Months Subscription">
 <div class="breadcrumb-area black-bg-4">
     <div class="container">
         <div class="breadcrumb-content">
@@ -38,7 +40,11 @@
                                         {% endif %}
                                     </div>
                                     <div class="product-list-content">
-                                        <span>₹ {{ plan.get_monthly_subscription_amount }} Monthly</span>
+                                        {% if plan.type == "SB" %}
+                                        <span>₹ {{ plan.get_plan_selling_price }} for {{ plan.duration }} Months</span>
+                                        {% else %}
+                                        <span>Buy with ₹ {{ plan.get_security_deposit }}{% if plan.refundable %} Refundable! {% else %} Not Refundable {% endif %} Security Deposit Only</span>
+                                        {% endif %}
                                         <h4><a href="{{ plan.get_absolute_url }}">{{ plan.name }}</a></h4>
                                         <div class="product-rating">
                                             <i class="ion-android-star-outline theme-star"></i>
@@ -48,21 +54,28 @@
                                             <i class="ion-android-star-outline"></i>
                                         </div>
                                         <div class="product-price-wrapper">
+                                            {% if plan.type == "SB" %}
                                             {% if plan.discount != 0 %}
-                                            <span class="product-price-old">₹ {{ plan.subscription_amount }}</span>
-                                            <span>₹ {{ plan.get_plan_selling_price }} for {{ plan.duration }} Months</span>
+                                            <span class="product-price-old">₹ {{ plan.get_monthly_subscription_mrp }}</span>
+                                            <span>₹ {{ plan.get_monthly_subscription_selling_price }} monthly</span>
                                             {% else %}
-                                            <span>₹ {{ plan.get_plan_selling_price }} for {{ plan.duration }} Months</span>
+                                            <span>₹ {{ plan.get_monthly_subscription_mrp }} monthly (for {{ plan.duration }} months)</span>
+                                            {% endif %}
+                                            {% else %}
+                                            <span style="font-weight: bold;">Get Any Game at Rupee 300/500 Only*</span>
                                             {% endif %}
                                         </div>
                                         <p>{{ plan.get_plan_description|striptags }}</p>
                                         {% if plan.active %}
                                         {% if user.userprofile.has_subscription %}
-                                        <h3>Hi! You already started hunting.</h3>
+                                        <div class="product-action">
+                                            <a class="action-cart" href="#" style="background-color: #ff9900;"
+                                               title="Choose Your Games"> Choose Your Games </a>
+                                        </div>
                                         {% else %}
                                         <div class="product-action">
-                                            <a class="action-cart" href="#"
-                                               title="{% url 'carts:add-plan' plan.slug %}"> Add to Cart </a>
+                                            <a class="action-cart" href="{% url 'carts:add-plan' plan.slug %}"
+                                               title="Add to Cart"> Add to Cart </a>
                                         </div>
                                         {% endif %}
                                         {% endif %}

@@ -25,8 +25,13 @@
 #                 continue
 #             print(f"{count} Products Trailer Saved in System")
 
+l1 = [1,2,3,4,5]
+l2 = [6,7,8,9,10]
+total = []
+
+l3 = l1 + l2
+
+print(l3)
 
 
-name = "/assassins-creed-syndicate-by-ubisoft-for-ps-4"
 
-print(name.replace("/", ""))

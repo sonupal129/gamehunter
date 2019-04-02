@@ -74,8 +74,6 @@ def redirect_payment_complete(request):
 @receiver(order_payment_received)
 def create_order(sender, **kwargs):
     cart = kwargs.get("cart_id")
-    print(sender)
-    print(kwargs.get("cart_id"))
     cart.create_product_orders()
     if cart.plan:
         cart.create_subscription_order()

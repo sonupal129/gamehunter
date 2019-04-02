@@ -9,7 +9,7 @@ class CartAdmin(admin.ModelAdmin):
     readonly_fields = (
         "cart_id", "date", "updated", "payment_request", "total_mrp", "total_selling_price", "total_discount",
         "address",
-        "products", "user", "payment_id", "payment_status", "plan",)
+        "products", "user", "payment_id", "payment_status", "plan", "pay_game_products",)
     list_filter = ["payment_status", "date"]
 
 
@@ -18,7 +18,7 @@ class ProductOrdersAdmin(admin.ModelAdmin):
     readonly_fields = (
         "suborder_id", "payment_method", "condition", "hunter_discount", "total_discount", "selling_price", "mrp",
         "final_selling_price", "delivery_charges", "product", "order_date", "address", "cart",)
-    search_fields = ["suborder_id", "product"]
+    search_fields = ["suborder_id"]
     list_filter = ["status", "condition", "payment_method"]
 
 
@@ -26,7 +26,7 @@ class SubscriptionOrdersAdmin(admin.ModelAdmin):
     list_display = ["suborder_id", "active", "order_date"]
     readonly_fields = ("suborder_id", "payment_method", "subscription_amount", "security_deposit",
                        "subscription_duration", "extra_month", "available_swaps", "order_date", "user", "expiry_date",
-                       "address", "cart",)
+                       "address", "cart", "type",)
     search_fields = ["suborder_id"]
     list_filter = ["active", "subscription_duration",]
 

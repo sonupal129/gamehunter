@@ -2,11 +2,11 @@
 {% load staticfiles %}
 
 <!-- Site Title -->
-{% block title%}<title>{{ product.name|title }} Available at GameHunter.in</title>{% endblock %}
+{% block title%}<title>Buy online {{ product.name|title }} for {{ product.category }} at GameHunter.in</title>{% endblock %}
 
 {% block navbar %}
 <meta name="keywords" content="{{ product.category|upper }} Games, Consoles, Accessories, Collectives">
-<meta name="title" content="{{ product.name|title }} for {{ product.category|upper }} available at Gamehunter">
+<meta name="title" content="Buy {{ product.name|title }} for {{ product.category|upper }} online, available at Gamehunter">
 <meta name="description" content="{{ product.get_product_description|striptags }}"/>
 <div class="breadcrumb-area black-bg-4">
     <div class="container">
@@ -28,10 +28,10 @@
                         <img class="zoompro" src="{{ product.get_default_photo.file.url }}"
                              alt="{{ product.name|upper }}" width="570" height="570"/>
                         {% if product.game_trailer %}
-                        <div class="product-video">
-                            <a target="_blank" class="popup-youtube" href="{{ product.game_trailer }}">
+                        <div class="product-video" >
+                            <a target="_blank" id="video" href="{{ product.game_trailer }}">
                                 <i class="fa fa-video-camera"></i>
-                                Watch Trailor
+                                Watch Trailer
                             </a>
                         </div>
                         {% endif %}
@@ -104,7 +104,7 @@
                         {% endif %}
                         <p>Usually Shipped in: <span>2-4 Days</span></p>
                     </div>
-                    {% if product.item_status == 'I' %}
+                    {% if product.item_status == 'I' or product.item_status == 'S' %}
                     <p>{{product.description|striptags|slice:":300"}}</p>
                     <!--<div class="pro-dec-feature">-->
                     <!--<ul>-->
@@ -120,8 +120,7 @@
                         <!--<label>Qty:</label>-->
                         <!--<input class="cart-plus-minus-box" type="text" name="qtybutton" value="02">-->
                         <!--</div>-->
-                        {% if product.item_status == 'I' %}
-                        {% if product in cart.products.all %}
+                        {% if product in cart.products.all or product in cart.pay_game_products.all %}
                         <div class="product-action">
                             <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">Go
                                 to Cart</a>
@@ -134,23 +133,36 @@
                             <!--</a>-->
                         </div>
                         {% else %}
+                        {% if product.item_status == 'I' %}
                         <div class="product-action">
+                            <!--<div class="quality">-->
+                                <!--<label>Qty:</label>-->
+                                <!--<input class="cart-plus-minus-box" type="text" name="qtybutton" value="02">-->
+                            <!--</div>-->
                             <a id="add-to-cart" class="action-cart" title="Add To Cart"
                                href="{% url 'carts:add' product.slug %}">Add to
                                 Cart</a>
-                            <!--<a class="same-action" title="Wishlist" href="#">dsfsdfsd</a>-->
-                            <!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
-                            <!--title="Compare" href="#">-->
-                            <!--<i class="fa fa-sliders fa-rotate-90"></i>-->
-                            <!--</a>-->
+                            {% if product.get_pay_per_game_subscription_price %}
+                            <span style="padding-left: 15px; padding-right: 15px; font-size: 24px;">Or</span>
+                            <a class="action-cart"
+                               title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price }} Only"
+                               href="{% url 'carts:pay-per-game-product' product.slug %}">Get @
+                                ₹{{ product.get_pay_per_game_subscription_price }} Only</a>
+                            {% endif %}
                         </div>
-                        {% endif %}
-                        {% endif %}
-                        {% if product.item_status == 'S' %}
+                        {% elif product.item_status == 'S' %}
                         <div class="product-action">
                             <a class="action-cart" title="Buy Subscription" href="{% url 'shop:subscription-list' %}">Buy
                                 Subscription</a>
+                            {% if product.get_pay_per_game_subscription_price %}
+                            <span style="padding-left: 15px; padding-right: 15px; font-size: 24px;">Or</span>
+                            <a class="action-cart"
+                               title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price }} Only"
+                               href="{% url 'carts:pay-per-game-product' product.slug %}">Get @
+                                ₹{{ product.get_pay_per_game_subscription_price }} Only</a>
+                            {% endif %}
                         </div>
+                        {% endif %}
                         {% endif %}
                     </div>
                     <!--<div class="pro-dec-categories">-->
@@ -172,12 +184,12 @@
                     <!--</div>-->
                     <div class="pro-dec-social">
                         <ul>
-                            <li><a class="tweet" href="#"><i class="ion-social-twitter"></i> Tweet</a></li>
-                            <li><a class="share"
-                                   onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('{{ request.get_raw_uri }}'),'facebook-share-dialog','width=626,height=436'); return false;"></i>
-                                Share</a></li>
-                            <li><a class="pinterest" href="#"><i class="ion-social-pinterest"></i> Pinterest</a>
-                            </li>
+                            <span>Share :</span>
+                            <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+                                <a class="a2a_button_facebook"></a>
+                                <a class="a2a_button_twitter"></a>
+                                <a class="a2a_button_whatsapp"></a>
+                            </div>
                         </ul>
                     </div>
                     <!--<div class="pro-dec-btn">-->
@@ -240,10 +252,12 @@
                 <div class="product-img black-bg-5">
                     <a href="{{ product.get_absolute_url }}">
                         <img src="{% if product.get_default_photo.file %} {{ product.get_default_photo.file.url }} {% else %} {% static 'img/product/default-product-image.png' %}
-                                                      {% endif %}">
+                                                      {% endif %}" height="206px" width="206px">
                     </a>
+                    {% if product.item_status == "I" %}
                     {% if product.total_discount %}
                     <span>{{ product.total_discount }}%</span>
+                    {% endif %}
                     {% endif %}
                 </div>
                 <div class="list-col black-bg-5">
@@ -251,6 +265,7 @@
                         <div class="product-content text-center">
                             <span> For {{ product.category.name }}</span>
                             <h4><a href="{{ product.get_absolute_url }}"> {{ product.get_product_title_name }} </a></h4>
+                            {% if product.item_status == "I" %}
                             {% ifequal product.total_discount 0 %}
                             <div class="product-price-wrapper">
                                 <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
@@ -261,6 +276,11 @@
                                 <span class="product-price-old">₹ {{ product.get_mrp_and_selling_price|last }}</span>
                             </div>
                             {% endifequal %}
+                            {% elif product.item_status == "S" %}
+                            <div class="product-price-wrapper">
+                                <span>Subscription Only</span>
+                            </div>
+                            {% endif %}
                         </div>
                         <div class="product-action-wrapper-2 text-center">
                             <div class="product-rating">
@@ -271,12 +291,36 @@
                                 <i class="ion-android-star-outline"></i>
                             </div>
                             <p>{{ product.get_product_description|striptags }} </p>
+                            {% if product in cart.products.all or product in cart.pay_game_products.all %}
                             <div class="product-action">
-                                <a class="action-cart" title="Quick View" data-toggle="modal"
-                                   data-target="#exampleModal" href="#">
+                                <a class="action-cart" title="Go to Cart"
+                                   href="{% url 'carts:cart' %}">
+                                    Go to Cart
+                                </a>
+                            </div>
+                            {% else %}
+                            {% if product.item_status == "I" %}
+                            <div class="product-action">
+                                <a class="action-cart" title="Add to Cart"
+                                   href="{% url 'carts:add' product.slug %}">
                                     Add to Cart
                                 </a>
                             </div>
+                            {% elif product.get_pay_per_game_subscription_price %}
+                            <div class="product-action">
+                                <a class="action-cart"
+                                   title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price }} Only"
+                                   href="{% url 'carts:pay-per-game-product' product.slug %}">
+                                    Get @ ₹{{ product.get_pay_per_game_subscription_price }} Only </a>
+                            </div>
+                            {% else %}
+                            <div class="product-action">
+                                <a class="action-cart" title="Buy Subscription"
+                                   href="{% url 'shop:subscription-list' %}">
+                                    Buy Subscription </a>
+                            </div>
+                            {% endif %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -310,5 +354,13 @@
     </div>
 </div>
 {% include 'shop/include/shop-service-page.html' %}
+<!-- BEGIN AnnToAny CODE -->
+<script>
+var a2a_config = a2a_config || {};
+a2a_config.onclick = 1;
+a2a_config.num_services = 4;
+</script>
+<script async src="https://static.addtoany.com/menu/page.js"></script>
+<!-- AddToAny END -->
 {% endblock %}
 <!-- Nav-bar Area End Here-->

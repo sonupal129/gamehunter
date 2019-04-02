@@ -6,6 +6,7 @@ from jsonfield import JSONField
 from django.shortcuts import HttpResponseRedirect, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from carts.signals import new_order_received, new_subscription_order_received
+from background_task import background
 # Create your models here.
 
 
@@ -41,6 +42,7 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True)
     products = models.ManyToManyField(Product, related_name='products', blank=True)
     plan = models.ForeignKey(Plan, on_delete=models.DO_NOTHING, blank=True, null=True, related_name="plan")
+    pay_game_products = models.ManyToManyField(Product, related_name='pay_game_products', blank=True)
     total_mrp = models.DecimalField(default=0, blank=True, max_digits=5, decimal_places=0)
     total_selling_price = models.DecimalField(default=0, blank=True, max_digits=5, decimal_places=0)
     total_discount = models.DecimalField(default=0, blank=True, max_digits=5, decimal_places=0)
@@ -79,6 +81,8 @@ class Cart(models.Model):
             total += self.plan.get_security_deposit()
         for p in self.products.all():
             total += p.get_mrp_and_selling_price()[0]
+        for p in self.pay_game_products.all():
+            total += int(p.get_pay_per_game_subscription_price())
         return total
 
     def get_mrp(self):
@@ -88,23 +92,40 @@ class Cart(models.Model):
             total += self.plan.get_security_deposit()
         for p in self.products.all():
             total += p.get_mrp_and_selling_price()[1]
+        for p in self.pay_game_products.all():
+            total += int(p.get_pay_per_game_subscription_price())
         return total
 
     def total_cart_items_count(self):
         total_count = self.products.all().count()
+        total_count += self.pay_game_products.all().count()
         if self.plan:
             total_count += 1
         return total_count
 
     def total_items_list(self):
-        items = []
+        products = []
+        pay_per_game_products = []
+        for p in self.products.all():
+            if p.item_status == "O" or not p.active:
+                self.products.remove(p)
+            else:
+                products.append(p)
+        for p in self.pay_game_products.all():
+            if p.item_status == "O" or not p.active:
+                self.pay_game_products.remove(p)
+            else:
+                products.append(p)
+        if self.plan is not None:
+            if self.plan.active:
+                products.append(self.plan)
+            else:
+                self.plan = None
+                self.save(update_fields=["plan"])
         if self.plan:
-            items.append(self.plan)
-            for p in self.products.all():
-                items.append(p)
-            return items
+            return products, pay_per_game_products
         else:
-            return self.products.all()
+            return self.products.all(), self.pay_game_products.all()
 
     def remove_plan(self):
         if self.plan:
@@ -144,13 +165,14 @@ class Cart(models.Model):
                     print("Object is Available in System Can't Create New")
 
     def create_subscription_order(self, **kwargs):
+        print(self)
         if self.plan and self.payment_status == "Credit":
             order_id = "SUB_" + str(self.cart_id)
             date = datetime.datetime.now()
             data = {"payment_method": "PREPAID", "subscription_amount": self.plan.get_plan_selling_price(),
                     "security_deposit": self.plan.get_security_deposit(), "subscription_duration": self.plan.duration,
                     "extra_month": self.plan.additional_month, "available_swaps": self.plan.swaps, "active": True,
-                    "user": self.user, "cart": self, "address": self.address}
+                    "user": self.user, "cart": self, "address": self.address, "type": self.plan.type}
             days = (int(data.get("subscription_duration")) + int(data.get("extra_month"))) * 30
             end_date = date + datetime.timedelta(days)
             data["expiry_date"] = end_date
@@ -211,6 +233,7 @@ class ProductOrders(models.Model):
 
 class SubscriptionOrders(models.Model):
     cart = models.ForeignKey(Cart, null=True, blank=True, on_delete=models.CASCADE)
+    type = models.CharField(null=True, blank=True, max_length=20)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="subscription")
     suborder_id = models.CharField(max_length=25, null=True, blank=True)
     active = models.BooleanField(blank=False, default=True)
@@ -220,7 +243,7 @@ class SubscriptionOrders(models.Model):
     expiry_date = models.DateTimeField(blank=True, null=True)
     subscription_amount = models.DecimalField(default=0, blank=False, max_digits=5, decimal_places=0)
     security_deposit = models.DecimalField(default=0, blank=False, max_digits=5, decimal_places=0)
-    subscription_duration = models.DecimalField(default=0, blank=False, max_digits=2, decimal_places=0)
+    subscription_duration = models.DecimalField(default=0, blank=False, max_digits=3, decimal_places=0)
     extra_month = models.DecimalField(default=0, blank=False, max_digits=2, decimal_places=0)
     available_swaps = models.DecimalField(default=0, blank=False, max_digits=2, decimal_places=0)
     address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)

@@ -4,12 +4,12 @@ from django.views import generic
 from .models import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login
-from .forms import UserLoginForm, SignUpForm, SellGamesForm
+from .forms import *
 from django.http import HttpResponseRedirect
 from carts.models import *
 from django.db.models import Q
 from shop.debug import log_exceptions
-from django.views.generic.edit import FormView
+from django.views.generic.edit import UpdateView, FormView
 # Create your views here.
 
 
@@ -22,7 +22,7 @@ class HomePageView(ListView):
         return blogs
 
     def get_home_page_products(self):
-        products = Product.objects.filter(active=True, item_status="I")
+        products = Product.objects.filter(active=True, item_status__in=["I", "S"])
         new_released_games = products.order_by("-launch_date")[:12]
         featured_playstation_games = products.filter(category__name__in=['PS 4', 'PS 3'],
                                                      is_featured=True).order_by("-date")[:10]
@@ -46,6 +46,8 @@ class HomePageView(ListView):
         try:
             new_released_games, featured_playstation_games, featured_xbox_games, new_arrived_products = self.get_home_page_products()
             top_coverpage, center_coverpage, bottom_coverpage, left_banner, right_banner = self.get_home_page_banner()
+            cart_obj, new_obj = Cart.objects.create_or_get_cart(self.request)
+            context['cart'] = cart_obj
             context['articles'] = self.blogs_list()
             context['new_released_games'] = new_released_games
             context['new_arrived_products'] = new_arrived_products
@@ -56,12 +58,13 @@ class HomePageView(ListView):
             context['bottom_coverpage'] = bottom_coverpage
             context['banner_left'] = left_banner
             context['banner_right'] = right_banner
+            print(cart_obj)
         except IndexError:
             print("Product, Blog, Banner Objects Not Available")
         return context
 
     def get_queryset(self):
-        return Product.objects.filter(active=True, item_status="I")
+        return Product.objects.filter(active=True, item_status__in=["I", "S"])
 
 
 class ProductListView(ListView):
@@ -69,11 +72,11 @@ class ProductListView(ListView):
     template_name = 'shop/product-list.html'
     context_object_name = "products"
 
-    @log_exceptions("Category View")
+    @log_exceptions("Product List Querysets Function")
     def get_queryset(self):
         sort_by = self.request.GET.get("sort_by")
         try:
-            queryset = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True)
+            queryset = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True, item_status__in=["I", "S"])
         except IndexError:
             pass
         if self.request.method == "GET":
@@ -84,8 +87,9 @@ class ProductListView(ListView):
             else:
                 return queryset.order_by("-date")
 
+    @log_exceptions("Product Side List Filter Function")
     def get_side_list_filter(self):
-        products = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True)
+        products = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True, item_status__in=["I", "S"])
         publishers = products.filter(publisher__name__isnull=False).values("publisher__name").distinct()
         developers = products.filter(developer__name__isnull=False).values("developer__name").distinct()
         genres = products.filter(genre__genre__isnull=False).values("genre__genre").distinct()
@@ -116,14 +120,14 @@ class ProductDetailView(DetailView):
         slug = self.request.path
         count = 4
         relatedproducts = []
-        products = Product.objects.filter(active=True)
+        products = Product.objects.filter(active=True, item_status__in=["I", "S"])
         product = products.filter(slug=slug.replace("/", "")).first()
 
-        for pub in products.filter(publisher=product.publisher, item_status="I").order_by("-launch_date")[:count]:
+        for pub in products.filter(publisher=product.publisher).order_by("-launch_date")[:count]:
             relatedproducts.append(pub)
-        for dev in products.filter(developer=product.developer, item_status="I").order_by("-launch_date")[:count]:
+        for dev in products.filter(developer=product.developer).order_by("-launch_date")[:count]:
             relatedproducts.append(dev)
-        for cat in products.filter(category=product.category, item_status="I").order_by("-date")[:count]:
+        for cat in products.filter(category=product.category).order_by("-date")[:count]:
             relatedproducts.append(cat)
         return relatedproducts
 
@@ -131,6 +135,7 @@ class ProductDetailView(DetailView):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
         cart_obj, new_obj = Cart.objects.create_or_get_cart(self.request)
         context["cart"] = cart_obj
+        print(cart_obj)
         context["related_products"] = self.related_product()
         return context
 
@@ -259,7 +264,7 @@ def signup_page(request):
 
 
 class ProductSearchView(ListView):
-    template_name = "shop/search-product-list.html"
+    template_name = "shop/product-list.html"
     context_object_name = "products"
 
     def get_queryset(self):
@@ -298,8 +303,18 @@ class ComingSoonView(TemplateView):
     template_name = "shop/coming-soon.html"
 
 
-class MyAccountView(TemplateView):
+class MyAccountView(FormView):
     template_name = "shop/my-account.html"
+    form_class = PersonalDetailForm
+    success_url = None
+
+    def get_context_data(self, **kwargs):
+        if 'form' not in kwargs:
+            kwargs["form"] = self.get_form()
+            kwargs["user"] = self.request.user
+        return super().get_context_data(**kwargs)
+
+
 
 
 class SellYourGamesView(FormView):
@@ -307,4 +322,4 @@ class SellYourGamesView(FormView):
     form_class = SellGamesForm
     success_url = "shop/successful/game-sell-query-submitted-successfuly.html"
 
-    print(form_class)
+

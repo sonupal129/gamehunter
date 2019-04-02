@@ -107,7 +107,8 @@
                         <div class="table-content table-responsive">
                             <table>
                                 <tbody>
-                                {% for product in products%}
+                                {% if products %}
+                                {% for product in products %}
                                 <tr>
                                     <td class="product-thumbnail">{% if product.is_object_of_plan_class %}<img
                                             src="{{ product.image.url }}" alt="" width="60"
@@ -122,6 +123,21 @@
                                     </td>
                                 </tr>
                                 {% endfor %}
+                                {% endif %}
+                                {% if pay_game_products %}
+                                {% for product in pay_game_products %}
+                                <tr>
+                                    <td class="product-thumbnail"><img
+                                            src="{{ product.get_default_photo.file.url }}" alt="" width="60"
+                                            height="60">
+                                    </td>
+                                    <td class="product-name"><a href="{{ product.get_absolute_url }}">
+                                        {{ product.get_product_title_name }}
+                                    </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
                                 </tbody>
                             </table>
                         </div>

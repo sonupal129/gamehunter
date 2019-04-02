@@ -5,10 +5,11 @@
 {% block title%}<title>Rental Plan {{ plan.name|title }}</title>{% endblock %}
 
 {% block navbar %}
-<meta name="title" content="rental plan {{ plan.name|lower }} for unlimited games">
+<meta name="title" content="buy rental plan {{ plan.name|lower }} for unlimited games, available at gamehunter.in">
 <meta name="keywords"
       content="unlimited games, games on rent, subscribe for free games, game rental, video games, console games, party games, action games ">
-<meta name="description" content="Subscribe for unlimited games available at Gamehunter">
+<meta name="description" content="Subscribe for unlimited games available at gamehunter">
+{% if plan.active %}
 <div class="breadcrumb-area black-bg-4">
     <div class="container">
         <div class="breadcrumb-content">
@@ -72,6 +73,7 @@
                         <!--</div>-->
                     </div>
                     {% if plan.active %}
+                    {% if plan.type == "SB" %}
                     {% if plan.discount != 0 %}
                     <span class="product-old-price">₹ {{ plan.subscription_amount }}</span>
                     <span>₹ {{ plan.get_plan_selling_price }} for {{ plan.duration }} Months</span>
@@ -79,7 +81,8 @@
                     <span>₹ {{ plan.subscription_amount }} for {{ plan.duration }} Months</span>
                     {% endif %}
                     <div class="in-stock">
-                        <p>Monthly Subscription Amount: <span>₹ {{ plan.get_monthly_subscription_amount }} </span></p>
+                        <p>Monthly Subscription Amount:
+                            <span>₹ {{ plan.get_monthly_subscription_selling_price }} </span></p>
                         {% if plan.additional_month > 0 %}
                         <p>Subscription Duration: <span>{{ plan.duration }} Month + {{ plan.additional_month }} Month Extra!</span>
                         </p>
@@ -88,14 +91,25 @@
                         {% endif %}
                         {% if plan.swaps > 0 %}
                         <p>Available Swaps: <span>{{ plan.monthly_available_swaps }} Swap in Month</span>
-                        {% endif %}
-                        {% if plan.security_deposit > 0 %}
+                            {% endif %}
+                            {% if plan.security_deposit > 0 %}
                         <p>Security Deposit: <span>₹ {{ plan.security_deposit }} Refundable!</span>
-                        {% endif %}
+                            {% endif %}
                     </div>
                     {% else %}
-                    <span>Not Available!</span>
+                    <span>₹ {{ plan.security_deposit }} Security Deposit {% if refundable %}( Refundable ){% else %}( Not Refundable ){% endif %}</span>
+                    <div class="in-stock">
+                        <p>Plan Validity: <span>{{ plan.duration }} Month</span></p>
+                        {% if plan.available_swaps %}
+                        <p>Game Swaping Period: <span>{{ plan.available_swaps }} Month</span></p>
+                        {% endif %}
+                    </div>
                     {% endif %}
+                    {% endif %}
+                    <p>rjau chachavaayega rjau chachavaayega rjau chachavaayega rjau chachavaayega rjau chachavaayega
+                        rjau chachavaayega
+                        rjau chachavaayega rjau chachavaayega rjau chachavaayega rjau chachavaayega rjau chachavaayega
+                        rjau chachavaayega rjau chachavaayega rjau chachavaayega </p>
                     <!--<div class="pro-dec-feature">-->
                     <!--<ul>-->
                     <!--<li><input type="checkbox"> Protection Plan: <span> 2 year  $4.99</span></li>-->
@@ -111,7 +125,10 @@
                         <!--</div>-->
                         {% if plan.active %}
                         {% if user.userprofile.has_subscription %}
-                        <h3>Hi! you already a hunter.</h3>
+                        <div class="product-action">
+                            <a class="action-cart" href="#" style="background-color: #ff9900;"
+                               title="Choose Your Games"> Choose Your Games </a>
+                        </div>
                         {% else %}
                         <div class="product-action">
                             <a class="action-cart" title="Add To Cart" href="{% url 'carts:add-plan' plan.slug %}">Add to Cart</a>
@@ -145,13 +162,12 @@
                     <!--</div>-->
                     <div class="pro-dec-social">
                         <ul>
-                            <li><a class="tweet" href="#"><i class="ion-social-twitter"></i> Tweet</a></li>
-                            <li><a class="share" href="{{ product.get_absolute_url }}"><i
-                                    class="ion-social-facebook"></i> Share</a></li>
-                            <li><a class="google" href="#"><i class="ion-social-googleplus-outline"></i> Google+</a>
-                            </li>
-                            <li><a class="pinterest" href="#"><i class="ion-social-pinterest"></i> Pinterest</a>
-                            </li>
+                            <span>Share :</span>
+                            <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+                                <a class="a2a_button_facebook"></a>
+                                <a class="a2a_button_twitter"></a>
+                                <a class="a2a_button_whatsapp"></a>
+                            </div>
                         </ul>
                     </div>
                     <!--<div class="pro-dec-btn">-->
@@ -185,275 +201,14 @@
         </div>
     </div>
 </div>
-<!--<div class="product-area pb-45 black-bg-5">-->
-<!--<div class="container">-->
-<!--<div class="section-border mb-10">-->
-<!--<h4 class="section-title section-bg-black">Related Products</h4>-->
-<!--</div>-->
-<!--<div class="product-slider-nav nav-style"></div>-->
-<!--<div class="headphone-slider-active product-slider owl-carousel nav-style">-->
-<!--<div class="devita-product-2">-->
-<!--<div class="product-img black-bg-5">-->
-<!--<a href="product-details.html">-->
-<!--<img src="{% static 'img/product/pro-game-1.png' %}">-->
-<!--</a>-->
-<!--</div>-->
-<!--<div class="list-col black-bg-5">-->
-<!--<div class="gridview">-->
-<!--<div class="product-content text-center">-->
-<!--<span>Headphone, Accessories</span>-->
-<!--<h4><a href="product-details.html">Matrior white Headphone Ver 2018 </a></h4>-->
-<!--<div class="product-price-wrapper">-->
-<!--<span>$260.00</span>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="product-action-wrapper-2 text-center">-->
-<!--<div class="product-rating">-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline"></i>-->
-<!--</div>-->
-<!--<p> Quam elit phasellus nibh sed eget, sed nunc in ultricies sodales sapien, non velit-->
-<!--scelerisque...</p>-->
-<!--<div class="product-action">-->
-<!--<a class="same-action" title="Wishlist" href="#">-->
-<!--<i class="fa fa-heart-o"></i>-->
-<!--</a>-->
-<!--<a class="action-cart" title="Quick View" data-toggle="modal"-->
-<!--data-target="#exampleModal" href="#">-->
-<!--Add to Cart-->
-<!--</a>-->
-<!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
-<!--title="Compare" href="#">-->
-<!--<i class="fa fa-sliders fa-rotate-90"></i>-->
-<!--</a>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="devita-product-2">-->
-<!--<div class="product-img black-bg-5">-->
-<!--<a href="product-details.html">-->
-<!--<img src="{% static 'img/product/pro-game-1.png' %}" alt="">-->
-<!--</a>-->
-<!--<span>-30%</span>-->
-<!--</div>-->
-<!--<div class="list-col black-bg-5">-->
-<!--<div class="gridview">-->
-<!--<div class="product-content text-center">-->
-<!--<span>Headphone, Accessories</span>-->
-<!--<h4><a href="product-details.html">Matrior black Headphone Ver 2018</a></h4>-->
-<!--<div class="product-price-wrapper">-->
-<!--<span>$260.00</span>-->
-<!--<span class="product-price-old">$162.00 </span>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="product-action-wrapper-2 text-center">-->
-<!--<div class="product-rating">-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline"></i>-->
-<!--</div>-->
-<!--<p> Quam elit phasellus nibh sed eget, sed nunc in ultricies sodales sapien, non velit-->
-<!--scelerisque...</p>-->
-<!--<div class="product-action">-->
-<!--<a class="same-action" title="Wishlist" href="#">-->
-<!--<i class="fa fa-heart-o"></i>-->
-<!--</a>-->
-<!--<a class="action-cart" title="Quick View" data-toggle="modal"-->
-<!--data-target="#exampleModal" href="#">-->
-<!--Add to Cart-->
-<!--</a>-->
-<!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
-<!--title="Compare" href="#">-->
-<!--<i class="fa fa-sliders fa-rotate-90"></i>-->
-<!--</a>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="devita-product-2">-->
-<!--<div class="product-img black-bg-5">-->
-<!--<a href="product-details.html">-->
-<!--<img src="{% static 'img/product/pro-game-1.png' %}" alt="">-->
-<!--</a>-->
-<!--</div>-->
-<!--<div class="list-col black-bg-5">-->
-<!--<div class="gridview">-->
-<!--<div class="product-content text-center">-->
-<!--<span>Headphone, Accessories</span>-->
-<!--<h4><a href="product-details.html">Matrior blue Headphone Ver 2018</a></h4>-->
-<!--<div class="product-price-wrapper">-->
-<!--<span>$300.00</span>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="product-action-wrapper-2 text-center">-->
-<!--<div class="product-rating">-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline"></i>-->
-<!--</div>-->
-<!--<p> Quam elit phasellus nibh sed eget, sed nunc in ultricies sodales sapien, non velit-->
-<!--scelerisque...</p>-->
-<!--<div class="product-action">-->
-<!--<a class="same-action" title="Wishlist" href="#">-->
-<!--<i class="fa fa-heart-o"></i>-->
-<!--</a>-->
-<!--<a class="action-cart" title="Quick View" data-toggle="modal"-->
-<!--data-target="#exampleModal" href="#">-->
-<!--Add to Cart-->
-<!--</a>-->
-<!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
-<!--title="Compare" href="#">-->
-<!--<i class="fa fa-sliders fa-rotate-90"></i>-->
-<!--</a>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="devita-product-2">-->
-<!--<div class="product-img black-bg-5">-->
-<!--<a href="product-details.html">-->
-<!--<img src="{% static 'img/product/pro-game-1.png' %}" alt="">-->
-<!--</a>-->
-<!--<span>-10%</span>-->
-<!--</div>-->
-<!--<div class="list-col black-bg-5">-->
-<!--<div class="gridview">-->
-<!--<div class="product-content text-center">-->
-<!--<span>Headphone, Accessories</span>-->
-<!--<h4><a href="product-details.html">Matrior black Headphone Ver 2018</a></h4>-->
-<!--<div class="product-price-wrapper">-->
-<!--<span>$120.00</span>-->
-<!--<span class="product-price-old">$150.00 </span>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="product-action-wrapper-2 text-center">-->
-<!--<div class="product-rating">-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline"></i>-->
-<!--</div>-->
-<!--<p> Quam elit phasellus nibh sed eget, sed nunc in ultricies sodales sapien, non velit-->
-<!--scelerisque...</p>-->
-<!--<div class="product-action">-->
-<!--<a class="same-action" title="Wishlist" href="#">-->
-<!--<i class="fa fa-heart-o"></i>-->
-<!--</a>-->
-<!--<a class="action-cart" title="Quick View" data-toggle="modal"-->
-<!--data-target="#exampleModal" href="#">-->
-<!--Add to Cart-->
-<!--</a>-->
-<!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
-<!--title="Compare" href="#">-->
-<!--<i class="fa fa-sliders fa-rotate-90"></i>-->
-<!--</a>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="devita-product-2">-->
-<!--<div class="product-img">-->
-<!--<a href="product-details.html">-->
-<!--<img src="assets/img/product/headphone-5.jpg" alt="">-->
-<!--</a>-->
-<!--</div>-->
-<!--<div class="list-col">-->
-<!--<div class="gridview">-->
-<!--<div class="product-content text-center">-->
-<!--<span>Headphone, Accessories</span>-->
-<!--<h4><a href="product-details.html">Matrior white Headphone Ver 2018</a></h4>-->
-<!--<div class="product-price-wrapper">-->
-<!--<span>$190.00</span>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="product-action-wrapper-2 text-center">-->
-<!--<div class="product-rating">-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline"></i>-->
-<!--</div>-->
-<!--<p> Quam elit phasellus nibh sed eget, sed nunc in ultricies sodales sapien, non velit-->
-<!--scelerisque...</p>-->
-<!--<div class="product-action">-->
-<!--<a class="same-action" title="Wishlist" href="#">-->
-<!--<i class="fa fa-heart-o"></i>-->
-<!--</a>-->
-<!--<a class="action-cart" title="Quick View" data-toggle="modal"-->
-<!--data-target="#exampleModal" href="#">-->
-<!--Add to Cart-->
-<!--</a>-->
-<!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
-<!--title="Compare" href="#">-->
-<!--<i class="fa fa-sliders fa-rotate-90"></i>-->
-<!--</a>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="devita-product-2">-->
-<!--<div class="product-img">-->
-<!--<a href="product-details.html">-->
-<!--<img src="assets/img/product/headphone-2.jpg" alt="">-->
-<!--</a>-->
-<!--<span>-15%</span>-->
-<!--</div>-->
-<!--<div class="list-col">-->
-<!--<div class="gridview">-->
-<!--<div class="product-content text-center">-->
-<!--<span>Headphone, Accessories</span>-->
-<!--<h4><a href="product-details.html">Matrior black Headphone Ver 2018</a></h4>-->
-<!--<div class="product-price-wrapper">-->
-<!--<span>$260.00</span>-->
-<!--<span class="product-price-old">$162.00 </span>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="product-action-wrapper-2 text-center">-->
-<!--<div class="product-rating">-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline theme-star"></i>-->
-<!--<i class="ion-android-star-outline"></i>-->
-<!--</div>-->
-<!--<p> Quam elit phasellus nibh sed eget, sed nunc in ultricies sodales sapien, non velit-->
-<!--scelerisque...</p>-->
-<!--<div class="product-action">-->
-<!--<a class="same-action" title="Wishlist" href="#">-->
-<!--<i class="fa fa-heart-o"></i>-->
-<!--</a>-->
-<!--<a class="action-cart" title="Quick View" data-toggle="modal"-->
-<!--data-target="#exampleModal" href="#">-->
-<!--Add to Cart-->
-<!--</a>-->
-<!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
-<!--title="Compare" href="#">-->
-<!--<i class="fa fa-sliders fa-rotate-90"></i>-->
-<!--</a>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
+{% endif %}
 {% include 'shop/include/partner-brand.html' %}
 {% include 'shop/include/shop-service-page.html' %}
+<script>
+var a2a_config = a2a_config || {};
+a2a_config.onclick = 1;
+a2a_config.num_services = 4;
+</script>
+<script async src="https://static.addtoany.com/menu/page.js"></script>
 {% endblock %}
 <!-- Nav-bar Area End Here-->

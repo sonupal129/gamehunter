@@ -10,6 +10,7 @@ app_name = 'carts'
 urlpatterns = [
     path('', login_required(views.cart_home), name='cart'),
     path('add/<slug:slug>', views.cart_add_product, name='add'),
+    path('add-pay-per-game/<slug:slug>', views.add_pay_per_game_product, name='pay-per-game-product'),
     path('remove/<slug:slug>', views.cart_remove_product, name='remove'),
     path('delete', views.remove_whole_cart, name='delete-all'),
     path('checkout/', views.cart_checkout, name='checkout'),

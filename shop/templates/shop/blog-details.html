@@ -5,6 +5,7 @@
 {% block title%}<title>{{ article|title }}</title>{% endblock %}
 
 {% block navbar %}
+<meta name="title" content="{{ article.get_blog_title_name|striptags }}">
 <meta name="description" content="{{ article.get_blog_description|striptags }}">
 <div class="breadcrumb-area black-bg-4">
     <div class="container">
@@ -143,12 +144,13 @@
                                 <!--</ul>-->
                             </div>
                             <div class="blog-dec-social">
-                                <span>share :</span>
+                                <span>Share :</span>
                                 <ul>
-                                    <li><a href="#"><i class="ion-social-facebook"></i></a></li>
-                                    <li><a href="#"><i class="ion-social-twitter"></i></a></li>
-                                    <li><a href="#"><i class="ion-social-instagram-outline"></i></a></li>
-                                    <li><a href="#"><i class="ion-social-googleplus-outline"></i></a></li>
+                                    <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+                                        <a class="a2a_button_facebook"></a>
+                                        <a class="a2a_button_twitter"></a>
+                                        <a class="a2a_button_whatsapp"></a>
+                                    </div>
                                 </ul>
                             </div>
                         </div>
@@ -161,12 +163,14 @@
 <div class="brand-logo-area black-bg-5">
 </div>
 {% include 'shop/include/shop-service-page.html' %}
+<!-- AddToAny START  -->
+<script>
+var a2a_config = a2a_config || {};
+a2a_config.onclick = 1;
+a2a_config.num_services = 4;
+</script>
+<script async src="https://static.addtoany.com/menu/page.js"></script>
+<!-- AddToAny END -->
 {% endblock %}
 <!-- Nav-bar Area End Here-->
-
-<!-- Coverpage Area Starts Here-->
-{% block coverpage %}
-{% endblock %}
-<!-- Coverpage Area End Here-->
-
 

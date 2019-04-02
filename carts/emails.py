@@ -2,7 +2,6 @@ from carts.models import *
 from post_office import mail
 from carts.signals import order_payment_received, new_user_profile_created
 from django.dispatch import receiver
-
 # Code Starts from Here
 
 
@@ -12,7 +11,6 @@ def send_cart_order_place_email(sender, **kwargs):
     # print(cart)
     # print(cart.total_items_list())
     cart = kwargs.get("cart_id")
-    print(cart.user.email)
     if cart.payment_status == "Credit":
         mail.send(
             recipients=cart.user.email,

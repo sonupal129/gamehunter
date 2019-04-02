@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
+try:
+    from .local_settings import *
+except ImportError:
+    pass
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -38,11 +43,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
+    # other apps
     'treebeard',
     'adminsortable',
     'ckeditor',
     'post_office',
     'django_slack',
+    'background_task',
+
 ]
 
 MIDDLEWARE = [
@@ -53,6 +63,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Other Middle ware classed
+    'htmlmin.middleware.HtmlMinifyMiddleware',
+    'htmlmin.middleware.MarkRequestMiddleware',
 
 ]
 
@@ -62,7 +75,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
-        # 'APP_DIRS': True,
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -70,9 +83,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'loaders': [
-                'django.template.loaders.app_directories.Loader',
-            ],
+            # 'loaders': [
+            #     'django.template.loaders.app_directories.Loader',
+            # ],
         },
     },
 ]
@@ -181,8 +194,23 @@ INSTAMOJO_AUTH_TOKEN = "test_f544367f6405aa31283a4605731"
 BASE_PAYMENT_URL = "https://test.instamojo.com/api/1.1/payment-requests/"
 PAYEMENT_REDIRECT_URL = "http://127.0.0.1:8000/cart/payment/successful"
 
+# Sitemaps Details
+if not DEBUG:
+    SITE_ID = 1
 
-try:
-    from .local_settings import *
-except ImportError:
-    pass
+# Django Caches
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': 'd:/Game Hunter/testcache/',
+        'TIMEOUT': None,
+        'OPTIONS': {
+            'MAX_ENTRIES': 300,
+        }
+    }
+}
+
+# django htmlmin
+EXCLUDE_FROM_MINIFYING = ('url-optimize/sitemap.xml/', 'cki39vbl3/admin/')
+
+
