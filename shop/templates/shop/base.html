@@ -45,6 +45,7 @@
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
     <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
     <script src="{% static 'js/vendor/modernizr-2.8.3.min.js' %}"></script>
+
 </head>
 <body>
 <header class="header-area bg-img" style='background-image: url({% static "img/bg/bg-14.jpg" %}' );>
@@ -125,10 +126,7 @@ fbq('track', 'PageView');
                             </li>
                             {% else %}
                             <li>
-                                <a href="{% url 'shop:signup' %}">Sign Up </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'shop:login' %}">Sign In </a>
+                                <a href="{% url 'shop:login-register' %}">Register or Login </a>
                             </li>
                             <li>
                                 <a href="{% url 'shop:sell-games' %}">Sell Your Games</a>
@@ -434,7 +432,7 @@ fbq('track', 'PageView');
             <div class="row">
                 <div class="col-12">
                     <div class="copyright text-center copyright-white">
-                        <p>Copyright © 2019<a href="{% url 'shop:homepage' %}">Gamehunter.in</a>. All Right Reserved. -- Beta
+                        <p>Copyright © 2019 <a href="{% url 'shop:homepage' %}">Gamehunter.in</a>. All Right Reserved. -- Beta
                             Version</p>
                     </div>
                 </div>

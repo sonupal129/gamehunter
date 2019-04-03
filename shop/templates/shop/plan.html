@@ -43,7 +43,7 @@
                                         {% if plan.type == "SB" %}
                                         <span>₹ {{ plan.get_plan_selling_price }} for {{ plan.duration }} Months</span>
                                         {% else %}
-                                        <span>Buy with ₹ {{ plan.get_security_deposit }}{% if plan.refundable %} Refundable! {% else %} Not Refundable {% endif %} Security Deposit Only</span>
+                                        <span>Buy with ₹ {{ plan.get_security_deposit }} One Time Registration Fees </span>
                                         {% endif %}
                                         <h4><a href="{{ plan.get_absolute_url }}">{{ plan.name }}</a></h4>
                                         <div class="product-rating">

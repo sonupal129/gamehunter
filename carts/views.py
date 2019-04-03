@@ -54,13 +54,18 @@ def add_pay_per_game_product(request, slug):
     product = Product.objects.get(slug=slug)
     plan = product.plan.filter(type="GB").first()
     cart_obj, new_obj = Cart.objects.create_or_get_cart(request)
-    context = {}
-    if not request.user.userprofile.has_subscription():
-        if cart_obj.pay_game_products.all().count() == 0:
-            print(request.user)
-            cart_obj.pay_game_products.add(product)
-        else:
+    if request.user.is_anonymous:
+        print(request.user)
+        if cart_obj.pay_game_products.all().count() >= 1:
             return redirect(product, {"error": "Rajus"})
+        else:
+            cart_obj.pay_game_products.add(product)
+    else:
+        if request.user.is_authenticated:
+            if cart_obj.pay_game_products.all().count() == 0:
+                cart_obj.pay_game_products.add(product)
+            else:
+                return redirect(product, {"error": "Rajus"})
     return redirect(plan)
 
 

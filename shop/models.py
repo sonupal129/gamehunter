@@ -331,21 +331,25 @@ class ProductAttribute(models.Model):
         if instance.plan.filter(type="GB"):
             game_price_attribute = ProductAttribute.objects.filter(product=instance, attribute=attr).first()
             if game_price_attribute:
-                if instance.mrp >= 1000:
+                if instance.mrp <= 1499:
+                    game_price_attribute.value = 300
+                elif instance.mrp > 1500 < 4000:
                     game_price_attribute.value = 500
                 else:
-                    game_price_attribute.value = 300
+                    del game_price_attribute
                 game_price_attribute.save()
             else:
-                if instance.mrp >= 1000:
+                if instance.mrp <= 1499:
+                    subscription_game_price = ProductAttribute(attribute=attr, value=300, product=instance)
+                elif instance.mrp > 1500 < 4000:
                     subscription_game_price = ProductAttribute(attribute=attr, value=500, product=instance)
                 else:
-                    subscription_game_price = ProductAttribute(attribute=attr, value=300, product=instance)
+                    pass
                 subscription_game_price.save()
         else:
             game_price_attribute = ProductAttribute.objects.filter(product=instance, attribute=attr)
             if game_price_attribute:
-                game_price_attribute.delete()
+                del game_price_attribute
 
 
 class Photo(models.Model):

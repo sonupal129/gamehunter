@@ -190,8 +190,8 @@ BASE_PAYMENT_URL = "https://test.instamojo.com/api/1.1/payment-requests/"
 PAYEMENT_REDIRECT_URL = "http://127.0.0.1:8000/cart/payment/successful"
 
 # Sitemaps Details
-if not DEBUG:
-    SITE_ID = 1
+if DEBUG:
+    SITE_ID = 2
 
 # Django Caches
 CACHES = {

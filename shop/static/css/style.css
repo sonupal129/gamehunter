@@ -2567,7 +2567,9 @@ button.icon-cart span.count-style {
     animation-delay: 1.0s;
     -webkit-animation-name: fadeInLeft;
     animation-name: fadeInLeft;
-    color: #df2121;
+    color: #fff;
+    
+
 }
 
 .owl-item.active .slider-animated-1 h4 {
@@ -2575,7 +2577,7 @@ button.icon-cart span.count-style {
     animation-delay: 1.3s;
     -webkit-animation-name: fadeInLeft;
     animation-name: fadeInLeft;
-    color: #ff9900;
+    color: #fff;
 }
 
 .owl-item.active .slider-animated-1 p {
@@ -4970,19 +4972,21 @@ h4.sidebar-title.sidebar-title-width-2::before {
 
 /* slider index-book-2 */
 .slider-content-5 {
-    margin-left: -60px;
+    margin-left: -80px;
 }
 
 .slider-content-5 h2 {
-    font-size: 40px;
-    letter-spacing: -0.5px;
+    font-size: 50px;
+    letter-spacing: -0.7px;
     line-height: 40px;
     margin: 0;
+    font-weight: 600px;
 }
 
 .slider-content-5 h4 {
-    font-size: 18px;
+    font-size: 24px;
     margin: 23px 0 0;
+    font-weight: 800px;
 }
 
 .slider-btn.red-color-2 a {

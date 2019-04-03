@@ -97,19 +97,16 @@
                             {% endif %}
                     </div>
                     {% else %}
-                    <span>₹ {{ plan.security_deposit }} Security Deposit {% if refundable %}( Refundable ){% else %}( Not Refundable ){% endif %}</span>
+                    <span>₹ {{ plan.security_deposit }} One Time Registration Fees</span>
                     <div class="in-stock">
                         <p>Plan Validity: <span>{{ plan.duration }} Month</span></p>
                         {% if plan.available_swaps %}
-                        <p>Game Swaping Period: <span>{{ plan.available_swaps }} Month</span></p>
+                        <p>Game Swaping Period: <span>Play Unlimited* or {{ plan.available_swaps }} Months*</span></p>
                         {% endif %}
                     </div>
                     {% endif %}
                     {% endif %}
-                    <p>rjau chachavaayega rjau chachavaayega rjau chachavaayega rjau chachavaayega rjau chachavaayega
-                        rjau chachavaayega
-                        rjau chachavaayega rjau chachavaayega rjau chachavaayega rjau chachavaayega rjau chachavaayega
-                        rjau chachavaayega rjau chachavaayega rjau chachavaayega </p>
+                    <p>{{ plan.get_plan_description|striptags }} </p>
                     <!--<div class="pro-dec-feature">-->
                     <!--<ul>-->
                     <!--<li><input type="checkbox"> Protection Plan: <span> 2 year  $4.99</span></li>-->

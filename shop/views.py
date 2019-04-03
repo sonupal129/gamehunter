@@ -17,6 +17,9 @@ class HomePageView(ListView):
     template_name = 'shop/index.html'
     context_object_name = 'products'
 
+    def get_queryset(self):
+        return Product.objects.filter(active=True, item_status__in=["I", "S"])
+
     def blogs_list(self):
         blogs = Blog.objects.filter(status="P").order_by('-date_created')[:5]
         return blogs
@@ -62,9 +65,6 @@ class HomePageView(ListView):
         except IndexError:
             print("Product, Blog, Banner Objects Not Available")
         return context
-
-    def get_queryset(self):
-        return Product.objects.filter(active=True, item_status__in=["I", "S"])
 
 
 class ProductListView(ListView):
@@ -170,7 +170,7 @@ class SubscriptionPlanView(ListView):
 
     def get_queryset(self):
         self.request.get_raw_uri()
-        return Plan.objects.all().order_by('duration')
+        return Plan.objects.filter(active=True).order_by('duration')
 
 
 class SubscriptionDetailView(DetailView):
@@ -213,12 +213,14 @@ class TermConditionView(TemplateView):
     template_name = 'shop/term-condition.html'
 
 
-def login_page(request):
+def login_register_page(request):
     user_login_form = UserLoginForm(request.POST or None)
-
+    user_signup_form = SignUpForm(request.POST or None)
     context = {
-        "form": user_login_form,
+        "login_form": user_login_form,
+        "signup_form": user_signup_form,
     }
+
     if user_login_form.is_valid():
         username = user_login_form.cleaned_data.get("username")
         password = user_login_form.cleaned_data.get("password")
@@ -234,20 +236,11 @@ def login_page(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             context["error"] = "Incorrect username or password*"
-            redirect("shop:login")
-    if request.user.is_authenticated:
-        return redirect("shop:homepage")
-    return render(request, "shop/login.html", context)
+            return HttpResponseRedirect('')
 
-
-def signup_page(request):
-    signup_form = SignUpForm(request.POST or None)
-    context = {
-        "form": signup_form,
-    }
-    if signup_form.is_valid():
-        email = signup_form.cleaned_data.get("email")
-        password = signup_form.cleaned_data.get("password")
+    if user_signup_form.is_valid():
+        email = user_signup_form.cleaned_data.get("email")
+        password = user_signup_form.cleaned_data.get("password")
         user = User.objects.filter(email=email)
         if not user:
             user_obj = User.objects.create_user(username=email, email=email, password=password)
@@ -256,11 +249,12 @@ def signup_page(request):
             login(request, user_login)
             return redirect("shop:homepage")
         else:
-            context["error"] = "User already exist, Please try with different email*"
-            redirect("shop:signup")
+            kwargs = {"error": "User already exist, Please try with different email*"}
+            return HttpResponseRedirect('')
+
     if request.user.is_authenticated:
-        return redirect("shop:homepage")
-    return render(request, 'shop/register.html', context)
+            return redirect("shop:homepage")
+    return render(request, "shop/login-register.html", context)
 
 
 class ProductSearchView(ListView):
@@ -271,17 +265,15 @@ class ProductSearchView(ListView):
         keywords = self.request.GET.get("keywords")
         qs = Product.objects.filter(active=True)
         if keywords:
-            return qs.filter(Q(name__icontains=keywords))
+            return qs.filter(Q(name__icontains=keywords, item_status__in=["S", "I"]))
 
     def get_context_data(self, **kwargs):
         context = super(ProductSearchView, self).get_context_data(**kwargs)
-        keywords = self.request.GET.get("keywords")
-        qs = Product.objects.filter(Q(name__icontains=keywords)).exclude(active=False)
-        if keywords:
-            context["developers"] = qs.filter(developer__name__isnull=False).values("developer__name").distinct()
-            context["publishers"] = qs.filter(publisher__name__isnull=False).values("publisher__name").distinct()
-            context["genres"] = qs.filter(genre__genre__isnull=False).values("genre__genre").distinct()
-            return context
+        qs = self.get_queryset()
+        context["developers"] = qs.filter(developer__name__isnull=False).values("developer__name").distinct()
+        context["publishers"] = qs.filter(publisher__name__isnull=False).values("publisher__name").distinct()
+        context["genres"] = qs.filter(genre__genre__isnull=False).values("genre__genre").distinct()
+        return context
 
 
 class MyOrderView(ListView):
@@ -313,9 +305,6 @@ class MyAccountView(FormView):
             kwargs["form"] = self.get_form()
             kwargs["user"] = self.request.user
         return super().get_context_data(**kwargs)
-
-
-
 
 class SellYourGamesView(FormView):
     template_name = "shop/sell-your-games.html"
