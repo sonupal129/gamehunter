@@ -772,26 +772,33 @@
 {% block banner1 %}
 {% if center_coverpage %}
 <div class="banner-area">
-    <div class="container">
-        <div class="bg-img pt-55 pb-60" style="background-image:url({{ center_coverpage.get_promo_image.file.url }});">
-            <div class="row">
-                <div class="col-lg-8 col-md-7">
-                    <div class="construction-discount-content pl-90">
-                        {% if center_coverpage.name %}<h3>{{ center_coverpage.name }}</h3>{% endif %}
-                        {% if center_coverpage.description %}<p>{{ center_coverpage.description }}</p>{% endif %}
-                    </div>
-                </div>
-                {% if center_coverpage.link %}
-                <div class="col-lg-4 col-md-5">
-                    <div class="construction-discount-btn mt-10 pr-90">
-                        <a class="btn-style" href="{{ center_coverpage.link }}">Shop Now</a>
-                    </div>
-                </div>
-                {% endif %}
-            </div>
-        </div>
+    <div class="banner-content-2">
+        <img alt="" src="{{ center_coverpage.get_promo_image.file.url }}" height="187" width="1349">
     </div>
 </div>
+<!--<div class="banner-area">-->
+    <!--<div class="container">-->
+        <!--<div class="bg-img pt-55 pb-60">-->
+            <!--<img src="{{ center_coverpage.get_promo_image.file.url }}" height="187" width="1349">-->
+            <!--&lt;!&ndash;style="background-image:url({{ center_coverpage.get_promo_image.file.url }}); height: 187px; width: 1349px; ">&ndash;&gt;-->
+            <!--<div class="row">-->
+                <!--<div class="col-lg-8 col-md-7">-->
+                    <!--<div class="construction-discount-content pl-90">-->
+                        <!--{% if center_coverpage.name %}<h3>{{ center_coverpage.name }}</h3>{% endif %}-->
+                        <!--{% if center_coverpage.description %}<p>{{ center_coverpage.description }}</p>{% endif %}-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--{% if center_coverpage.link %}-->
+                <!--<div class="col-lg-4 col-md-5">-->
+                    <!--<div class="construction-discount-btn mt-10 pr-90">-->
+                        <!--<a class="btn-style" href="{{ center_coverpage.link }}">Shop Now</a>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--{% endif %}-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
 {% endif %}
 {% endblock %}
 <!-- Coverpage Center Area Ends Here-->

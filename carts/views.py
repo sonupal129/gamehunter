@@ -15,8 +15,6 @@ def cart_home(request):
     cart_obj.total_mrp = cart_obj.get_mrp()
     cart_obj.total_selling_price = cart_obj.get_selling_price()
     cart_obj.save()
-    print(products)
-    print(pay_game_products)
     return render(request, "carts/cart-page.html",
                   {"products": products, "cart": cart_obj, "pay_game_products": pay_game_products})
 

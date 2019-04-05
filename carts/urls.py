@@ -4,8 +4,8 @@ from . import views, instamojo, emails, slacknotification
 from django.contrib.auth.decorators import login_required
 
 
-
 app_name = 'carts'
+
 
 urlpatterns = [
     path('', login_required(views.cart_home), name='cart'),

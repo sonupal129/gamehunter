@@ -60,15 +60,18 @@
                                     {% endif %}
                                 </td>
                                 {% if product.is_object_of_plan_class %}
-                                <td class="product-subtotal">{% if product.get_plan_selling_price %}₹
-                                    {{ product.get_plan_selling_price }} {% else %} Free !{% endif %} +
-                                    {{product.security_deposit }} (Security Deposit)
+                                <td class="product-subtotal">{% if product.type == "GB" %}
+                                    {{ product.security_deposit }} (Registration Fees) {% else %}
+                                    ₹{{ product.get_plan_selling_price }} +
+                                    {{product.security_deposit }} (Security Deposit){% endif %}
                                 </td>
                                 <td class="product-remove">
                                     <a href="{% url 'carts:remove-plan' product.slug %}"><i class="fa fa-times"></i></a>
                                 </td>
                                 {% else %}
-                                <td class="product-subtotal">₹ {{ product.get_mrp_and_selling_price|first }}</td>
+                                <td class="product-subtotal">{% if product.get_pay_per_game_subscription_price %}
+                                    {{ product.get_pay_per_game_subscription_price }} {% else %}
+                                    ₹ {{ product.get_mrp_and_selling_price|first }}{% endif %}</td>
                                 <td class="product-remove">
                                     <a href="{% url 'carts:remove' product.slug %}"><i class="fa fa-times"></i></a>
                                 </td>
