@@ -7,6 +7,7 @@ from django.contrib.sitemaps.views import sitemap
 from shop.sitemaps import *
 from django.contrib.sitemaps import views as sitemap_views
 from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 # Started Working Below
 
 
@@ -21,7 +22,7 @@ sitemaps = {
 }
 
 urlpatterns = [
-
+    path('cache/clear', clear_cache, name='clear-cache'),
     path('url-optimize/sitemap.xml/', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('url-optimize/sitemap-<section>.xml', (sitemap_views.sitemap), {'sitemaps': sitemaps}, name='sitemaps'),
     path('', HomePageView.as_view(), name='homepage'),

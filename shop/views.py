@@ -6,6 +6,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login
 from .forms import *
 from django.core.cache import cache
+from django.http import HttpResponse
 from django.views.decorators.cache import cache_page
 from carts.models import *
 from django.db.models import Q
@@ -35,6 +36,12 @@ class HomePageView(ListView):
         blogs = Blog.objects.filter(status="P").order_by('-date_created')[:5]
         return blogs
 
+    def trending_products_list(self):
+        atr = Attribute.objects.get(attribute="trending")
+        pd = ProductAttribute.objects.filter(attribute=atr).order_by('-value')[:12]
+        products = [at.product for at in pd]
+        return products
+
     def get_home_page_products(self):
         new_released_games = cache.get("new_released_games")
         if new_released_games is None:
@@ -58,7 +65,11 @@ class HomePageView(ListView):
             new_arrived_products = self.get_queryset().order_by("-date")[:12]
             cache.set("new_arrived_products", new_arrived_products)
 
-        return new_released_games, featured_playstation_games, featured_xbox_games, new_arrived_products
+        trending_products = cache.get("trending_products")
+        if trending_products is None:
+            trending_products = self.trending_products_list()
+            cache.set("trending_products", trending_products)
+        return new_released_games, featured_playstation_games, featured_xbox_games, new_arrived_products, trending_products
 
     def get_home_page_banner(self):
         qs = PromoCard.objects.filter(active=True).order_by("-date")
@@ -72,7 +83,7 @@ class HomePageView(ListView):
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
         try:
-            new_released_games, featured_playstation_games, featured_xbox_games, new_arrived_products = self.get_home_page_products()
+            new_released_games, featured_playstation_games, featured_xbox_games, new_arrived_products, trending_products = self.get_home_page_products()
             top_coverpage, center_coverpage, bottom_coverpage, left_banner, right_banner = self.get_home_page_banner()
             context['cart'] = get_cart_obj(self.request)
             blogs = cache.get("homepage_blogs")
@@ -80,6 +91,7 @@ class HomePageView(ListView):
                 blogs = self.blogs_list()
                 cache.set("homepage_blogs", blogs)
             context['articles'] = blogs
+            context['trending_products'] = trending_products
             context['new_released_games'] = new_released_games
             context['new_arrived_products'] = new_arrived_products
             context['featured_playstation_games'] = featured_playstation_games
@@ -152,11 +164,10 @@ class ProductDetailView(DetailView):
     template_name = 'shop/product-details.html'
 
     def related_product(self):
-        slug = self.request.path
         count = 4
         relatedproducts = []
         products = Product.objects.filter(active=True, item_status__in=["I", "S"])
-        product = products.filter(slug=slug.replace("/", "")).first()
+        product = self.get_object()
 
         for pub in products.filter(publisher=product.publisher).order_by("-launch_date")[:count]:
             relatedproducts.append(pub)
@@ -366,3 +377,8 @@ class ResetPasswordView(PasswordResetView):
 
 # class PasswordResetDoneView(TemplateView):
 #     template_name = "shop/registrations/password_reset_done.html"
+
+
+def clear_cache(request):
+    cache.clear()
+    return HttpResponse("Cache cleared for website")

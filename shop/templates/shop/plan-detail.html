@@ -1,6 +1,6 @@
 {% extends 'shop/base.html' %}
 {% load staticfiles %}
-
+{% load thumbnail %}
 <!-- Site Title -->
 {% block title%}<title>Rental Plan {{ plan.name|title }}</title>{% endblock %}
 
@@ -28,8 +28,9 @@
                 <div class="product-details-img">
                     <div class="zoompro-span">
                         {% if plan.image.url %}
-                        <img src="{{ plan.image.url }}" data-zoom-image="{{ plan.image.url }}" alt=""
-                             height="560" width="560">
+                        {% thumbnail plan.image "560x560" crop="center" quality=70 as im %}
+                                <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                        {% endthumbnail %}
                         {% else %}
                         <img src="{% static 'img/images/no-image.jpg' %}"
                              data-zoom-image="{% static 'img/images/no-image.jpg' %}" alt=""
@@ -106,7 +107,7 @@
                     </div>
                     {% endif %}
                     {% endif %}
-                    <p>{{ plan.get_plan_description|striptags }} </p>
+                    <p>{{ plan.get_plan_description|striptags|safe }} </p>
                     <!--<div class="pro-dec-feature">-->
                     <!--<ul>-->
                     <!--<li><input type="checkbox"> Protection Plan: <span> 2 year  $4.99</span></li>-->

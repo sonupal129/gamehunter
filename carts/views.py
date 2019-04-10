@@ -42,6 +42,7 @@ def cart_remove_plan(request, slug):
 
 def cart_add_product(request, slug):
     prod_obj = Product.objects.get(slug=slug)
+    prod_obj.add_to_trending_products()
     cart_obj = Cart.objects.create_or_get_cart(request)
     cart_obj.products.add(prod_obj)
     request.session["cart_items"] = cart_obj.total_cart_items_count()
@@ -51,20 +52,14 @@ def cart_add_product(request, slug):
 
 def add_pay_per_game_product(request, slug):
     product = Product.objects.get(slug=slug)
+    product.add_to_trending_products()
     plan = product.plan.filter(type="GB").first()
     cart_obj = Cart.objects.create_or_get_cart(request)
-    if request.user.is_anonymous:
-        print(request.user)
-        if cart_obj.pay_game_products.all().count() >= 1:
-            return redirect(product, {"error": "Rajus"})
-        else:
-            cart_obj.pay_game_products.add(product)
+    if cart_obj.pay_game_products.all():
+        cart_obj.pay_game_products.clear()
+        cart_obj.pay_game_products.add(product)
     else:
-        if request.user.is_authenticated:
-            if cart_obj.pay_game_products.all().count() == 0:
-                cart_obj.pay_game_products.add(product)
-            else:
-                return redirect(product, {"error": "Rajus"})
+        cart_obj.pay_game_products.add(product)
     return redirect(plan)
 
 

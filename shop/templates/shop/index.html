@@ -1005,8 +1005,9 @@
                                 <div class="single-product-img">
                                     <a href="{{ product.get_absolute_url }}">
                                     {% thumbnail product.get_default_photo.file "100x100" crop="center" quality=70 as im %}
-                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
                                     {% endthumbnail %}
+                                    </a>
                                 </div>
                                 <div class="product-content">
                                     <span>For {{ product.category.name|upper }}</span>
@@ -1028,59 +1029,111 @@
             <div class="col-lg-4">
                 <div class="new-arrivals-area">
                     <div class="section-border mb-40">
-                        <h4 class="section-title white-title section-bg-black">Trending Comming Soon!</h4>
+                        <h4 class="section-title white-title section-bg-black">Trending in Community</h4>
                     </div>
                     <div class="product-slider-active-2 nav-style nav-style-game owl-carousel">
                         <div class="single-product-bundle">
+                            {% for product in trending_products|slice:":3" %}
                             <div class="single-product-wrapper single-product-game">
                                 <div class="single-product-img">
-                                    <a href="#">
-                                        <img alt="" src="img/product/default-product-image.png">
+                                    <a href="{{ product.get_absolute_url }}">
+                                    {% thumbnail product.get_default_photo.file "100x100" crop="center" quality=70 as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+                                    {% endthumbnail %}
                                     </a>
                                 </div>
                                 <div class="product-content">
-                                    <span>For PS4</span>
+                                    <span>For {{ product.category.name|upper }}</span>
                                     <h4>
-                                        <a href="#">Red Dead Redemption 2</a>
+                                        <a href="{{ product.get_absolute_url }}">
+                                            {{product.get_product_title_name|title}}
+                                        </a>
                                     </h4>
-                                    <div class="product-price-wrapper">
-                                        <span>₹ 3760</span>
-                                    </div>
+                                    <!--<div class="product-price-wrapper">-->
+                                        <!--<span>₹ 3760</span>-->
+                                    <!--</div>-->
                                 </div>
                             </div>
-                            <div class="single-product-wrapper single-product-game">
-                                <div class="single-product-img">
-                                    <a href="#">
-                                        <img alt="" src="img/product/default-product-image.png">
-                                    </a>
-                                </div>
-                                <div class="product-content">
-                                    <span>For PS 4</span>
-                                    <h4>
-                                        <a href="#">The Witcher 3 - Wild Hunt</a>
-                                    </h4>
-                                    <div class="product-price-wrapper">
-                                        <span>₹ 2350</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="single-product-wrapper single-product-game">
-                                <div class="single-product-img">
-                                    <a href="#">
-                                        <img alt="" src="img/product/default-product-image.png">
-                                    </a>
-                                </div>
-                                <div class="product-content">
-                                    <span>For PS 4</span>
-                                    <h4>
-                                        <a href="#">Assassin's Creed Odyssey</a>
-                                    </h4>
-                                    <div class="product-price-wrapper">
-                                        <span>2632</span>
-                                    </div>
-                                </div>
-                            </div>
+                            {% endfor %}
                         </div>
+                        {% if trending_products|slice:"3:6" %}
+                        <div class="single-product-bundle">
+                            {% for product in trending_products|slice:"3:6" %}
+                            <div class="single-product-wrapper single-product-game">
+                                <div class="single-product-img">
+                                    <a href="{{ product.get_absolute_url }}">
+                                    {% thumbnail product.get_default_photo.file "100x100" crop="center" quality=70 as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+                                    {% endthumbnail %}
+                                    </a>
+                                </div>
+                                <div class="product-content">
+                                    <span>For {{ product.category.name|upper }}</span>
+                                    <h4>
+                                        <a href="{{ product.get_absolute_url }}">
+                                            {{product.get_product_title_name|title}}
+                                        </a>
+                                    </h4>
+                                    <!--<div class="product-price-wrapper">-->
+                                        <!--<span>₹ 3760</span>-->
+                                    <!--</div>-->
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% if trending_products|slice:"6:9" %}
+                        <div class="single-product-bundle">
+                            {% for product in trending_products|slice:"6:9" %}
+                            <div class="single-product-wrapper single-product-game">
+                                <div class="single-product-img">
+                                    <a href="{{ product.get_absolute_url }}">
+                                    {% thumbnail product.get_default_photo.file "100x100" crop="center" quality=70 as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+                                    {% endthumbnail %}
+                                    </a>
+                                </div>
+                                <div class="product-content">
+                                    <span>For {{ product.category.name|upper }}</span>
+                                    <h4>
+                                        <a href="{{ product.get_absolute_url }}">
+                                            {{product.get_product_title_name|title}}
+                                        </a>
+                                    </h4>
+                                    <!--<div class="product-price-wrapper">-->
+                                        <!--<span>₹ 3760</span>-->
+                                    <!--</div>-->
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% if trending_products|slice:"9:12" %}
+                        <div class="single-product-bundle">
+                            {% for product in trending_products|slice:"9:12" %}
+                            <div class="single-product-wrapper single-product-game">
+                                <div class="single-product-img">
+                                    <a href="{{ product.get_absolute_url }}">
+                                    {% thumbnail product.get_default_photo.file "100x100" crop="center" quality=70 as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+                                    {% endthumbnail %}
+                                    </a>
+                                </div>
+                                <div class="product-content">
+                                    <span>For {{ product.category.name|upper }}</span>
+                                    <h4>
+                                        <a href="{{ product.get_absolute_url }}">
+                                            {{product.get_product_title_name|title}}
+                                        </a>
+                                    </h4>
+                                    <!--<div class="product-price-wrapper">-->
+                                        <!--<span>₹ 3760</span>-->
+                                    <!--</div>-->
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

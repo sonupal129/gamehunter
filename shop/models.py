@@ -195,8 +195,8 @@ class Plan(models.Model):
         return self.swaps
 
     def get_plan_description(self):
-        if len(self.description) > 250:
-            description = self.description[:260] + '...'
+        if len(self.description) > 350:
+            description = self.description[:350] + '...'
             return description.strip()
         return self.description.strip()
 
@@ -292,6 +292,18 @@ class Product(models.Model):
             game_price_attribute = ProductAttribute.objects.filter(product=self, attribute=attr).first()
             if game_price_attribute:
                 return game_price_attribute.value
+
+    def add_to_trending_products(self):
+        atr = Attribute.objects.get(attribute="trending")
+        attr = ProductAttribute.objects.filter(product=self, attribute=atr).first()
+        if attr:
+            print(attr.value)
+            new_value = int(attr.value)
+            new_value += 1
+            attr.value = new_value
+            attr.save()
+        else:
+            ProductAttribute.objects.create(product=self, attribute=atr, value=1)
 
     def get_default_photo(self):
         if not hasattr(self, '__default_photo'):

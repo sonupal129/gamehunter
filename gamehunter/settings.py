@@ -197,13 +197,14 @@ if DEBUG:
     SITE_ID = 2
 
 # Django Caches
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': 'd:/Game Hunter/testcache/',
-        'TIMEOUT': 18000,
+if not DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+            'LOCATION': 'd:/Game Hunter/testcache/',
+            'TIMEOUT': 18000,
+        }
     }
-}
 
 # django htmlmin
 EXCLUDE_FROM_MINIFYING = ('url-optimize/sitemap.xml/', 'cki39vbl3/admin/')

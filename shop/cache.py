@@ -7,37 +7,36 @@ from shop.models import Product, Plan, Blog
 # Code Starts Below
 
 def clear_product_list_view_cache():
-    cache.delete("featured_playstation_games")
-    cache.delete("featured_xbox_games")
-    cache.delete("new_released_games")
-    cache.delete("new_arrived_products")
-    cache.delete("products_list_view")
-    cache.delete("side_list_products")
+    cache.delete_many(
+        ["featured_playstation_games", "featured_xbox_games", "new_released_games", "new_arrived_products",
+         "products_list_view", "side_list_products", "trending_products"])
 
 
 @receiver(post_delete, sender=Product)
-def product_post_delete_handler():
+def product_post_delete_handler(sender, **kwargs):
     clear_product_list_view_cache()
 
 
-@receiver(post_save, sender=Product)
-def product_post_save_handler():
-    clear_product_list_view_cache()
+@receiver(post_save, sender='shop.Product')
+def product_post_save_handler(sender, **kwargs):
+    print(cache.get("featured_playstation_games"))
+    if kwargs["created"]:
+        clear_product_list_view_cache()
 
 
 def clear_blog_list_view_cache():
-    cache.delete("articles_list_view")
-    cache.delete("homepage_blogs")
+    cache.delete_many(["articles_list_view", "homepage_blogs"])
 
 
 @receiver(post_delete, sender=Blog)
-def blog_post_delete_handler():
+def blog_post_delete_handler(sender, **kwargs):
     clear_blog_list_view_cache()
 
 
 @receiver(post_save, sender=Blog)
-def blog_post_save_handler():
-    clear_blog_list_view_cache()
+def blog_post_save_handler(sender, **kwargs):
+    if kwargs["creapted"]:
+        clear_blog_list_view_cache()
 
 
 def clear_plan_list_view_cache():
