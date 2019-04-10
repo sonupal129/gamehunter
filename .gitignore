@@ -1,6 +1,7 @@
 local_settings.py
 db.sqlite3
 /media
+/static
 __pycache__/
 *.log
 *.pot

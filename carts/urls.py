@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from . import views, instamojo, emails, slacknotification
+from . import views, instamojo, tasks, emails
 from django.contrib.auth.decorators import login_required
 
 
@@ -18,5 +18,5 @@ urlpatterns = [
     path('payment/successful', instamojo.redirect_payment_complete, name='payment-successful'),
     path('add/plan/<slug:slug>', views.cart_add_plan, name='add-plan'),
     path('remove/plan/<slug:slug>', views.cart_remove_plan, name='remove-plan'),
-    path('test/', views.TestView.as_view(), name='test'),
+    path('test/', emails.email_to_user_added_pay_per_game_products, name='test'),
 ]

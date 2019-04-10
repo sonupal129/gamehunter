@@ -10,7 +10,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 def cart_home(request):
-    cart_obj, new_obj = Cart.objects.create_or_get_cart(request)
+    print(request.session.get("cart_id"))
+    cart_obj = Cart.objects.create_or_get_cart(request)
     products, pay_game_products = cart_obj.total_items_list()
     cart_obj.total_mrp = cart_obj.get_mrp()
     cart_obj.total_selling_price = cart_obj.get_selling_price()
@@ -21,7 +22,7 @@ def cart_home(request):
 
 def cart_add_plan(request, slug):
     plan_obj = Plan.objects.get(slug=slug)
-    cart_obj, new_obj = Cart.objects.create_or_get_cart(request)
+    cart_obj = Cart.objects.create_or_get_cart(request)
     cart_obj.plan = plan_obj
     cart_obj.save(update_fields=["plan"])
     request.session["cart_items"] = cart_obj.total_cart_items_count()
@@ -31,7 +32,7 @@ def cart_add_plan(request, slug):
 
 def cart_remove_plan(request, slug):
     plan_obj = Plan.objects.get(slug=slug)
-    cart_obj, new_obj = Cart.objects.create_or_get_cart(request)
+    cart_obj = Cart.objects.create_or_get_cart(request)
     cart_obj.plan = None
     cart_obj.save(update_fields=["plan"])
     request.session["cart_items"] = cart_obj.total_cart_items_count()
@@ -41,7 +42,7 @@ def cart_remove_plan(request, slug):
 
 def cart_add_product(request, slug):
     prod_obj = Product.objects.get(slug=slug)
-    cart_obj, new_obj = Cart.objects.create_or_get_cart(request)
+    cart_obj = Cart.objects.create_or_get_cart(request)
     cart_obj.products.add(prod_obj)
     request.session["cart_items"] = cart_obj.total_cart_items_count()
     request.session["cart_total"] = int(cart_obj.get_selling_price())
@@ -51,7 +52,7 @@ def cart_add_product(request, slug):
 def add_pay_per_game_product(request, slug):
     product = Product.objects.get(slug=slug)
     plan = product.plan.filter(type="GB").first()
-    cart_obj, new_obj = Cart.objects.create_or_get_cart(request)
+    cart_obj = Cart.objects.create_or_get_cart(request)
     if request.user.is_anonymous:
         print(request.user)
         if cart_obj.pay_game_products.all().count() >= 1:
@@ -69,7 +70,7 @@ def add_pay_per_game_product(request, slug):
 
 def cart_remove_product(request, slug):
     prod_obj = Product.objects.get(slug=slug)
-    cart_obj, new_obj = Cart.objects.create_or_get_cart(request)
+    cart_obj = Cart.objects.create_or_get_cart(request)
     cart_obj.products.remove(prod_obj)
     cart_obj.pay_game_products.remove(prod_obj)
     request.session["cart_items"] = cart_obj.total_cart_items_count()
@@ -78,7 +79,7 @@ def cart_remove_product(request, slug):
 
 
 def remove_whole_cart(request):
-    cart_obj, new_obj = Cart.objects.create_or_get_cart(request)
+    cart_obj = Cart.objects.create_or_get_cart(request)
     cart_obj.products.clear()
     cart_obj.pay_game_products.clear()
     cart_obj.plan = None
@@ -89,7 +90,7 @@ def remove_whole_cart(request):
 
 
 def cart_checkout(request):
-    cart_obj, new_obj = Cart.objects.create_or_get_cart(request)
+    cart_obj = Cart.objects.get(cart_id=request.session.get("cart_id"))
     checkout_form = CheckoutForm(request.POST or None)
     products, pay_game_products = cart_obj.total_items_list()
     if cart_obj.plan:

@@ -6,7 +6,7 @@ from .models import *
 from django.contrib.admin import ModelAdmin
 from .csv_importer_exporter import *
 from shop.debug import ExceptionLog
-
+from django.db import connection
 # Register your models here.
 
 admin.site.site_header = 'Game Hunter Admin';
@@ -59,45 +59,26 @@ class ProductAdmin(admin.ModelAdmin):
                "make_active_selected_products", "make_inactive_selected_products"]
 
     def out_of_stock_selected_products(self, request, queryset):
-        count = 0
-        for q in queryset:
-            q.item_status = 'O'
-            count += 1
-            q.save()
-        return self.message_user(request, f"{count} products marked out of stock")
+        queryset.update(item_status='O')
+        return self.message_user(request, f"{queryset.count()} products marked out of stock")
 
     def in_stock_selected_products(self, request, queryset):
-        count = 0
-        for q in queryset:
-            q.item_status = 'I'
-            count += 1
-            q.save()
-        return self.message_user(request, f"{count} products marked in stock")
+        queryset.update(item_status='I')
+        return self.message_user(request, f"{queryset.count()} products marked in stock")
 
     def subscription_only_selected_products(self, request, queryset):
-        count = 0
-        for q in queryset:
-            q.item_status = 'S'
-            count += 1
-            q.save()
-        return self.message_user(request, f"{count} products marked subscription only")
+        queryset.update(item_status='S')
+        return self.message_user(request, f"{queryset.count()} products marked subscription only")
 
     def make_active_selected_products(self, request, queryset):
-        count = 0
-        for q in queryset:
-            if q.item_status == "I" or q.item_status == "S":
-                q.active = True
-                count += 1
-                q.save()
-        return self.message_user(request, f"{count} products marked active")
+        qs = queryset.filter(item_status__in=["I", "S"])
+        qs.update(active=True)
+        return self.message_user(request, f"{qs.count()} products marked active")
 
     def make_inactive_selected_products(self, request, queryset):
-        count = 0
-        for q in queryset:
-            q.active = False
-            count += 1
-            q.save()
-        return self.message_user(request, f"{count} products marked inactive")
+        queryset.update(active=False)
+        print(len(connection.queries))
+        return self.message_user(request, f"{queryset.count()} products marked inactive")
 
 
 class BlogAttributeInline(admin.TabularInline):

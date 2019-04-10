@@ -80,8 +80,8 @@ def upload_products(filepath):
                 product_updated += 1
             else:
                 product = Product(name=row.get("Name"), item_status=item_status, mrp=row.get("MRP"),
-                                                 category=data.get("category"), is_featured=data.get("is_featured"),
-                                                 publisher=data.get("publisher"), active=data.get("active"))
+                                  category=data.get("category"), is_featured=data.get("is_featured"),
+                                  publisher=data.get("publisher"), active=data.get("active"))
                 product.save()
                 product.description = data.get("description")
                 if row.get("Launch Date"):

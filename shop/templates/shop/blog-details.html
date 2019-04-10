@@ -1,6 +1,6 @@
 {% extends 'shop/base.html' %}
 {% load staticfiles %}
-
+{% load thumbnail %}
 <!-- Site Title -->
 {% block title%}<title>{{ article|title }}</title>{% endblock %}
 
@@ -41,11 +41,9 @@
                             <div class="single-recent-post mb-20">
                                 <div class="recent-post-img">
                                     <a href="{{ product.get_absolute_url }}">
-                                        <img alt="" src="{% if product.get_default_photo.file %}
-                                                        {{ product.get_default_photo.file.url }}
-                                                      {% else %}
-                                                        {% static 'img/product/default-product-image.png' %}
-                                                      {% endif %}" width="105" height="105">
+                                    {% thumbnail product.get_default_photo.file "100x100" crop="center" as im %}
+                                    <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+                                    {% endthumbnail %}
                                     </a>
                                 </div>
                                 <div class="product-content">
@@ -58,6 +56,7 @@
                             {% endfor %}
                         </div>
                     </div>
+                    {% endif %}
                     <div class="shop-widget mt-40 pt-35 shop-sidebar-border">
                         <h4 class="shop-sidebar-title">Recent Post</h4>
                         <div class="recent-post-wrapper mt-20">
@@ -65,7 +64,9 @@
                             <div class="single-recent-post mb-20">
                                 <div class="recent-post-img">
                                     <a href="{{ article.get_absolute_url }}">
-                                        <img alt="" src="{{ article.card_image.url }}" height="60" width="100">
+                                        {% thumbnail article.card_image "100x60" crop="center" as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+                                        {% endthumbnail %}
                                     </a>
                                 </div>
                                 <div class="product-content">
@@ -78,35 +79,15 @@
                             {% endfor %}
                         </div>
                     </div>
-                    {% else %}
-                    <div class="shop-widget mt-40 pt-35 shop-sidebar-border">
-                        <h4 class="shop-sidebar-title">Recent Post</h4>
-                        <div class="recent-post-wrapper mt-20">
-                            {% for article in recent_articles %}
-                            <div class="single-recent-post mb-20">
-                                <div class="recent-post-img">
-                                    <a href="{{ article.get_absolute_url }}">
-                                        <img alt="" src="{{ article.card_image.url }}" height="60" width="100">
-                                    </a>
-                                </div>
-                                <div class="product-content">
-                                    <h4>
-                                        <a href="{{ article.get_absolute_url }}">{{ article.get_blog_title_name }}</a>
-                                    </h4>
-                                    <span>{{ article.date_created }}</span>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endif %}
                 </div>
             </div>
             <div class="col-xl-9 col-lg-8">
                 <div class="blog-details-wrapper">
                     <div class="single-blog-wrapper">
                         <div class="blog-img mb-30">
-                            <img src="{{ article.cover_image.url }}" alt="" width="870" height="470">
+                        {% thumbnail article.cover_image "870x470" crop="center" quality=70 as im %}
+                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+                        {% endthumbnail %}
                         </div>
                         <div class="blog-details-content">
                             <h2>{{ article.title }}</h2>

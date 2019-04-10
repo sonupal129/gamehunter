@@ -1,12 +1,12 @@
 {% extends 'shop/base.html' %}
 {% load staticfiles %}
-
+{% load thumbnail %}
 <!-- Site Title -->
 {% block title%}<title>Buy online {{ product.name|title }} for {{ product.category }} at GameHunter.in</title>{% endblock %}
 
 {% block navbar %}
 <meta name="keywords" content="{{ product.category|upper }} Games, Consoles, Accessories, Collectives">
-<meta name="title" content="Buy {{ product.name|title }} for {{ product.category|upper }} online, available at Gamehunter">
+<meta name="title" content="Buy or rent {{ product.name|title }} for {{ product.category|upper }} online, available at Gamehunter">
 <meta name="description" content="{{ product.get_product_description|striptags }}"/>
 <div class="breadcrumb-area black-bg-4">
     <div class="container">
@@ -105,7 +105,7 @@
                         <p>Usually Shipped in: <span>2-4 Days</span></p>
                     </div>
                     {% if product.item_status == 'I' or product.item_status == 'S' %}
-                    <p>{{product.description|striptags|slice:":300"}}</p>
+                    <p>{{product.description|striptags|safe|slice:":300"}}</p>
                     <!--<div class="pro-dec-feature">-->
                     <!--<ul>-->
                     <!--<li><input type="checkbox"> Protection Plan: <span> 2 year  $4.99</span></li>-->
@@ -251,9 +251,9 @@
             <div class="devita-product-2">
                 <div class="product-img black-bg-5">
                     <a href="{{ product.get_absolute_url }}">
-                        <img src="{% if product.get_default_photo.file %} {{ product.get_default_photo.file.url }} {% else %} {% static 'img/product/default-product-image.png' %}
-                                                      {% endif %}" height="206px" width="206px">
-                    </a>
+                        {% thumbnail product.get_default_photo.file "206x206" crop="center" as im %}
+                                <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                        {% endthumbnail %}
                     {% if product.item_status == "I" %}
                     {% if product.total_discount %}
                     <span>{{ product.total_discount }}%</span>
@@ -290,7 +290,7 @@
                                 <i class="ion-android-star-outline theme-star"></i>
                                 <i class="ion-android-star-outline"></i>
                             </div>
-                            <p>{{ product.get_product_description|striptags }} </p>
+                            <p>{{ product.get_product_description|striptags|safe }} </p>
                             {% if product in cart.products.all or product in cart.pay_game_products.all %}
                             <div class="product-action">
                                 <a class="action-cart" title="Go to Cart"

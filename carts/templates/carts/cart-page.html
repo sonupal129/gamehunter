@@ -1,6 +1,6 @@
 {% extends 'shop/base.html' %}
 {% load staticfiles %}
-
+{% load thumbnail %}
 {% block title%}<title>My Cart</title>{% endblock %}
 {% block navbar %}
 <div class="breadcrumb-area black-bg-4">
@@ -37,13 +37,15 @@
                             {% for product in products %}
                             <tr>
                                 <td class="product-thumbnail">{% if product.is_object_of_plan_class %}
-                                    <a href="{{ product.get_absolute_url }}"><img
-                                            src="{{ product.image.url }}" alt="" width="80"
-                                            height="80"></a>
+                                    <a href="{{ product.get_absolute_url }}">
+                                    {% thumbnail product.image "80x80" crop="center" quality=70 as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                    {% endthumbnail %}
                                     {% else %}
-                                    <a href="{{ product.get_absolute_url }}"><img
-                                            src="{{ product.get_default_photo.file.url }}" alt="" width="80"
-                                            height="80"></a>
+                                    <a href="{{ product.get_absolute_url }}">
+                                    {% thumbnail product.get_default_photo.file "80x80" crop="center" quality=70 as im %}
+                                    <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                    {% endthumbnail %}
                                     {% endif %}
                                 </td>
                                 <td class="product-name">{% if product.is_object_of_plan_class %}<a
@@ -69,9 +71,7 @@
                                     <a href="{% url 'carts:remove-plan' product.slug %}"><i class="fa fa-times"></i></a>
                                 </td>
                                 {% else %}
-                                <td class="product-subtotal">{% if product.get_pay_per_game_subscription_price %}
-                                    {{ product.get_pay_per_game_subscription_price }} {% else %}
-                                    ₹ {{ product.get_mrp_and_selling_price|first }}{% endif %}</td>
+                                <td class="product-subtotal">₹ {{ product.get_mrp_and_selling_price|first }}</td>
                                 <td class="product-remove">
                                     <a href="{% url 'carts:remove' product.slug %}"><i class="fa fa-times"></i></a>
                                 </td>

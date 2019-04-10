@@ -65,3 +65,9 @@ class SellGamesForm(forms.Form):
     pincode = forms.IntegerField(widget=forms.TextInput(attrs={
         "placeholder": "Pincode",
     }))
+
+
+class ResetPasswordForm(forms.Form):
+    email = forms.EmailField(max_length=30, widget=forms.EmailInput(attrs={
+        "placeholder": "Email",
+    }))

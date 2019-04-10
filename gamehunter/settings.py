@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'post_office',
     'django_slack',
     'background_task',
+    'sorl.thumbnail',
+    # 'compressor',
 
 ]
 
@@ -61,6 +63,7 @@ MIDDLEWARE = [
     # Other Middle ware classed
     'htmlmin.middleware.HtmlMinifyMiddleware',
     'htmlmin.middleware.MarkRequestMiddleware',
+
 
 ]
 
@@ -198,18 +201,36 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         'LOCATION': 'd:/Game Hunter/testcache/',
-        'TIMEOUT': None,
-        'OPTIONS': {
-            'MAX_ENTRIES': 300,
-        }
+        'TIMEOUT': 18000,
     }
 }
 
 # django htmlmin
 EXCLUDE_FROM_MINIFYING = ('url-optimize/sitemap.xml/', 'cki39vbl3/admin/')
 
+# Django Logging for Refining SQL Queries
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#             'handlers': ['console'],
+#         }
+#     },
+# }
+
+
+# Django Compressor Settings
+
 
 try:
     from .local_settings import *
 except ImportError:
     pass
+

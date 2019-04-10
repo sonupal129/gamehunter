@@ -1,4 +1,7 @@
-{% extends 'shop/base.html' %} {% load staticfiles %}<!-- Site Title -->{% block title%}
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+<!-- Site Title -->{% block title%}
 
 <title>Subscribe | Buy | Sell {% if category %} {{ category.name|title }} Games Online at GameHunter {% endif %}
 </title>{% endblock %}{% block navbar %}
@@ -156,12 +159,9 @@
                                     <div class="devita-product-2 mrg-inherit">
                                         <div class="product-img">
                                             <a href="{{ product.get_absolute_url }}">
-                                                <img src="{% if product.get_default_photo.file %}
-                                                        {{product.get_default_photo.file.url}}
-                                                      {% else %}
-                                                        {% static 'img/product/default-product-image.png' %}
-                                                      {% endif %}" alt="" width="210" height="210">
-                                            </a>
+                                            {% thumbnail product.get_default_photo.file "210x210" crop="center" as im %}
+                                                <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                            {% endthumbnail %}
                                             {% ifequal product.item_status 'I' %}
                                             {% if product.total_discount %}
                                             <span>{{product.total_discount}}%</span>
@@ -203,7 +203,7 @@
                                                         <i class="ion-android-star-outline theme-star"></i>
                                                         <i class="ion-android-star-outline"></i>
                                                     </div>
-                                                    <p>{{ product.get_product_description|safe|title }}</p>
+                                                    <p>{{ product.get_product_description|striptags|safe }}</p>
                                                     <div class="product-action">
                                                         <!--<a class="same-action" title="Wishlist" href="#">-->
                                                         <!--<i class="fa fa-heart-o"></i>-->

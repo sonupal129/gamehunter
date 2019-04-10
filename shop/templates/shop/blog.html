@@ -1,5 +1,6 @@
 {% extends 'shop/base.html' %}
 {% load staticfiles %}
+{% load thumbnail %}
 
 
 <!-- Site Title -->
@@ -27,7 +28,9 @@
                 <div class="blog-wrapper mb-30 main-blog">
                     <div class="blog-img mb-20">
                         <a href="{% url 'shop:article-detail' article.slug %}">
-                            <img src="{{ article.card_image.url }}" width="370" height="220">
+                        {% thumbnail article.card_image "370x220" crop="center" quality=70 as im %}
+                            <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+                        {% endthumbnail %}
                         </a>
                     </div>
                     <span>{{ article.blog_type|title }}</span>

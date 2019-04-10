@@ -5,12 +5,22 @@ from .models import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login
 from .forms import *
-from django.http import HttpResponseRedirect
+from django.core.cache import cache
+from django.views.decorators.cache import cache_page
 from carts.models import *
 from django.db.models import Q
 from shop.debug import log_exceptions
 from django.views.generic.edit import UpdateView, FormView
+from django.contrib.auth.views import PasswordResetView
 # Create your views here.
+
+
+def get_cart_obj(request):
+    if request.session.get("cart_id"):
+        cart_obj = Cart.objects.get(cart_id=request.session.get("cart_id"))
+        return cart_obj
+    else:
+        return ""
 
 
 class HomePageView(ListView):
@@ -18,20 +28,35 @@ class HomePageView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        return Product.objects.filter(active=True, item_status__in=["I", "S"])
+        products = Product.objects.filter(active=True, item_status__in=["I", "S"])
+        return products
 
     def blogs_list(self):
         blogs = Blog.objects.filter(status="P").order_by('-date_created')[:5]
         return blogs
 
     def get_home_page_products(self):
-        products = Product.objects.filter(active=True, item_status__in=["I", "S"])
-        new_released_games = products.order_by("-launch_date")[:12]
-        featured_playstation_games = products.filter(category__name__in=['PS 4', 'PS 3'],
-                                                     is_featured=True).order_by("-date")[:10]
-        featured_xbox_games = products.filter(category__name__in=['Xbox One', 'Xbox 360'],
-                                              is_featured=True).order_by("-date")[:10]
-        new_arrived_products = products.order_by("-date")[:12]
+        new_released_games = cache.get("new_released_games")
+        if new_released_games is None:
+            new_released_games = self.get_queryset().order_by("-launch_date")[:12]
+            cache.set("new_released_games", new_released_games)
+
+        featured_playstation_games = cache.get("featured_playstation_games")
+        if featured_playstation_games is None:
+            featured_playstation_games = self.get_queryset().filter(category__name__in=['PS 4', 'PS 3'],
+                                                                    is_featured=True).order_by("-date")[:10]
+            cache.set("featured_playstation_games", featured_playstation_games)
+
+        featured_xbox_games = cache.get("featured_xbox_games")
+        if featured_xbox_games is None:
+            featured_xbox_games = self.get_queryset().filter(category__name__in=['Xbox One', 'Xbox 360'],
+                                                             is_featured=True).order_by("-date")[:10]
+            cache.set("featured_xbox_games", featured_xbox_games)
+
+        new_arrived_products = cache.get("new_arrived_products")
+        if new_arrived_products is None:
+            new_arrived_products = self.get_queryset().order_by("-date")[:12]
+            cache.set("new_arrived_products", new_arrived_products)
 
         return new_released_games, featured_playstation_games, featured_xbox_games, new_arrived_products
 
@@ -49,9 +74,12 @@ class HomePageView(ListView):
         try:
             new_released_games, featured_playstation_games, featured_xbox_games, new_arrived_products = self.get_home_page_products()
             top_coverpage, center_coverpage, bottom_coverpage, left_banner, right_banner = self.get_home_page_banner()
-            cart_obj, new_obj = Cart.objects.create_or_get_cart(self.request)
-            context['cart'] = cart_obj
-            context['articles'] = self.blogs_list()
+            context['cart'] = get_cart_obj(self.request)
+            blogs = cache.get("homepage_blogs")
+            if blogs is None:
+                blogs = self.blogs_list()
+                cache.set("homepage_blogs", blogs)
+            context['articles'] = blogs
             context['new_released_games'] = new_released_games
             context['new_arrived_products'] = new_arrived_products
             context['featured_playstation_games'] = featured_playstation_games
@@ -61,7 +89,6 @@ class HomePageView(ListView):
             context['bottom_coverpage'] = bottom_coverpage
             context['banner_left'] = left_banner
             context['banner_right'] = right_banner
-            print(cart_obj)
         except IndexError:
             print("Product, Blog, Banner Objects Not Available")
         return context
@@ -75,10 +102,13 @@ class ProductListView(ListView):
     @log_exceptions("Product List Querysets Function")
     def get_queryset(self):
         sort_by = self.request.GET.get("sort_by")
-        try:
-            queryset = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True, item_status__in=["I", "S"])
-        except IndexError:
-            pass
+        queryset = cache.get("products_list_view")
+
+        if queryset is None:
+            queryset = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
+                                              item_status__in=["I", "S"])
+            cache.set("products_list_view", queryset)
+
         if self.request.method == "GET":
             if sort_by == "name":
                 return queryset.order_by("name")
@@ -87,9 +117,15 @@ class ProductListView(ListView):
             else:
                 return queryset.order_by("-date")
 
+        return queryset
+
     @log_exceptions("Product Side List Filter Function")
     def get_side_list_filter(self):
-        products = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True, item_status__in=["I", "S"])
+        products = cache.get("side_list_products")
+        if products is None:
+            products = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
+                                              item_status__in=["I", "S"])
+            cache.set("side_list_products", products)
         publishers = products.filter(publisher__name__isnull=False).values("publisher__name").distinct()
         developers = products.filter(developer__name__isnull=False).values("developer__name").distinct()
         genres = products.filter(genre__genre__isnull=False).values("genre__genre").distinct()
@@ -106,8 +142,7 @@ class ProductListView(ListView):
         context['developers'] = developers
         context['publishers'] = publishers
         context['genres'] = genres
-        cart_obj, new_obj = Cart.objects.create_or_get_cart(self.request)
-        context["cart"] = cart_obj
+        context["cart"] = get_cart_obj(self.request)
         return context
 
 
@@ -133,9 +168,7 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
-        cart_obj, new_obj = Cart.objects.create_or_get_cart(self.request)
-        context["cart"] = cart_obj
-        print(cart_obj)
+        context["cart"] = get_cart_obj(self.request)
         context["related_products"] = self.related_product()
         return context
 
@@ -146,7 +179,10 @@ class ArticleListView(ListView):
     context_object_name = "articles"
 
     def get_queryset(self):
-        articles = Blog.objects.filter(status="P").order_by("-date")
+        articles = cache.get("articles_list_view")
+        if articles is None:
+            articles = Blog.objects.filter(status="P").order_by("-date")
+            cache.set("articles_list_view", articles)
         return articles
 
 
@@ -154,6 +190,9 @@ class ArticleDetailView(DetailView):
     template_name = 'shop/blog-details.html'
     model = Blog
     context_object_name = "article"
+
+    # def get_rececnt_articles(self):
+    #     if self.request
 
     def get_context_data(self, **kwargs):
         context = super(ArticleDetailView, self).get_context_data(**kwargs)
@@ -169,8 +208,11 @@ class SubscriptionPlanView(ListView):
     context_object_name = 'plans'
 
     def get_queryset(self):
-        self.request.get_raw_uri()
-        return Plan.objects.filter(active=True).order_by('duration')
+        plans = cache.get("plan_list_views")
+        if plans is None:
+            plans = Plan.objects.filter(active=True).order_by('duration')
+            cache.set("plan_list_views", plans)
+        return plans
 
 
 class SubscriptionDetailView(DetailView):
@@ -180,8 +222,7 @@ class SubscriptionDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(SubscriptionDetailView, self).get_context_data(**kwargs)
-        cart_obj, new_obj = Cart.objects.create_or_get_cart(self.request)
-        context['cart'] = cart_obj
+        context['cart'] = get_cart_obj(self.request)
         return context
 
 
@@ -189,8 +230,8 @@ class AboutUsView(TemplateView):
     template_name = 'shop/about-us.html'
 
 
-def contact_us(request):
-     return render(request, 'shop/contact.html')
+class ContactUsView(TemplateView):
+    template_name = 'shop/contact.html'
 
 
 class PrivacyPolicyView(TemplateView):
@@ -273,7 +314,8 @@ class ProductSearchView(ListView):
         context["developers"] = qs.filter(developer__name__isnull=False).values("developer__name").distinct()
         context["publishers"] = qs.filter(publisher__name__isnull=False).values("publisher__name").distinct()
         context["genres"] = qs.filter(genre__genre__isnull=False).values("genre__genre").distinct()
-        return context
+        context["cart"] = get_cart_obj(self.request)
+        return context;
 
 
 class MyOrderView(ListView):
@@ -298,13 +340,16 @@ class ComingSoonView(TemplateView):
 class MyAccountView(FormView):
     template_name = "shop/my-account.html"
     form_class = PersonalDetailForm
-    success_url = None
+    success_url = "shop.homepage"
 
     def get_context_data(self, **kwargs):
         if 'form' not in kwargs:
             kwargs["form"] = self.get_form()
             kwargs["user"] = self.request.user
+            print(kwargs)
+            print(self.get_form())
         return super().get_context_data(**kwargs)
+
 
 class SellYourGamesView(FormView):
     template_name = "shop/sell-your-games.html"
@@ -312,3 +357,12 @@ class SellYourGamesView(FormView):
     success_url = "shop/successful/game-sell-query-submitted-successfuly.html"
 
 
+class ResetPasswordView(PasswordResetView):
+    template_name = "shop/registrations/password_reset.html"
+    form_class = ResetPasswordForm
+    print(form_class)
+    success_url = "shop/registrations/password_reset_done.html"
+
+
+# class PasswordResetDoneView(TemplateView):
+#     template_name = "shop/registrations/password_reset_done.html"

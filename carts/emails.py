@@ -1,7 +1,9 @@
 from carts.models import *
 from post_office import mail
-from carts.signals import order_payment_received, new_user_profile_created
+from carts.signals import order_payment_received
 from django.dispatch import receiver
+from django.utils import timezone
+import datetime
 # Code Starts from Here
 
 
@@ -21,23 +23,56 @@ def send_cart_order_place_email(sender, **kwargs):
             context={
                 "products": cart.total_items_list(),
                 "cart": cart,
+                "user_name": cart.user.first_name + cart.user.last_name
 
             },
         )
         return ""
 
+# Cart Drop Out Emails
 
-@receiver(new_user_profile_created)
-def new_user_signup_email(sender, **kwargs):
-    user = kwargs.get("user")
+
+def email_to_user_added_products(cart):
     mail.send(
-        recipients=user.email,
+        recipients=cart.user.email,
         sender="no-reply@gamehunter.in",
-        template="new_user_sign_up",
-        priority="now",
         backend="django_ses",
+        priority="medium",
+        scheduled_time=datetime.datetime.now()+datetime.timedelta(hours=11),
         context={
-            "user": user
-        },
+            "products": cart.products.all(),
+            "last_visit": cart.updated,
+            "user_name": cart.user.first_name + cart.user.last_name
+            }
     )
     return ""
+
+
+def email_to_user_added_pay_per_game_products(cart):
+    mail.send(
+        recipients=cart.user.email,
+        sender="no-reply@gamehunter.in",
+        backend="django_ses",
+        priority="medium",
+        scheduled_time=datetime.datetime.now() + datetime.timedelta(hours=10),
+        context={
+            "products": cart.pay_game_products.all(),
+            "last_visit": cart.updated,
+            "user_name": cart.user.first_name + cart.user.last_name
+        },
+    )
+
+
+def email_to_user_added_plan_in_cart(cart):
+    mail.send(
+        recipients=cart.user.email,
+        sender="no-reply@gamehunter.in",
+        backend="django_ses",
+        priority="medium",
+        scheduled_time=datetime.datetime.now() + datetime.timedelta(hours=9),
+        context={
+            "plan": cart.plan,
+            "last_visit": cart.updated,
+            "user_name": cart.user.first_name + cart.user.last_name
+        },
+    )

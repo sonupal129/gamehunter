@@ -5658,7 +5658,7 @@ h3.section-title-2 {
 }
 
 .blog-content > p {
-    color: #242424;
+    color: #fff;
     margin: 0 0 5px;
 }
 
@@ -7175,7 +7175,7 @@ h4.setting-title {
 
 /* best selling area index-cycle */
 .nav-style-yellowgreen.nav-style.owl-carousel .owl-nav div:hover, .product-slider-nav.nav-style.nav-style-yellowgreen div:hover {
-    background-color: #85a700;
+    background-color: #df2121;
 }
 
 .bestselling-cycle-active.nav-style.owl-carousel .owl-nav div {
@@ -7195,7 +7195,7 @@ h4.setting-title {
 
 /* blog area index-cycle */
 .cycle-blog-wrapper .blog-categori > span {
-    background-color: #9bb70d;
+    background-color: #df2121;
 }
 
 .cycle-blog-wrapper .blog-content > h4 {
@@ -7209,7 +7209,7 @@ h4.setting-title {
 }
 
 .cycle-blog-wrapper .blog-content > h4 a:hover, .blog-wrapper-2.cycle-blog-wrapper .blog-meta ul li a:hover {
-    color: #9bb70d;
+    color: #df2121;
 }
 
 /* footer area index-cycle */

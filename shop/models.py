@@ -10,10 +10,11 @@ import datetime, os
 from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
 from django.contrib.auth.models import User
-from carts.signals import new_user_profile_created
+from shop.signals import new_user_profile_created
 from uuid import uuid4
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
+from django.utils.html import strip_tags, mark_safe, html_safe
 # Create your models here.
 
 
@@ -280,9 +281,10 @@ class Product(models.Model):
         return self.name
 
     def get_product_description(self):
-        if len(self.description) > 95:
-            return self.description[:95] + '...'
-        return self.description
+        description = self.description
+        if len(description) > 95:
+            return description[:95] + '...'
+        return description
 
     def get_pay_per_game_subscription_price(self):
         if self.plan.filter(type="GB"):

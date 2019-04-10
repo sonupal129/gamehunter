@@ -25,10 +25,9 @@ class ProductCartManager(models.Manager):
             cart_obj = Cart.objects.create_cart(user=request.user)
             new_obj = True
             request.session["cart_id"] = cart_obj.cart_id
-        return cart_obj, new_obj
+        return cart_obj
 
     def create_cart(self, user=None):
-        print(user.is_authenticated)
         user_obj = None
         if user is not None:
             if user.is_authenticated:
@@ -38,7 +37,7 @@ class ProductCartManager(models.Manager):
 
 class Cart(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    cart_id = models.CharField(max_length=20, blank=True)
+    cart_id = models.CharField(db_index=True, max_length=20, blank=True)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True)
     products = models.ManyToManyField(Product, related_name='products', blank=True)
     plan = models.ForeignKey(Plan, on_delete=models.DO_NOTHING, blank=True, null=True, related_name="plan")
@@ -115,17 +114,14 @@ class Cart(models.Model):
             if p.item_status == "O" or not p.active:
                 self.pay_game_products.remove(p)
             else:
-                products.append(p)
+                pay_per_game_products.append(p)
         if self.plan is not None:
             if self.plan.active:
                 products.append(self.plan)
             else:
                 self.plan = None
                 self.save(update_fields=["plan"])
-        if self.plan:
-            return products, pay_per_game_products
-        else:
-            return self.products.all(), self.pay_game_products.all()
+        return products, pay_per_game_products
 
     def remove_plan(self):
         if self.plan:
@@ -158,6 +154,34 @@ class Cart(models.Model):
                         data["condition"] = "NEW"
                     else:
                         data["condition"] = "USED"
+                    order = ProductOrders.objects.create(suborder_id=order_id, **data)
+                    new_order_received.send(sender=ProductOrders, suborder=order)
+                    order_created += 1
+                else:
+                    print("Object is Available in System Can't Create New")
+
+    def create_pay_per_game_product_order(self):
+        order_created = 1
+        if self.payment_status == "Credit":
+            for product in self.pay_game_products.all():
+                order_id = f"{self.cart_id}_PGP_{order_created}"
+                print(order_id)
+                try:
+                    order = ProductOrders.objects.get(suborder_id=order_id)
+                except ObjectDoesNotExist:
+                    data = {"mrp": 0, "selling_price": product.get_pay_per_game_subscription_price(), "cart": self,
+                            "hunter_discount": 0, "total_discount": 0,
+                            "delivery_charges": 0, "address": self.address,
+                            "final_selling_price": product.get_pay_per_game_subscription_price(),
+                            "product": product}
+
+                    if self.payment_status == "Credit":
+                        data["payment_method"] = "PREPAID"
+                    elif self.payment_status == "COD":
+                        data["payment_method"] = "COD"
+                    else:
+                        data["payment_method"] = "NO METHOD DEFINE"
+                    data["condition"] = "USED"
                     order = ProductOrders.objects.create(suborder_id=order_id, **data)
                     new_order_received.send(sender=ProductOrders, suborder=order)
                     order_created += 1

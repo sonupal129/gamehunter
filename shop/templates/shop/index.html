@@ -1,5 +1,6 @@
 {% extends 'shop/base.html' %}
 {% load staticfiles %}
+{% load thumbnail %}
 
 <!-- Site Title -->
 {% block title%}<title>Gamehunter game store for console games subscriptions/rent, console games, consoles, collectives and many
@@ -44,28 +45,36 @@
             {% if banner_left.link %}
             <div class="col-lg-6 col-md-6">
                 <div class="banner-img banner-hover banner-mrg">
-                    <a href="{{ banner_left.link }}"><img alt="" src="{{ banner_left.get_promo_image.file.url }}"
-                                                          height="160" width="570"></a>
+                    <a href="{{ banner_left.link }}">
+                    {% thumbnail banner_left.get_promo_image.file "570x160" crop="center" quality=70 as im %}
+                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                    {% endthumbnail %}
                 </div>
             </div>
             {% else %}
             <div class="col-lg-6 col-md-6">
                 <div class="banner-img banner-mrg">
-                    <img alt="" src="{{ banner_left.get_promo_image.file.url }}" height="160" width="570">
+                    {% thumbnail banner_left.get_promo_image.file "570x160" crop="center" quality=70 as im %}
+                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                    {% endthumbnail %}
                 </div>
             </div>
             {% endif %}
             {% if banner_right.link %}
             <div class="col-lg-6 col-md-6">
                 <div class="banner-img banner-hover">
-                    <a href="{{ banner_right.link }}"><img alt="" src="{{ banner_right.get_promo_image.file.url }}"
-                                                           height="160" width="570"></a>
+                    <a href="{{ banner_right.link }}">
+                    {% thumbnail banner_right.get_promo_image.file "570x160" crop="center" quality=70 as im %}
+                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                    {% endthumbnail %}
                 </div>
             </div>
             {% else %}
             <div class="col-lg-6 col-md-6">
                 <div class="banner-img">
-                    <img alt="" src="{{ banner_right.get_promo_image.file.url }}" height="160" width="570">
+                    {% thumbnail banner_right.get_promo_image.file "570x160" crop="center" quality=70 as im %}
+                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                    {% endthumbnail %}
                 </div>
             </div>
             {% endif %}
@@ -110,11 +119,11 @@
                     {% for playstationgame in featured_playstation_games %}
                     <div class="devita-product-2 devita-product-game">
                         <div class="product-img">
-                            <a href="{{ playstationgame.get_absolute_url }}"><img src="{% if playstationgame.get_default_photo.file %}
-                                                        {{ playstationgame.get_default_photo.file.url }}
-                                                      {% else %}
-                                                        {% static 'img/product/default-product-image.png' %}
-                                                      {% endif %}" alt=""></a>
+                            <a href="{{ playstationgame.get_absolute_url }}">
+                                {% thumbnail playstationgame.get_default_photo.file "198x198" crop="center" quality=70 as im %}
+                                <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                {% endthumbnail %}
+                            </a>
                             {% if playstationgame.item_status == "I" %}
                             {% if playstationgame.total_discount %}
                             <span>{{ playstationgame.total_discount }}%</span>
@@ -153,7 +162,7 @@
                                         <i class="ion-android-star-outline theme-star"></i>
                                         <i class="ion-android-star-outline"></i>
                                     </div>
-                                    <p> {{ playstationgame.get_product_description|safe|title }}</p>
+                                    <p> {{ playstationgame.get_product_description|striptags|safe }}</p>
                                     {% if playstationgame in cart.products.all or product in cart.pay_game_products.all %}
                                     <div class="product-action">
                                         <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">
@@ -197,11 +206,10 @@
                     {% for xboxgame in featured_xbox_games %}
                     <div class="devita-product-2 devita-product-game">
                         <div class="product-img">
-                            <a href="{{ xboxgame.get_absolute_url }}"><img src="{% if xboxgame.get_default_photo.file %}
-                                                        {{ xboxgame.get_default_photo.file.url }}
-                                                      {% else %}
-                                                        {% static 'img/product/default-product-image.png' %}
-                                                      {% endif %}" alt=""></a>
+                            <a href="{{ xboxgame.get_absolute_url }}">
+                                {% thumbnail xboxgame.get_default_photo.file "198x198" crop="center" quality=70 as im %}
+                                <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                            {% endthumbnail %}
                             {% if xboxgame.item_status == "I" %}
                             {% if xboxgame.total_discount %}
                             <span>{{ xboxgame.total_discount }}%</span>
@@ -240,7 +248,7 @@
                                         <i class="ion-android-star-outline theme-star"></i>
                                         <i class="ion-android-star-outline"></i>
                                     </div>
-                                    <p> {{ xboxgame.get_product_description|safe|title }}</p>
+                                    <p> {{ xboxgame.get_product_description|striptags|safe }}</p>
                                     {% if xboxgame.item_status == "I" %}
                                     <div class="product-action">
                                         <a class="action-cart" title="Add To Cart" href="{% url 'carts:add' xboxgame.slug %}">
@@ -773,7 +781,9 @@
 {% if center_coverpage %}
 <div class="banner-area">
     <div class="banner-content-2">
-        <img alt="" src="{{ center_coverpage.get_promo_image.file.url }}" height="187" width="1349">
+        {% thumbnail center_coverpage.get_promo_image.file "1349x187" crop="center" quality=60 as im %}
+        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+        {% endthumbnail %}
     </div>
 </div>
 <!--<div class="banner-area">-->
@@ -820,12 +830,9 @@
                             <div class="single-product-wrapper single-product-game">
                                 <div class="single-product-img">
                                     <a href="{{ product.get_absolute_url }}">
-                                        <img alt="" src="{% if product.get_default_photo.file %}
-                                                        {{product.get_default_photo.file.url}}
-                                                      {% else %}
-                                                        {% static 'img/product/default-product-image.png' %}
-                                                      {% endif %}">
-                                    </a>
+                                    {% thumbnail product.get_default_photo.file "100x100" crop="center" quality=70 as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                    {% endthumbnail %}
                                 </div>
                                 <div class="product-content">
                                     <span>For {{ product.category.name|upper }}</span>
@@ -846,12 +853,9 @@
                             <div class="single-product-wrapper single-product-game">
                                 <div class="single-product-img">
                                     <a href="{{ product.get_absolute_url }}">
-                                        <img alt="" src="{% if product.get_default_photo.file %}
-                                                        {{product.get_default_photo.file.url}}
-                                                      {% else %}
-                                                        {% static 'img/product/default-product-image.png' %}
-                                                      {% endif %}">
-                                    </a>
+                                    {% thumbnail product.get_default_photo.file "100x100" crop="center" quality=70 as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                    {% endthumbnail %}
                                 </div>
                                 <div class="product-content">
                                     <span>For {{ product.category.name|upper }}</span>
@@ -873,12 +877,9 @@
                             <div class="single-product-wrapper single-product-game">
                                 <div class="single-product-img">
                                     <a href="{{ product.get_absolute_url }}">
-                                        <img alt="" src="{% if product.get_default_photo.file %}
-                                                        {{product.get_default_photo.file.url}}
-                                                      {% else %}
-                                                        {% static 'img/product/default-product-image.png' %}
-                                                      {% endif %}">
-                                    </a>
+                                    {% thumbnail product.get_default_photo.file "100x100" crop="center" quality=70 as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                    {% endthumbnail %}
                                 </div>
                                 <div class="product-content">
                                     <span>For {{ product.category.name|upper }}</span>
@@ -900,12 +901,9 @@
                             <div class="single-product-wrapper single-product-game">
                                 <div class="single-product-img">
                                     <a href="{{ product.get_absolute_url }}">
-                                        <img alt="" src="{% if product.get_default_photo.file %}
-                                                        {{product.get_default_photo.file.url}}
-                                                      {% else %}
-                                                        {% static 'img/product/default-product-image.png' %}
-                                                      {% endif %}">
-                                    </a>
+                                    {% thumbnail product.get_default_photo.file "100x100" crop="center" quality=70 as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                    {% endthumbnail %}
                                 </div>
                                 <div class="product-content">
                                     <span>For {{ product.category.name|upper }}</span>
@@ -935,12 +933,9 @@
                             <div class="single-product-wrapper single-product-game">
                                 <div class="single-product-img">
                                     <a href="{{ product.get_absolute_url }}">
-                                        <img alt="" src="{% if product.get_default_photo.file %}
-                                                        {{product.get_default_photo.file.url}}
-                                                      {% else %}
-                                                        {% static 'img/product/default-product-image.png' %}
-                                                      {% endif %}">
-                                    </a>
+                                    {% thumbnail product.get_default_photo.file "100x100" crop="center" quality=70 as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                    {% endthumbnail %}
                                 </div>
                                 <div class="product-content">
                                     <span>For {{ product.category.name|upper }}</span>
@@ -961,12 +956,9 @@
                             <div class="single-product-wrapper single-product-game">
                                 <div class="single-product-img">
                                     <a href="{{ product.get_absolute_url }}">
-                                        <img alt="" src="{% if product.get_default_photo.file %}
-                                                        {{product.get_default_photo.file.url}}
-                                                      {% else %}
-                                                        {% static 'img/product/default-product-image.png' %}
-                                                      {% endif %}">
-                                    </a>
+                                    {% thumbnail product.get_default_photo.file "100x100" crop="center" quality=70 as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                    {% endthumbnail %}
                                 </div>
                                 <div class="product-content">
                                     <span>For {{ product.category.name|upper }}</span>
@@ -988,12 +980,9 @@
                             <div class="single-product-wrapper single-product-game">
                                 <div class="single-product-img">
                                     <a href="{{ product.get_absolute_url }}">
-                                        <img alt="" src="{% if product.get_default_photo.file %}
-                                                        {{product.get_default_photo.file.url}}
-                                                      {% else %}
-                                                        {% static 'img/product/default-product-image.png' %}
-                                                      {% endif %}">
-                                    </a>
+                                    {% thumbnail product.get_default_photo.file "100x100" crop="center" quality=70 as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                    {% endthumbnail %}
                                 </div>
                                 <div class="product-content">
                                     <span>For {{ product.category.name|upper }}</span>
@@ -1015,12 +1004,9 @@
                             <div class="single-product-wrapper single-product-game">
                                 <div class="single-product-img">
                                     <a href="{{ product.get_absolute_url }}">
-                                        <img alt="" src="{% if product.get_default_photo.file %}
-                                                        {{product.get_default_photo.file.url}}
-                                                      {% else %}
-                                                        {% static 'img/product/default-product-image.png' %}
-                                                      {% endif %}">
-                                    </a>
+                                    {% thumbnail product.get_default_photo.file "100x100" crop="center" quality=70 as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                    {% endthumbnail %}
                                 </div>
                                 <div class="product-content">
                                     <span>For {{ product.category.name|upper }}</span>
@@ -1111,12 +1097,16 @@
     {% if bottom_coverpage.link %}
     <a href="{{ bottom_coverpage.link }}">
         <div class="banner-content-2">
-            <img alt="" src="{{ bottom_coverpage.get_promo_image.file.url }}" width="1170" height="160">
+            {% thumbnail bottom_coverpage.get_promo_image.file "1170x160" crop="center" quality=60 as im %}
+            <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+            {% endthumbnail %}
         </div>
     </a>
     {% else %}
     <div class="banner-content-2">
-        <img alt="" src="{{ bottom_coverpage.get_promo_image.file.url }}" width="1170" height="160">
+        {% thumbnail bottom_coverpage.get_promo_image.file "1170x160" crop="center" quality=60 as im %}
+        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+        {% endthumbnail %}
     </div>
     {% endif %}
     {% endif %}
@@ -1130,26 +1120,32 @@
 <div class="blog-area black-bg-5 pt-60 pb-65 blog-game">
     <div class="container">
         <div class="section-border mb-40">
-            <h4 class="section-title white-title section-bg-black">New in our Blogs</h4>
+            <h4 class="section-title white-title section-bg-black">From our Blogs</h4>
         </div>
-        <div class="blog-slider-active-4 owl-carousel nav-style nav-style-game">
+        <div class="blog-slider-active-3 owl-carousel nav-style  nav-style-yellowgreen">
             {% for article in articles %}
-            <div class="blog-wrapper-4">
-                <div class="blog-img">
+            <div class="blog-wrapper-2 text-center cycle-blog-wrapper">
+
+                <div class="blog-img mb-15">
                     <a href="{{ article.get_absolute_url }}">
-                        <img alt="" src="{{ article.card_image.url }}" height="250px" width="250px">
-                    </a>
-                </div>
-                <div class="blog-content-4">
-                    <h4>
-                        <a href="{{ article.get_absolute_url }}">{{ article.get_blog_title_name }}</a>
-                    </h4>
-                    <p>{{ article.get_blog_description|striptags }}</p>
-                    <div class="blog-meta-4">
-                        <ul>
-                            <li>{{ article.date_created }}</li>
-                        </ul>
+                        {% thumbnail article.card_image "370x220" crop="center" quality=70 as im %}
+                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                    {% endthumbnail %}
+                    <div class="blog-categori">
+                        <span>{{ article.blog_type|upper }}</span>
                     </div>
+                </div>
+                <div class="blog-content">
+                    <h4><a href="{{ article.get_absolute_url }}">{{ article.get_blog_title_name }}</a></h4>
+                    <p>{{ article.get_blog_description|striptags }}</p>
+                </div>
+                <div class="blog-meta">
+                    <ul>
+                        <li>{{ article.date_created }}</li>
+                        <!--<li>-->
+                            <!--<a href="#">02 Comments</a>-->
+                        <!--</li>-->
+                    </ul>
                 </div>
             </div>
             {% endfor %}

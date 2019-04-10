@@ -1,4 +1,5 @@
-# import csv
+import csv
+import datetime
 # from shop.models import Product, Attribute
 # file_path = r'D:\GH Operation\Product CSV Files for Upload\Subscription Only Product Uploading\games_trailor.csv'
 #
@@ -25,13 +26,4 @@
 #                 continue
 #             print(f"{count} Products Trailer Saved in System")
 
-l1 = [1,2,3,4,5]
-l2 = [6,7,8,9,10]
-total = []
-
-l3 = l1 + l2
-
-print(l3)
-
-
-
+print(datetime.datetime.now())

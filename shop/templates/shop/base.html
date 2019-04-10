@@ -5,10 +5,10 @@
 <html class="no-js" lang="zxx">
 <!-- header start -->
 <head>
-    {% if not DEBUG %}
     <!-- jQuery CDN by Google -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+    {% if not DEBUG %}
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132433608-1"></script>
     <script>
@@ -211,13 +211,13 @@ fbq('track', 'PageView');
                                     <li><a href="#">Playstation Games</a>
                                         <ul>
                                             <li><a href="/products/playstation-games/ps-4">Playstation 4</a></li>
-                                            <li><a href="#"> Playstation 3</a></li>
+                                            <!--<li><a href="#"> Playstation 3</a></li>-->
                                         </ul>
                                     </li>
                                     <li><a href="#">Xbox Games</a>
                                         <ul>
                                             <li><a href="/products/xbox-games/xbox-one">Xbox One</a></li>
-                                            <li><a href="#"> Xbox 360 </a></li>
+                                            <!--<li><a href="#"> Xbox 360 </a></li>-->
                                         </ul>
                                     </li>
                                     <li><a href="{% url 'shop:coming-soon' %}">Consoles</a>
@@ -242,13 +242,13 @@ fbq('track', 'PageView');
                     <ul>
                         <li><a href="#">Playstation Games<i class="ion-chevron-down"></i></a>
                             <ul class="submenu">
-                                <li><a href="#">Playstation 3</a></li>
+                                <!--<li><a href="#">Playstation 3</a></li>-->
                                 <li><a href="/products/playstation-games/ps-4">Playstation 4</a></li>
                             </ul>
                         </li>
                         <li><a href="#">Xbox Games<i class="ion-chevron-down"></i></a>
                             <ul class="submenu">
-                                <li><a href="#">Xbox 360</a></li>
+                                <!--<li><a href="#">Xbox 360</a></li>-->
                                 <li><a href="/products/xbox-games/xbox-one">Xbox One</a></li>
                             </ul>
                         </li>
@@ -407,9 +407,9 @@ fbq('track', 'PageView');
                                 <li><a href="#">Accessories </a></li>
                                 <li><a href="{% url 'shop:subscription-list' %}">Plans </a></li>
                                 <li><a href="/products/playstation-games/ps-4">PS 4 Games </a></li>
-                                <li><a href="#">PS 3 Games </a></li>
+                                <!--<li><a href="#">PS 3 Games </a></li>-->
                                 <li><a href="/products/xbox-games/xbox-one">Xbox One Games </a></li>
-                                <li><a href="#">Xbox 360 Games </a></li>
+                                <!--<li><a href="#">Xbox 360 Games </a></li>-->
                                 <li><a href="{% url 'shop:articles' %}">Gaming Charcha </a></li>
                                 <li><a href="{% url 'shop:shipping' %}">Shipping </a></li>
                                 <li><a href="{% url 'shop:return-cancellation' %}">Cancellation & Return </a></li>

@@ -1,5 +1,7 @@
 {% extends 'shop/base.html' %}
 {% load staticfiles %}
+{% load thumbnail %}
+
 
 {% block title%}<title>My Orders</title>{% endblock %}
 {% block navbar %}
@@ -37,9 +39,10 @@
                         {% for order in orders %}
                         <tr>
                             <td class="product-thumbnail">
-                                <a href="{{ order.product.get_absolute_url }}"><img
-                                        src="{{ order.product.get_default_photo.file.url }}" alt="" width="80"
-                                        height="80"></a>
+                                <a href="{{ order.product.get_absolute_url }}">
+                                {% thumbnail product.get_default_photo.file "80x80" crop="center" quality=70 as im %}
+                                    <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                {% endthumbnail %}
                             </td>
                             <td class="product-name"><a href="{{ order.product.get_absolute_url }}">
                                 {{order.product.name|title }} for {{ order.product.category }}</a></td>
