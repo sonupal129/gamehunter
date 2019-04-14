@@ -30,14 +30,15 @@
                 <div class="tab-content jump">
                     <div class="tab-pane active" id="product-list">
                         <div class="row">
-                            {% for plan in plans %}
                             <div class="col-lg-12">
+                            {% for plan in plans %}
                                 <div class="product-list-wrapper shop-border mb-40 pb-40">
                                     <div class="product-img">
                                         <a href="{{ plan.get_absolute_url }}">
                                         {% thumbnail plan.image.file "240x240" crop="center" quality=70 as im %}
-                                            <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                            <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
                                         {% endthumbnail %}
+                                        </a>
                                         {% if plan.discount %}
                                         <span> {{ plan.discount }}% Off!</span>
                                         {% endif %}
@@ -89,8 +90,8 @@
                                         {% endif %}
                                     </div>
                                 </div>
-                            </div>
                             {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -195,8 +195,8 @@ class Plan(models.Model):
         return self.swaps
 
     def get_plan_description(self):
-        if len(self.description) > 350:
-            description = self.description[:350] + '...'
+        if len(self.description) > 300:
+            description = self.description[:270] + '...'
             return description.strip()
         return self.description.strip()
 
