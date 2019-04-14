@@ -219,10 +219,7 @@ class SubscriptionPlanView(ListView):
     context_object_name = 'plans'
 
     def get_queryset(self):
-        plans = cache.get("plan_list_views")
-        if plans is None:
-            plans = Plan.objects.filter(active=True).order_by('subscription_amount')
-            cache.set("plan_list_views", plans)
+        plans = Plan.objects.filter(active=True).order_by('subscription_amount')
         return plans
 
 

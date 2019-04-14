@@ -9,7 +9,7 @@ from shop.models import Product, Plan, Blog
 def clear_product_list_view_cache():
     cache.delete_many(
         ["featured_playstation_games", "featured_xbox_games", "new_released_games", "new_arrived_products",
-         "products_list_view", "side_list_products", "trending_products"])
+         "trending_products"])
 
 
 @receiver(post_delete, sender=Product)
@@ -35,20 +35,5 @@ def blog_post_delete_handler(sender, **kwargs):
 
 @receiver(post_save, sender=Blog)
 def blog_post_save_handler(sender, **kwargs):
-    if kwargs["creapted"]:
+    if kwargs["created"]:
         clear_blog_list_view_cache()
-
-
-def clear_plan_list_view_cache():
-    cache.delete("plan_list_views")
-
-
-@receiver(post_delete, sender=Plan)
-def plan_post_delete_handler():
-    clear_plan_list_view_cache()
-
-
-@receiver(post_save, sender=Plan)
-def plan_post_save_handler():
-    clear_plan_list_view_cache()
-
