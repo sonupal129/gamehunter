@@ -107,7 +107,7 @@ admin.site.register(Blog, BlogAdmin)
 
 
 class PlanAdmin(admin.ModelAdmin):
-    list_display = ('name', 'subscription_amount', 'security_deposit')
+    list_display = ('name', 'subscription_amount', 'security_deposit', "active")
     fields = ['name', 'type', 'duration', 'additional_month', 'swaps', 'description', 'active',
               ('subscription_amount', 'security_deposit', 'refundable', 'discount'),
               'term_condition',

@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
-from adminsortable.models import SortableMixin
+from django.shortcuts import get_object_or_404
 import datetime, os
 from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
@@ -273,6 +273,7 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         """Returns the url to access a particular instance of Family."""
+
         return reverse("shop:product-detail", kwargs={'slug': self.slug})
 
     def get_product_title_name(self):

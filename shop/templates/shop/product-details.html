@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% load thumbnail %}
 <!-- Site Title -->
-{% block title%}<title>Buy online {{ product.name|title }} for {{ product.category }} at GameHunter.in</title>{% endblock %}
+{% block title%}<title>Buy online {{ product.name|lower }} for {{ product.category|lower }} at GameHunter.in</title>{% endblock %}
 
 {% block navbar %}
 <meta name="keywords" content="{{ product.category|upper }} Games, Consoles, Accessories, Collectives">

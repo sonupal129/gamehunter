@@ -69,7 +69,7 @@
                                             {% endif %}
                                         </div>
                                         <p>{{ plan.get_plan_description|striptags|safe }}</p>
-                                        {% if plan.active %}
+                                        {% if user.is_authenticated %}
                                         {% if user.userprofile.has_subscription %}
                                         <div class="product-action">
                                             <a class="action-cart" href="#" style="background-color: #ff9900;"
@@ -81,6 +81,11 @@
                                                title="Add to Cart"> Add to Cart </a>
                                         </div>
                                         {% endif %}
+                                        {% else %}
+                                        <div class="product-action">
+                                            <a class="action-cart" href="{% url 'carts:add-plan' plan.slug %}"
+                                               title="Add to Cart"> Add to Cart </a>
+                                        </div>
                                         {% endif %}
                                     </div>
                                 </div>

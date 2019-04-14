@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView, DetailView, ListView
 from django.views import generic
 from .models import *
@@ -6,7 +6,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login
 from .forms import *
 from django.core.cache import cache
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.views.decorators.cache import cache_page
 from carts.models import *
 from django.db.models import Q
@@ -114,12 +114,9 @@ class ProductListView(ListView):
     @log_exceptions("Product List Querysets Function")
     def get_queryset(self):
         sort_by = self.request.GET.get("sort_by")
-        queryset = cache.get("products_list_view")
-
-        if queryset is None:
-            queryset = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
-                                              item_status__in=["I", "S"])
-            cache.set("products_list_view", queryset)
+        print(self.kwargs.get("slug"))
+        queryset = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
+                                          item_status__in=["I", "S"])
 
         if self.request.method == "GET":
             if sort_by == "name":
@@ -133,11 +130,8 @@ class ProductListView(ListView):
 
     @log_exceptions("Product Side List Filter Function")
     def get_side_list_filter(self):
-        products = cache.get("side_list_products")
-        if products is None:
-            products = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
-                                              item_status__in=["I", "S"])
-            cache.set("side_list_products", products)
+        products = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
+                                          item_status__in=["I", "S"])
         publishers = products.filter(publisher__name__isnull=False).values("publisher__name").distinct()
         developers = products.filter(developer__name__isnull=False).values("developer__name").distinct()
         genres = products.filter(genre__genre__isnull=False).values("genre__genre").distinct()
@@ -162,6 +156,12 @@ class ProductDetailView(DetailView):
     model = Product
     context_object_name = "product"
     template_name = 'shop/product-details.html'
+
+    def get_object(self, queryset=None):
+        obj = super(ProductDetailView, self).get_object(queryset=queryset)
+        if obj.active is not True:
+            raise Http404()
+        return obj
 
     def related_product(self):
         count = 4
@@ -221,7 +221,7 @@ class SubscriptionPlanView(ListView):
     def get_queryset(self):
         plans = cache.get("plan_list_views")
         if plans is None:
-            plans = Plan.objects.filter(active=True).order_by('duration')
+            plans = Plan.objects.filter(active=True).order_by('subscription_amount')
             cache.set("plan_list_views", plans)
         return plans
 
