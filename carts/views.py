@@ -10,14 +10,21 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 def cart_home(request):
-    print(request.session.get("cart_id"))
+    context = {}
+    if request.session.get("cart_error", None):
+        context["error"] = request.session["cart_error"]
+        del request.session["cart_error"]
+    else:
+        pass
     cart_obj = Cart.objects.create_or_get_cart(request)
     products, pay_game_products = cart_obj.total_items_list()
+    context["products"] = products
+    context["pay_game_products"] = pay_game_products
     cart_obj.total_mrp = cart_obj.get_mrp()
     cart_obj.total_selling_price = cart_obj.get_selling_price()
     cart_obj.save()
-    return render(request, "carts/cart-page.html",
-                  {"products": products, "cart": cart_obj, "pay_game_products": pay_game_products})
+    context["cart"] = cart_obj
+    return render(request, "carts/cart-page.html", context)
 
 
 def cart_add_plan(request, slug):
@@ -90,13 +97,16 @@ def cart_checkout(request):
     products, pay_game_products = cart_obj.total_items_list()
     if cart_obj.plan:
         if cart_obj.plan.type == "GB" and pay_game_products is None:
+            request.session["cart_error"] = "Please Add Product in Cart"
             return redirect("carts:cart")
         elif cart_obj.plan.type == "SB" and pay_game_products:
+            request.session["cart_error"] = "Please Choose Pay Game Plan"
             return redirect("carts:cart")
         else:
             pass
     else:
         if pay_game_products:
+            request.session["cart_error"] = "Please Add Pay Game Plan in Cart"
             return redirect("carts:cart")
         else:
             pass

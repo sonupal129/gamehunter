@@ -31,7 +31,6 @@ ALLOWED_HOSTS = ['127.0.0.1']
 INSTALLED_APPS = [
     'shop.apps.ShopConfig',
     'carts.apps.CartsConfig',
-    'emails.apps.EmailsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.sitemaps',
+    'django.contrib.redirects',
     # other apps
     'treebeard',
     'adminsortable',
@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
     # Other Middle ware classed
     'htmlmin.middleware.HtmlMinifyMiddleware',
     'htmlmin.middleware.MarkRequestMiddleware',
@@ -147,7 +148,7 @@ MEDIA_URL = '/media/'
 
 CKEDITOR_CONFIGS = {
     'default': {
-        'toolbar': 'Custom',
+    'toolbar': 'Custom',
         'toolbar_Custom': [
             ['Bold', 'Italic', 'Underline'],
             ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter',
@@ -179,9 +180,8 @@ POST_OFFICE = {
 
 AWS_ACCESS_KEY_ID = 'AKIAIXJMBDAJVH6XYS6A'
 AWS_SECRET_ACCESS_KEY = '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'
-# AWS_SES_REGION_NAME = 'eu-west-1'
-# AWS_SES_REGION_ENDPOINT = 'email-smtp.eu-west-1.amazonaws.com'
-
+# AWS_SES_REGION_NAME = 'us-east-1'
+# AWS_SES_REGION_ENDPOINT = 'email-smtp.us-east-1.amazonaws.com'
 
 # Slack API Token & Information for Notification
 SLACK_TOKEN = 'xoxb-402668290307-541515247091-5kxEPnxOQ0dQSLy334WoENDE'
@@ -193,8 +193,8 @@ BASE_PAYMENT_URL = "https://test.instamojo.com/api/1.1/payment-requests/"
 PAYEMENT_REDIRECT_URL = "http://127.0.0.1:8000/cart/payment/successful"
 
 # Sitemaps Details
-if DEBUG:
-    SITE_ID = 2
+# if DEBUG:
+SITE_ID = 2
 
 # Django Caches
 if not DEBUG:
@@ -225,9 +225,6 @@ EXCLUDE_FROM_MINIFYING = ('url-optimize/sitemap.xml/', 'cki39vbl3/admin/')
 #         }
 #     },
 # }
-
-
-# Django Compressor Settings
 
 
 try:

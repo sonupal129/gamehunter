@@ -1,15 +1,16 @@
-import csv
-import datetime
-from shop.models import Product, Attribute
-from carts.models import Cart
+import requests
 
 
-def total_products_in_cart(*args):
-    for cart in args:
-        if cart.products.all():
-            for p in cart.products.all():
-                p.add_to_trending_products()
-        if cart.pay_game_products.all():
-            for p in cart.pay_game_products.all():
-                p.add_to_trending_products()
-    return "All Products Clicks Added"
+login_url = "https://spark.echoindia.in/api-auth/login/"
+session = requests.Session()
+
+
+response = session.post(login_url, data={"email": "spal@echoindia.in", "password": "Sonupal123"})
+print(response.status_code)
+print(response)
+
+
+# url = "https://spark.echoindia.in/api/programs/"
+# response = requests.get(url)
+# data = response.json()
+# print(data)

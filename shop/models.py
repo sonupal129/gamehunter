@@ -5,16 +5,15 @@ from django.urls import reverse
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
-from django.shortcuts import get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 import datetime, os
 from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
 from django.contrib.auth.models import User
-from shop.signals import new_user_profile_created
 from uuid import uuid4
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
-from django.utils.html import strip_tags, mark_safe, html_safe
+from django.utils.html import mark_safe, html_safe, force_text, format_html, escape
 # Create your models here.
 
 
@@ -67,7 +66,7 @@ class Category(MP_Node):
     name = models.CharField(max_length=50, unique=True, default='')
     slug = models.SlugField(db_index=True, null=True, blank=True)
     category_title_meta = models.CharField(max_length=50, null=True, blank=True)
-    category_description_meta = models.CharField(max_length=50, null=True, blank=True)
+    category_description_meta = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -78,7 +77,7 @@ class Category(MP_Node):
             self.slug = '/'.join(slug_list) + "/%s" % slugify(self.name)
         else:
             self.slug = slugify(self.name)
-        super(Category, self).save(*args, **kwargs)
+        return super(Category, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         """Returns the url to access a particular instance of Family."""
@@ -149,7 +148,7 @@ class Plan(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super(Plan, self).save(*args, **kwargs)
+        return super(Plan, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("shop:subscription-detail", kwargs={'slug': self.slug})
@@ -260,20 +259,15 @@ class Product(models.Model):
         self.total_discount = self.discount + self.hunter_discount
         if self.total_discount > 99:
             self.total_discount = self.discount
-        else:
-            self.total_discount
-        super(Product, self).save(*args, **kwargs)
 
         if not self.publisher:
             self.slug = slugify(self.name + '-for-' + self.category.name)
         else:
             self.slug = slugify(self.name + '-by-' + self.publisher.name + '-for-' + self.category.name)
-        super(Product, self).save(*args, **kwargs)
-        post_save.connect(ProductAttribute.add_delete_pay_per_game_price, sender=Product)
+        return super(Product, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         """Returns the url to access a particular instance of Family."""
-
         return reverse("shop:product-detail", kwargs={'slug': self.slug})
 
     def get_product_title_name(self):
@@ -288,23 +282,32 @@ class Product(models.Model):
         return description
 
     def get_pay_per_game_subscription_price(self):
-        if self.plan.filter(type="GB"):
-            attr = Attribute.objects.get(attribute="game_based_plan_price")
+        attr = Attribute.objects.get(attribute="game_based_plan_price")
+        try:
             game_price_attribute = ProductAttribute.objects.filter(product=self, attribute=attr).first()
-            if game_price_attribute:
-                return game_price_attribute.value
+            return game_price_attribute
+        except ObjectDoesNotExist:
+            return ""
+
+    def get_old_slug(self):
+        attr = Attribute.objects.get(attribute="old_slug")
+        try:
+            slug = ProductAttribute.objects.get(product=self, attribute=attr)
+            return slug
+        except ObjectDoesNotExist:
+            return ""
 
     def add_to_trending_products(self):
         atr = Attribute.objects.get(attribute="trending")
-        attr = ProductAttribute.objects.filter(product=self, attribute=atr).first()
-        if attr:
-            print(attr.value)
+        try:
+            attr = ProductAttribute.objects.get(product=self, attribute=atr)
+        except ObjectDoesNotExist:
+            ProductAttribute.objects.create(product=self, attribute=atr, value=1)
+        else:
             new_value = int(attr.value)
             new_value += 1
             attr.value = new_value
             attr.save()
-        else:
-            ProductAttribute.objects.create(product=self, attribute=atr, value=1)
 
     def get_default_photo(self):
         if not hasattr(self, '__default_photo'):
@@ -317,10 +320,11 @@ class Product(models.Model):
         return selling_price, mrp
 
     def game_trailer(self):
-        trailer = ProductAttribute.objects.filter(attribute__attribute="game_trailer", product=self.id).first()
-        if trailer:
+        try:
+            trailer = ProductAttribute.objects.get(attribute__attribute="game_trailer", product=self)
             return trailer.value
-        return False
+        except ObjectDoesNotExist:
+            return ""
 
     def photos_in_ascendant(self):
         if self.photo_set.all():
@@ -338,33 +342,6 @@ class ProductAttribute(models.Model):
 
     class Meta:
         verbose_name = "Product Attribute"
-
-    def add_delete_pay_per_game_price(sender, instance, **kwargs):
-        attr = Attribute.objects.get(attribute="game_based_plan_price")
-        print(sender)
-        print(instance)
-        if instance.plan.filter(type="GB"):
-            game_price_attribute = ProductAttribute.objects.filter(product=instance, attribute=attr).first()
-            if game_price_attribute:
-                if instance.mrp <= 1499:
-                    game_price_attribute.value = 300
-                elif instance.mrp > 1500 < 4000:
-                    game_price_attribute.value = 500
-                else:
-                    del game_price_attribute
-                game_price_attribute.save()
-            else:
-                if instance.mrp <= 1499:
-                    subscription_game_price = ProductAttribute(attribute=attr, value=300, product=instance)
-                elif instance.mrp > 1500 < 4000:
-                    subscription_game_price = ProductAttribute(attribute=attr, value=500, product=instance)
-                else:
-                    pass
-                subscription_game_price.save()
-        else:
-            game_price_attribute = ProductAttribute.objects.filter(product=instance, attribute=attr)
-            if game_price_attribute:
-                del game_price_attribute
 
 
 class Photo(models.Model):
@@ -392,7 +369,7 @@ class Blog(models.Model):
     status = models.CharField(choices={("P", "Published"), ("U", "Unpublished")}, max_length=15, default="U")
 
     def validate_card_image(self):
-        limit = 300 * 300
+        limit = 370 * 220
         if self.size > limit:
             raise ValidationError(f"Uploaded Image W*H Should be {limit} in size")
 
@@ -415,19 +392,19 @@ class Blog(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
-        super(Blog, self).save(*args, **kwargs)
+        return super(Blog, self).save(*args, **kwargs)
 
     def get_blog_title_name(self):
         if len(self.title) > 40:
             title = (self.title[:35] + '...').title()
             return title.strip()
-        return self.title.title().strip()
+        return mark_safe(self.title.title())
 
     def get_blog_description(self):
         if len(self.description) > 100:
             description = self.description[:130] + '...'
-            return description.strip()
-        return self.description.strip()
+            return description
+        return self.description
 
 
 class BlogAttribute(models.Model):
@@ -449,16 +426,16 @@ class UserProfile(models.Model):
         return self.user.email
 
     def has_subscription(self):
-        subscription = self.user.subscription.filter(active=True).first()
-        if subscription is None:
+        try:
+            self.user.subscription.filter(active=True).first()
+            return True
+        except ObjectDoesNotExist:
             return False
-        return True
 
     @receiver(post_save, sender=User)
     def create_or_update_user_profile(sender, instance, created, **kwargs):
         if created:
             UserProfile.objects.create(user=instance, subscribed=True)
-            new_user_profile_created.send(sender=UserProfile, user=instance)
         instance.userprofile.save()
 
 
@@ -510,3 +487,14 @@ class ExceptionLog(models.Model):
     views = models.CharField("View", max_length=60)
     exceptionclass = models.CharField("Exception Class", max_length=120)
     message = models.TextField("Exception Message", max_length=1000)
+
+
+class SellYourGames(models.Model):
+    game_choice = {("xbox_one", "Xbox One"),
+                   ("ps4", "Playstation 4")
+                   }
+
+    game_name = models.CharField(max_length=150, blank=True, null=True)
+    game_category = models.CharField(max_length=30, choices=game_choice)
+    customer_name = models.CharField(max_length=50, blank=True, null=True)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)

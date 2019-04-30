@@ -1,0 +1,26 @@
+User-agent: *
+Disallow: /cart/checkout/
+Disallow: /cart/
+Disallow: /cart/delete/
+Disallow: /cart/test/
+Disallow: /cart/
+Disallow: /cache/clear/
+Disallow: /logout/
+Disallow: /my-orders/
+Disallow: /reset-password/
+Disallow: /my-account/
+
+
+
+User-agent: Scrapy
+Disallow: /
+
+User-agent: Googlebot
+Disallow: /cart/checkout/
+Disallow: /cart/
+
+User-agent: Googlebot-image
+Disallow:
+
+User-agent: MJ12bot
+Disallow: /

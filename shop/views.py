@@ -12,7 +12,9 @@ from carts.models import *
 from django.db.models import Q
 from shop.debug import log_exceptions
 from django.views.generic.edit import UpdateView, FormView
-from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
+
+
 # Create your views here.
 
 
@@ -114,10 +116,8 @@ class ProductListView(ListView):
     @log_exceptions("Product List Querysets Function")
     def get_queryset(self):
         sort_by = self.request.GET.get("sort_by")
-        print(self.kwargs.get("slug"))
         queryset = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
                                           item_status__in=["I", "S"])
-
         if self.request.method == "GET":
             if sort_by == "name":
                 return queryset.order_by("name")
@@ -125,7 +125,6 @@ class ProductListView(ListView):
                 return queryset.order_by("mrp")
             else:
                 return queryset.order_by("-date")
-
         return queryset
 
     @log_exceptions("Product Side List Filter Function")
@@ -190,10 +189,7 @@ class ArticleListView(ListView):
     context_object_name = "articles"
 
     def get_queryset(self):
-        articles = cache.get("articles_list_view")
-        if articles is None:
-            articles = Blog.objects.filter(status="P").order_by("-date")
-            cache.set("articles_list_view", articles)
+        articles = Blog.objects.filter(status="P").order_by("-date")
         return articles
 
 
@@ -269,7 +265,11 @@ def login_register_page(request):
         "login_form": user_login_form,
         "signup_form": user_signup_form,
     }
-
+    if request.session.get("error", None):
+        context["error"] = request.session["error"]
+        del request.session["error"]
+    else:
+        pass
     if user_login_form.is_valid():
         username = user_login_form.cleaned_data.get("username")
         password = user_login_form.cleaned_data.get("password")
@@ -284,21 +284,26 @@ def login_register_page(request):
             login(request, user)
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
-            context["error"] = "Incorrect username or password*"
-            return HttpResponseRedirect('')
+            request.session["error"] = "Incorrect username or password"
+            return HttpResponseRedirect("")
 
     if user_signup_form.is_valid():
         email = user_signup_form.cleaned_data.get("email")
         password = user_signup_form.cleaned_data.get("password")
+        confirm_password = user_signup_form.cleaned_data.get("confirm_password")
         user = User.objects.filter(email=email)
         if not user:
-            user_obj = User.objects.create_user(username=email, email=email, password=password)
-            user_obj.save()
-            user_login = authenticate(request, username=email, password=password)
-            login(request, user_login)
-            return redirect("shop:homepage")
+            if password == confirm_password:
+                user_obj = User.objects.create_user(username=email, email=email, password=password)
+                user_obj.save()
+                user_login = authenticate(request, username=email, password=password)
+                login(request, user_login)
+                return redirect("shop:homepage")
+            else:
+                request.session["error"] = "Password not matched"
+                return HttpResponseRedirect('')
         else:
-            kwargs = {"error": "User already exist, Please try with different email*"}
+            request.session["error"] = "User already exist!"
             return HttpResponseRedirect('')
 
     if request.user.is_authenticated:
@@ -345,18 +350,13 @@ class ComingSoonView(TemplateView):
     template_name = "shop/coming-soon.html"
 
 
-class MyAccountView(FormView):
+class MyAccountView(TemplateView):
+    password_reset_form = ResetPasswordForm
+    personal_detail_form = PersonalDetailForm
     template_name = "shop/my-account.html"
-    form_class = PersonalDetailForm
-    success_url = "shop.homepage"
 
-    def get_context_data(self, **kwargs):
-        if 'form' not in kwargs:
-            kwargs["form"] = self.get_form()
-            kwargs["user"] = self.request.user
-            print(kwargs)
-            print(self.get_form())
-        return super().get_context_data(**kwargs)
+    def post(self, request):
+        post_data = request.POST or None
 
 
 class SellYourGamesView(FormView):
@@ -364,17 +364,44 @@ class SellYourGamesView(FormView):
     form_class = SellGamesForm
     success_url = "shop/successful/game-sell-query-submitted-successfuly.html"
 
+    def form_valid(self, form):
+        game_name = form.cleaned_data["game_name"]
+        customer_name = form.cleaned_data["name"]
+        email = form.cleaned_data["email"]
+        mobile = form.cleaned_data
+        return super().form_valid(form)
 
-class ResetPasswordView(PasswordResetView):
-    template_name = "shop/registrations/password_reset.html"
-    form_class = ResetPasswordForm
-    print(form_class)
-    success_url = "shop/registrations/password_reset_done.html"
 
+# def forget_password(request):
+#     forget_password_form = ResetPasswordForm(request.POST or None)
+#     context = {
+#         'form': forget_password_form,
+#     }
+#     if request.session.get("error", None):
+#         context["error"] = request.session.get("error")
+#         del request.session["error"]
+#
+#     if forget_password_form.is_valid():
+#         email = forget_password_form.cleaned_data.get("email")
+#         print(email)
+#         try:
+#             user = User.objects.get(email=email)
+#         except ObjectDoesNotExist:
+#             request.session["error"] = 'User not Found Please Register Yourself'
+#         else:
+#
+#     return render(request, "shop/registrations/password_reset.html", context)
 
-# class PasswordResetDoneView(TemplateView):
-#     template_name = "shop/registrations/password_reset_done.html"
-
+# class ForgetPasswordView(PasswordResetView):
+#     template_name = "shop/registrations/password_reset.html"
+#     success_url = "shop/registrations/password_reset_done.html"
+#
+#     print()
+#
+#
+# class ForgetPasswordConfirmedView(PasswordResetConfirmView):
+#     template_name = "shop/registrations/password_reset_confirmed.html"
+#     post_reset_login = True
 
 def clear_cache(request):
     cache.clear()

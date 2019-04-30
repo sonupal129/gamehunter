@@ -3,6 +3,7 @@
 {% load thumbnail %}
 {% block title%}<title>My Cart</title>{% endblock %}
 {% block navbar %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 <div class="breadcrumb-area black-bg-4">
     <div class="container">
         <div class="breadcrumb-content">
@@ -17,7 +18,7 @@
 <div class="cart-main-area pt-60 pb-65 black-bg-5 ">
     {% if products or pay_game_products %}
     <div class="container">
-        <h3 class="page-title">Your cart items</h3>
+        <h3 class="page-title" align="center">Your Cart Items</h3>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                 <form action="#">
@@ -94,7 +95,7 @@
                                 <td class="product-price-cart"><span
                                         class="amount">{{ product.total_discount }} %</span>
                                 </td>
-                                <td class="product-subtotal">₹ {{ product.get_pay_per_game_subscription_price }}</td>
+                                <td class="product-subtotal">₹ {{ product.get_pay_per_game_subscription_price.value }}</td>
                                 <td class="product-remove">
                                     <a href="{% url 'carts:remove' product.slug %}"><i class="fa fa-times"></i></a>
                                 </td>
@@ -184,12 +185,28 @@
                             <h5>Discount <span>₹ {{ cart.get_discount }}</span></h5>
                             <h4 class="grand-totall-title">Grand Total <span>₹ {{ cart.total_selling_price }}</span>
                             </h4>
-                            <a href="{% url 'carts:checkout' %}">Proceed to Checkout</a>
+                            <a id="checkout" href="{% url 'carts:checkout' %}">Proceed to Checkout</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        {% if error %}
+        <script>
+        $(document).ready(function(){
+        const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 5000,
+                });
+                Toast.fire({
+              type: 'error',
+              title: '{{ error }}'
+               })
+               });
+        </script>
+        {% endif %}
     </div>
     {% else %}
     <h3 class="page-title" align="center">Nothing here to show, to continue shopping. <a

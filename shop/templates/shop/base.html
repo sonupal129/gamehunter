@@ -261,7 +261,12 @@ fbq('track', 'PageView');
                         </li>
                         <li><a href="{% url 'shop:subscription-list' %}"><b><u>Subscriptions</u></b></a></li>
                         <li><a href="{% url 'shop:coming-soon' %}">collectives/accessories</a></li>
-                        <li><a href="{% url 'shop:coming-soon' %}">community</a></li>
+                        <li><a href="{% url 'shop:coming-soon' %}">events<i class="ion-chevron-down"></i></a>
+                            <ul class="submenu">
+                                <li><a href="#">Upcoming Events</a></li>
+                                <li><a href="#">Gallery</a></li>
+                            </ul>
+                        </li>
                         <li><a href="{% url 'shop:articles' %}">gaming charcha</a></li>
                     </ul>
                 </nav>
@@ -448,7 +453,7 @@ fbq('track', 'PageView');
 <script src="{% static 'js/owl.carousel.min.js' %}"></script>
 <script src="{% static 'js/plugins.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
-
+<script src="{% static 'js/video.popup.js' %}"></script>
 {% if not DEBUG %}
 <!-- Start of Async Drift Code -->
 <script>

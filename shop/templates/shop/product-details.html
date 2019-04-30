@@ -2,11 +2,10 @@
 {% load staticfiles %}
 {% load thumbnail %}
 <!-- Site Title -->
-{% block title%}<title>Buy online {{ product.name|lower }} for {{ product.category|lower }} at GameHunter.in</title>{% endblock %}
+{% block title%}<title>Buy or Rent Online {{ product.name|title }} for {{ product.category|upper }} in India, Availablero at GameHunter.in</title>{% endblock %}
 
 {% block navbar %}
-<meta name="keywords" content="{{ product.category|upper }} Games, Consoles, Accessories, Collectives">
-<meta name="title" content="Buy or rent {{ product.name|title }} for {{ product.category|upper }} online, available at Gamehunter">
+<meta name="title" content="Buy or Rent Online {{ product.name|title }} for {{ product.category|upper }} in India, Available at Gamehunter.in">
 <meta name="description" content="{{ product.get_product_description|striptags }}"/>
 <div class="breadcrumb-area black-bg-4">
     <div class="container">
@@ -28,11 +27,11 @@
                         <img class="zoompro" src="{{ product.get_default_photo.file.url }}"
                              alt="{{ product.name|upper }}" width="570" height="570"/>
                         {% if product.game_trailer %}
-                        <div class="product-video" >
-                            <a target="_blank" id="video" href="{{ product.game_trailer }}">
-                                <i class="fa fa-video-camera"></i>
-                                Watch Trailer
-                            </a>
+                        <div class="product-video">
+                                    <a id="video" video-url="{{ product.game_trailer }}">
+                                        <i class="fa fa-video-camera"></i>
+                                        Watch Trailer
+                                    </a>
                         </div>
                         {% endif %}
                     </div>
@@ -104,6 +103,16 @@
                         {% endif %}
                         <p>Usually Shipped in: <span>2-4 Days</span></p>
                     </div>
+                    {% if product.get_pay_per_game_subscription_price %}
+                    <div class="my-alert alert-orange">
+                        <div class="Message-icon">
+                            <i class="fa fa-exclamation" style="font-size:36px"></i>
+                        </div>
+                        <div class="Message-body">
+                            <p>To rent a game for Rs 300 or 500, you will have to buy a plan of rupee 2000.</p>
+                        </div>
+                    </div>
+                    {% endif %}
                     {% if product.item_status == 'I' or product.item_status == 'S' %}
                     <p>{{product.description|striptags|safe|slice:":300"}}</p>
                     <!--<div class="pro-dec-feature">-->
@@ -145,9 +154,9 @@
                             {% if product.get_pay_per_game_subscription_price %}
                             <span style="padding-left: 15px; padding-right: 15px; font-size: 24px;">Or</span>
                             <a class="action-cart"
-                               title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price }} Only"
+                               title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price.value }} Only"
                                href="{% url 'carts:pay-per-game-product' product.slug %}">Get @
-                                ₹{{ product.get_pay_per_game_subscription_price }} Only</a>
+                                ₹{{ product.get_pay_per_game_subscription_price.value }} Only</a>
                             {% endif %}
                         </div>
                         {% elif product.item_status == 'S' %}
@@ -157,9 +166,9 @@
                             {% if product.get_pay_per_game_subscription_price %}
                             <span style="padding-left: 15px; padding-right: 15px; font-size: 24px;">Or</span>
                             <a class="action-cart"
-                               title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price }} Only"
+                               title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price.value }} Only"
                                href="{% url 'carts:pay-per-game-product' product.slug %}">Get @
-                                ₹{{ product.get_pay_per_game_subscription_price }} Only</a>
+                                ₹{{ product.get_pay_per_game_subscription_price.value }} Only</a>
                             {% endif %}
                         </div>
                         {% endif %}
@@ -211,7 +220,7 @@
             <div class="tab-content description-review-bottom">
                 <div id="des-details1" class="tab-pane active">
                     <div class="product-description-wrapper">
-                        {{product.description|safe}}
+                        <p>{{ product.description|safe }}</p>
                     </div>
                 </div>
                 <!--<div id="des-details2" class="tab-pane">-->
@@ -263,8 +272,8 @@
                 <div class="list-col black-bg-5">
                     <div class="gridview">
                         <div class="product-content text-center">
-                            <span> For {{ product.category.name }}</span>
-                            <h4><a href="{{ product.get_absolute_url }}"> {{ product.get_product_title_name }} </a></h4>
+                            <span><b> For {{ product.category.name }}</b></span>
+                            <h4><a href="{{ product.get_absolute_url }}"> {{ product.get_product_title_name|title }} </a></h4>
                             {% if product.item_status == "I" %}
                             {% ifequal product.total_discount 0 %}
                             <div class="product-price-wrapper">
@@ -290,7 +299,7 @@
                                 <i class="ion-android-star-outline theme-star"></i>
                                 <i class="ion-android-star-outline"></i>
                             </div>
-                            <p>{{ product.get_product_description|striptags|safe }} </p>
+                            <p class="product-description-wrapper">{{ product.get_product_description|safe }} </p>
                             {% if product in cart.products.all or product in cart.pay_game_products.all %}
                             <div class="product-action">
                                 <a class="action-cart" title="Go to Cart"
@@ -309,9 +318,9 @@
                             {% elif product.get_pay_per_game_subscription_price %}
                             <div class="product-action">
                                 <a class="action-cart"
-                                   title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price }} Only"
+                                   title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price.value }} Only"
                                    href="{% url 'carts:pay-per-game-product' product.slug %}">
-                                    Get @ ₹{{ product.get_pay_per_game_subscription_price }} Only </a>
+                                    Get @ ₹{{ product.get_pay_per_game_subscription_price.value }} Only </a>
                             </div>
                             {% else %}
                             <div class="product-action">
@@ -361,6 +370,20 @@ a2a_config.onclick = 1;
 a2a_config.num_services = 4;
 </script>
 <script async src="https://static.addtoany.com/menu/page.js"></script>
+<script>
+    $(function(){
+        $("#video").videoPopup({
+            autoplay: 1,
+            controlsColor: 'white',
+            showVideoInformations: 0,
+            width: 1000,
+            customOptions: {
+                rel: 0,
+                end: 60
+            }
+        });
+    });
+</script>
 <!-- AddToAny END -->
 {% endblock %}
 <!-- Nav-bar Area End Here-->

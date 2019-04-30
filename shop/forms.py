@@ -9,7 +9,10 @@ class SignUpForm(forms.Form):
         "placeholder": "Email",
     }))
     password = forms.CharField(max_length=30, required=True, widget=forms.PasswordInput(attrs={
-        "placeholder": "Password",
+        "placeholder": "Enter Password",
+    }))
+    confirm_password = forms.CharField(max_length=30, required=True, widget=forms.PasswordInput(attrs={
+        "placeholder": "Enter Password",
     }))
 
 
@@ -18,7 +21,7 @@ class UserLoginForm(forms.Form):
         "placeholder": "Email"
     }))
     password = forms.CharField(max_length=30, widget=forms.PasswordInput(attrs={
-        "placeholder": "Password"
+        "placeholder": "Enter Password"
     }))
 
 
@@ -46,6 +49,8 @@ class ChangePasswordForm(forms.Form):
 
 class SellGamesForm(forms.Form):
     game_name = forms.CharField(max_length=18, widget=forms.TextInput(attrs={
+        "placeholder": "Name of Game You want to Sell", }))
+    game_type = forms.CharField(max_length=18, widget=forms.TextInput(attrs={
         "placeholder": "Name of Game You want to Sell", }))
     name = forms.CharField(max_length=18, widget=forms.TextInput(attrs={
         "placeholder": "Your Name",

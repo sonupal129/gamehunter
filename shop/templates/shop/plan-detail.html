@@ -5,9 +5,7 @@
 {% block title%}<title>Rental Plan {{ plan.name|title }}</title>{% endblock %}
 
 {% block navbar %}
-<meta name="title" content="buy rental plan {{ plan.name|lower }} for unlimited games, available at gamehunter.in">
-<meta name="keywords"
-      content="unlimited games, games on rent, subscribe for free games, game rental, video games, console games, party games, action games ">
+<meta name="title" content="buy rental plan {{ plan.name|lower }} for unlimited playstation and xbox games, available at gamehunter.in">
 <meta name="description" content="Subscribe for unlimited games available at gamehunter">
 {% if plan.active %}
 <div class="breadcrumb-area black-bg-4">
@@ -49,11 +47,9 @@
                             <img src="{{ plan.image.url }}" alt="" height="108px" width="90px">
                         </a>
                     </div>
-
                     {% if plan.discount %}
                     <span> {{ plan.discount }}% Off!</span>
                     {% endif %}
-
                 </div>
             </div>
             <div class="col-lg-6 col-md-12">
@@ -107,7 +103,17 @@
                     </div>
                     {% endif %}
                     {% endif %}
-                    <p>{{ plan.get_plan_description|striptags|safe }} </p>
+                    {% if plan.type == "GB" %}
+                    <div class="my-alert alert-orange">
+                        <div class="Message-icon">
+                            <i class="fa fa-exclamation" style="font-size:36px"></i>
+                        </div>
+                        <div class="Message-body">
+                            <p>Once you buy this plan you can rent any game for 300 or 500 rupees</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <p class="product-description-wrapper">{{ plan.get_plan_description|safe }} </p>
                     <!--<div class="pro-dec-feature">-->
                     <!--<ul>-->
                     <!--<li><input type="checkbox"> Protection Plan: <span> 2 year  $4.99</span></li>-->
@@ -192,7 +198,7 @@
                 </div>
                 <div id="des-details2" class="tab-pane">
                     <div class="product-anotherinfo-wrapper">
-                        {{ plan.term_condition|safe }}
+                        <p>{{ plan.term_condition|safe }}</p>
                     </div>
                 </div>
             </div>

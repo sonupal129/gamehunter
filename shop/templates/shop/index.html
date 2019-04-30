@@ -3,13 +3,12 @@
 {% load thumbnail %}
 
 <!-- Site Title -->
-{% block title%}<title>Gamehunter game store for console games subscriptions/rent, console games, consoles, collectives and many
-    more</title>{% endblock %}
+{% block title%}<title>Gamehunter.in | A Game Subscription – Rental | Electronic Sports Company</title>{% endblock %}
 
 {% block navbar %}
-<meta name="keywords" content="Games Online, Games on Subscription, Game Rental, Games on Rent, Consoles on Rent"/>
+<meta name="keywords" content="Games Online, Game Rental, Games on Rent, Consoles on Rent"/>
 <meta name="description"
-      content="GameHunter help gamer to create way to play unlimited games. A subscription package allows access to user to play hundreds of games displayed on website library."/>
+      content="Gamehunter is an online platform to rent/subscribe games. Our mission is to provide the most cost effective way to play wide range of PlayStation 4 & Xbox One games.  Play series and new games under all memberships."/>
 {% endblock %}
 <!-- Nav-bar Area End Here-->
 
@@ -181,7 +180,8 @@
                                         <a class="action-cart"
                                            title="Get This Game on Subscription at rupee {{ playstationgame.get_pay_per_game_subscription_price }} Only"
                                            href="{% url 'carts:pay-per-game-product' playstationgame.slug %}">
-                                            Get @ ₹{{ playstationgame.get_pay_per_game_subscription_price }} Only </a>
+                                            Get @ ₹ {{ playstationgame.get_pay_per_game_subscription_price.value }} Only
+                                        </a>
                                     </div>
                                     {% else %}
                                     <div class="product-action">
@@ -1169,43 +1169,6 @@
 
 <!-- Homepage-Blogs Area Starts Here-->
 {% block blogging %}
-<!-- Bloggins Area Starts -->
-<div class="blog-area black-bg-5 pt-60 pb-65 blog-game">
-    <div class="container">
-        <div class="section-border mb-40">
-            <h4 class="section-title white-title section-bg-black">From our Blogs</h4>
-        </div>
-        <div class="blog-slider-active-3 owl-carousel nav-style  nav-style-yellowgreen">
-            {% for article in articles %}
-            <div class="blog-wrapper-2 text-center cycle-blog-wrapper">
-
-                <div class="blog-img mb-15">
-                    <a href="{{ article.get_absolute_url }}">
-                        {% thumbnail article.card_image "370x220" crop="center" quality=70 as im %}
-                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
-                    {% endthumbnail %}
-                    <div class="blog-categori">
-                        <span>{{ article.blog_type|upper }}</span>
-                    </div>
-                </div>
-                <div class="blog-content">
-                    <h4><a href="{{ article.get_absolute_url }}">{{ article.get_blog_title_name }}</a></h4>
-                    <p>{{ article.get_blog_description|striptags }}</p>
-                </div>
-                <div class="blog-meta">
-                    <ul>
-                        <li>{{ article.date_created }}</li>
-                        <!--<li>-->
-                            <!--<a href="#">02 Comments</a>-->
-                        <!--</li>-->
-                    </ul>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-<!-- Bloggins Area Ends -->
 
 {% endblock %}
 <!-- Homepage-Blogs Area Ends Here-->

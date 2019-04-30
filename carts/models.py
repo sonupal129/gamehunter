@@ -81,7 +81,7 @@ class Cart(models.Model):
         for p in self.products.all():
             total += p.get_mrp_and_selling_price()[0]
         for p in self.pay_game_products.all():
-            total += int(p.get_pay_per_game_subscription_price())
+            total += int(p.get_pay_per_game_subscription_price().value)
         return total
 
     def get_mrp(self):
@@ -92,7 +92,7 @@ class Cart(models.Model):
         for p in self.products.all():
             total += p.get_mrp_and_selling_price()[1]
         for p in self.pay_game_products.all():
-            total += int(p.get_pay_per_game_subscription_price())
+            total += int(p.get_pay_per_game_subscription_price().value)
         return total
 
     def total_cart_items_count(self):

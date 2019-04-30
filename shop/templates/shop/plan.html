@@ -11,7 +11,6 @@
 <meta name="title" content="Subscriber for unlimited console games">
 <meta name="description"
       content="Play Unlimited PlayStation 4 & Xbox one Games| Buy Subscription and get access to hundreds of games and get fast delivery to your door step. Buy 3 Months, 6 Months & 12 Months Subscription">
-<meta name="keywords" content="ps4 games on rent, games on rent, games on subscription, free games, games rental, games on demad, rent a game, online renting games, video games, playstation games, games, xbox games">
 <div class="breadcrumb-area black-bg-4">
     <div class="container">
         <div class="breadcrumb-content">
@@ -70,24 +69,20 @@
                                             {% endif %}
                                         </div>
                                         <p>{{ plan.get_plan_description|striptags|safe }}</p>
+                                        <div class="product-action">
                                         {% if user.is_authenticated %}
                                         {% if user.userprofile.has_subscription %}
-                                        <div class="product-action">
                                             <a class="action-cart" href="#" style="background-color: #ff9900;"
                                                title="Choose Your Games"> Choose Your Games </a>
-                                        </div>
                                         {% else %}
-                                        <div class="product-action">
                                             <a class="action-cart" href="{% url 'carts:add-plan' plan.slug %}"
                                                title="Add to Cart"> Add to Cart </a>
-                                        </div>
                                         {% endif %}
                                         {% else %}
-                                        <div class="product-action">
                                             <a class="action-cart" href="{% url 'carts:add-plan' plan.slug %}"
                                                title="Add to Cart"> Add to Cart </a>
-                                        </div>
                                         {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             {% endfor %}

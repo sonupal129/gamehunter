@@ -34,8 +34,10 @@
                         </a>
                     </div>
                     <span>{{ article.blog_type|title }}</span>
-                    <h3><a href="{{ article.get_absolute_url }}">{{ article.get_blog_title_name }}</a></h3>
-                    <p>{{ article.get_blog_description|striptags }}</p>
+                    <h3><a href="{{ article.get_absolute_url }}">{{ article.get_blog_title_name|title }}</a></h3>
+                    <div class="blog-description-list">
+                    {{ article.get_blog_description|striptags }}
+                    </div>
                     <div class="blog-meta-bundle">
                         <div class="blog-meta">
                             <ul>

@@ -8,6 +8,7 @@ from shop.sitemaps import *
 from django.contrib.sitemaps import views as sitemap_views
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
+from django.views.generic import TemplateView
 # Started Working Below
 
 
@@ -22,9 +23,11 @@ sitemaps = {
 }
 
 urlpatterns = [
+    path('robots.txt/', TemplateView.as_view(template_name="shop/robots.txt", content_type='text/plain'),
+         name='robots'),
     path('cache/clear', clear_cache, name='clear-cache'),
     path('url-optimize/sitemap.xml/', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
-    path('url-optimize/sitemap-<section>.xml', (sitemap_views.sitemap), {'sitemaps': sitemaps}, name='sitemaps'),
+    path('url-optimize/sitemap-<section>.xml', sitemap_views.sitemap, {'sitemaps': sitemaps}, name='sitemaps'),
     path('', HomePageView.as_view(), name='homepage'),
     # path('consoles/', views.ProductListView.as_view(), name='consoles'),
     # path('gaming-accessories/', views.ProductListView.as_view(), name='gaming-accessories'),
@@ -49,6 +52,13 @@ urlpatterns = [
     path('my-account/', login_required(MyAccountView.as_view()), name='my-account'),
     path('sell-ur-games/', SellYourGamesView.as_view(), name='sell-games'),
     #     Password Change Urls
-    path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
-
+    path('password-reset/',
+         auth_views.PasswordResetView.as_view(template_name="shop/registrations/password_reset.html"),
+         name='password_reset'),
+    path('password-reset/done/',
+         auth_views.PasswordResetDoneView.as_view(template_name="shop/registrations/password_reset_done.html"),
+         name='password_reset_done'),
+    path('reset-password-confirm/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(template_name="shop/registrations/password_reset_confirm.html"),
+         name='password_reset_confirm'),
 ]

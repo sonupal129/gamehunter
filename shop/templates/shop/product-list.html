@@ -3,7 +3,7 @@
 {% load thumbnail %}
 <!-- Site Title -->{% block title%}
 
-<title>Subscribe | Buy | Sell {% if category %} {{ category.name|title }} Games Online at GameHunter {% endif %}
+<title>Rent | Buy | Sell {% if category %} {{ category.name|title }} Games Online at GameHunter {% endif %}
 </title>{% endblock %}{% block navbar %}
 {% if category %}
 <div class="breadcrumb-area black-bg-4">
@@ -203,7 +203,7 @@
                                                         <i class="ion-android-star-outline theme-star"></i>
                                                         <i class="ion-android-star-outline"></i>
                                                     </div>
-                                                    <p>{{ product.get_product_description|striptags|safe }}</p>
+                                                    <p class="product-description-wrapper">{{ product.get_product_description|safe }}</p>
                                                     <div class="product-action">
                                                         <!--<a class="same-action" title="Wishlist" href="#">-->
                                                         <!--<i class="fa fa-heart-o"></i>-->
@@ -221,10 +221,10 @@
                                                         </a>
                                                         {% elif product.get_pay_per_game_subscription_price and product.item_status == "S" %}
                                                         <a class="action-cart"
-                                                           title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price }} Only"
+                                                           title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price.value }} Only"
                                                            href="{% url 'carts:pay-per-game-product' product.slug %}">
                                                             Get @ ₹
-                                                            {{ product.get_pay_per_game_subscription_price }}
+                                                            {{ product.get_pay_per_game_subscription_price.value }}
                                                             Only
                                                         </a>
                                                         {% elif product.item_status == "S" %}
