@@ -13,8 +13,9 @@ from django.db.models import Q
 from shop.debug import log_exceptions
 from django.views.generic.edit import UpdateView, FormView
 from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
-
-
+from shop.emails import send_password_reset_email
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, force_bytes
 # Create your views here.
 
 
@@ -392,16 +393,24 @@ class SellYourGamesView(FormView):
 #
 #     return render(request, "shop/registrations/password_reset.html", context)
 
-# class ForgetPasswordView(PasswordResetView):
-#     template_name = "shop/registrations/password_reset.html"
-#     success_url = "shop/registrations/password_reset_done.html"
-#
-#     print()
-#
-#
-# class ForgetPasswordConfirmedView(PasswordResetConfirmView):
-#     template_name = "shop/registrations/password_reset_confirmed.html"
-#     post_reset_login = True
+def reset_password(request):
+    reset_form = ResetPasswordForm(request.POST or None)
+    context = {
+        'form': reset_form,
+    }
+    if reset_form.is_valid():
+        email = reset_form.cleaned_data.get("email")
+        try:
+            user = User.objects.get(email=email)
+        except ObjectDoesNotExist:
+            ""
+        else:
+            send_password_reset_email(request, user)
+            return redirect("shop:password_reset_done")
+    else:
+        redirect("shop:password_reset")
+    return render(request, "shop/registrations/password_reset.html", context)
+
 
 def clear_cache(request):
     cache.clear()

@@ -226,6 +226,10 @@ EXCLUDE_FROM_MINIFYING = ('url-optimize/sitemap.xml/', 'cki39vbl3/admin/')
 #     },
 # }
 
+# Password Reset Expiry Time
+
+PASSWORD_RESET_TIMEOUT_DAYS = 1
+
 
 try:
     from .local_settings import *
