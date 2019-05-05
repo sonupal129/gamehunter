@@ -6,7 +6,7 @@
 <title>Rent | Buy | Sell {% if category %} {{ category.name|title }} Games Online at GameHunter {% endif %}
 </title>{% endblock %}{% block navbar %}
 {% if category %}
-<div class="breadcrumb-area black-bg-4">
+<div class="breadcrumb-area gray-bg-5">
     <div class="container">
         <div class="breadcrumb-content">
             <ul>
@@ -17,12 +17,12 @@
     </div>
 </div>
 {% endif %}
-<div class="shop-page-area pt-30 pb-65 black-bg-5">
+<div class="shop-page-area pt-30 pb-65">
     <div class="container">
         {% if products %}
         <div class="row">
             <div class="col-lg-3">
-                <div class="shop-sidebar-wrapper black-bg-4">
+                <div class="shop-sidebar-wrapper gray-bg-7 mrg-top-md mrg-top-sm">
                     <!--<div class="shop-widget"><h4 class="shop-sidebar-title">Shop By Categories</h4>-->
                     <!--<div class="shop-catigory">-->
                     <!--<ul id="faq">-->
@@ -171,7 +171,7 @@
                                         <div class="list-col">
                                             <div class="gridview">
                                                 <div class="product-content text-center">
-                                                    <span><b>For {{ product.category.name|upper }}</b></span>
+                                                    <span>For {{ product.category.name|upper }}</span>
                                                     <h4><a href="{{ product.get_absolute_url }}">
                                                         {{ product.get_product_title_name|title }}</a></h4>
                                                     {% if product.item_status == 'O' %}

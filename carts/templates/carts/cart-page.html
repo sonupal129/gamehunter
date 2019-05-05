@@ -4,7 +4,7 @@
 {% block title%}<title>My Cart</title>{% endblock %}
 {% block navbar %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
-<div class="breadcrumb-area black-bg-4">
+<div class="breadcrumb-area gray-bg-5">
     <div class="container">
         <div class="breadcrumb-content">
             <ul>
@@ -15,7 +15,7 @@
     </div>
 </div>
 <!-- shopping-cart-area start -->
-<div class="cart-main-area pt-60 pb-65 black-bg-5 ">
+<div class="cart-main-area pt-60 pb-65">
     {% if products or pay_game_products %}
     <div class="container">
         <h3 class="page-title" align="center">Your Cart Items</h3>
@@ -165,7 +165,7 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="discount-code-wrapper">
                             <div class="title-wrap">
-                                <h4 class="cart-bottom-title section-bg-black">Use Coupon Code</h4>
+                                <h4 class="cart-bottom-title section-bg-white">Use Coupon Code</h4>
                             </div>
                             <div class="discount-code">
                                 <p>Enter your coupon code if you have one.</p>
@@ -179,7 +179,7 @@
                     <div class="col-lg-4 col-md-12">
                         <div class="grand-totall">
                             <div class="title-wrap">
-                                <h4 class="cart-bottom-title section-bg-black">Cart Total</h4>
+                                <h4 class="cart-bottom-title section-bg-gary-cart">Cart Total</h4>
                             </div>
                             <h5>Subtotal<span>₹ {{ cart.total_mrp }}</span></h5>
                             <h5>Discount <span>₹ {{ cart.get_discount }}</span></h5>
@@ -214,7 +214,6 @@
         here </a></h3>
     {% endif %}
 </div>
-{% include 'shop/include/partner-brand.html' %}
 {% include 'shop/include/shop-service-page.html' %}
 {% endblock %}
 <!-- Nav-bar Area End Here-->

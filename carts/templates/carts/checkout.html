@@ -4,7 +4,7 @@
 
 {% block title%}<title>Checkout</title>{% endblock %}
 {% block navbar %}
-<div class="breadcrumb-area black-bg-4">
+<div class="breadcrumb-area gray-bg-5">
     <div class="container">
         <div class="breadcrumb-content">
             <ul>
@@ -16,7 +16,7 @@
     </div>
 </div>
 <!-- checkout-area start -->
-<div class="checkout-area pb-45 pt-65 black-bg-5 ">
+<div class="checkout-area pb-45 pt-65">
     <div class="container">
         <div class="row">
             <div class="col-lg-9-1">
@@ -28,7 +28,7 @@
                                     Shipping Details</a></h5>
                             </div>
                             <div id="payment-1" class="panel-collapse collapse show">
-                                <div class="panel-body">
+                                <div class="panel-body gray-bg-7">
                                     <form method="POST">
                                         {% csrf_token %}
                                         <div class="billing-information-wrapper">
@@ -161,6 +161,5 @@
         </div>
     </div>
 </div>
-{% include 'shop/include/partner-brand.html' %}
 {% include 'shop/include/shop-service-page.html' %}
 {% endblock %}

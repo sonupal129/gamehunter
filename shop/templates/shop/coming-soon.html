@@ -3,20 +3,20 @@
 
 {% block title%}<title>Coming Soon.......</title>{% endblock %}
 {% block navbar %}
-<div class="breadcrumb-area black-bg-4">
+<div class="breadcrumb-area gray-bg-5">
     <div class="container">
         <div class="breadcrumb-content">
             <ul>
                 <li><a href="{% url 'shop:homepage' %}">HOME</a></li>
+                <li class="active">COMING SOON......</li>
             </ul>
         </div>
     </div>
 </div>
 <!-- shopping-cart-area start -->
-<div class="cart-main-area pt-60 pb-65 black-bg-5 ">
+<div class="cart-main-area pt-60 pb-65">
     <h1 class="page-title" align="center">Stay Tuned!, Coming Soon</h1>
 </div>
-{% include 'shop/include/partner-brand.html' %}
 {% include 'shop/include/shop-service-page.html' %}
 {% endblock %}
 <!-- Nav-bar Area End Here-->

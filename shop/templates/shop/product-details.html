@@ -7,7 +7,7 @@
 {% block navbar %}
 <meta name="title" content="Buy or Rent Online {{ product.name|title }} for {{ product.category|upper }} in India, Available at Gamehunter.in">
 <meta name="description" content="{{ product.get_product_description|striptags }}"/>
-<div class="breadcrumb-area black-bg-4">
+<div class="breadcrumb-area gray-bg-5">
     <div class="container">
         <div class="breadcrumb-content">
             <ul>
@@ -18,7 +18,7 @@
         </div>
     </div>
 </div>
-<div class="product-details pt-65 pb-65 black-bg-5">
+<div class="product-details pt-65 pb-65">
     <div class="container">
         <div class="row">
             <div class="col-lg-6 col-md-12">
@@ -133,13 +133,6 @@
                         <div class="product-action">
                             <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">Go
                                 to Cart</a>
-                            <!--<a class="same-action" title="Wishlist" href="#">-->
-                            <!--<i class="fa fa-heart-o">dfsdfs</i>-->
-                            <!--</a>-->
-                            <!--<a class="same-action compare-mrg" data-target="#exampleCompare" data-toggle="modal"-->
-                            <!--title="Compare" href="#">-->
-                            <!--<i class="fa fa-sliders fa-rotate-90"></i>-->
-                            <!--</a>-->
                         </div>
                         {% else %}
                         {% if product.item_status == 'I' %}
@@ -210,7 +203,7 @@
         </div>
     </div>
 </div>
-<div class="description-review-area pt-25 pb-70 black-bg-5">
+<div class="description-review-area pt-25 pb-70">
     <div class="container">
         <div class="description-review-wrapper">
             <div class="description-review-topbar nav text-center">
@@ -249,10 +242,10 @@
         </div>
     </div>
 </div>
-<div class="product-area pb-45 black-bg-5">
+<div class="product-area pb-45">
     <div class="container">
         <div class="section-border mb-10">
-            <h4 class="section-title section-bg-black">Related Products</h4>
+            <h4 class="section-title section-bg-white">Related Products</h4>
         </div>
         <div class="product-slider-nav nav-style"></div>
         <div class="headphone-slider-active product-slider owl-carousel nav-style">
@@ -269,10 +262,10 @@
                     {% endif %}
                     {% endif %}
                 </div>
-                <div class="list-col black-bg-5">
+                <div class="list-col">
                     <div class="gridview">
                         <div class="product-content text-center">
-                            <span><b> For {{ product.category.name }}</b></span>
+                            <span>For {{ product.category.name }}</span>
                             <h4><a href="{{ product.get_absolute_url }}"> {{ product.get_product_title_name|title }} </a></h4>
                             {% if product.item_status == "I" %}
                             {% ifequal product.total_discount 0 %}
@@ -335,30 +328,6 @@
                 </div>
             </div>
             {% endfor %}
-        </div>
-    </div>
-</div>
-<div class="brand-logo-area black-bg-5">
-    <div class="container">
-        <div class="brand-logo-active owl-carousel border-top-2 ptb-60">
-            <div class="single-brand-logo">
-                <img alt="" src="assets/img/brand-logo/brand-logo-1.png">
-            </div>
-            <div class="single-brand-logo">
-                <img alt="" src="assets/img/brand-logo/brand-logo-2.png">
-            </div>
-            <div class="single-brand-logo">
-                <img alt="" src="assets/img/brand-logo/brand-logo-3.png">
-            </div>
-            <div class="single-brand-logo">
-                <img alt="" src="assets/img/brand-logo/brand-logo-4.png">
-            </div>
-            <div class="single-brand-logo">
-                <img alt="" src="assets/img/brand-logo/brand-logo-5.png">
-            </div>
-            <div class="single-brand-logo">
-                <img alt="" src="assets/img/brand-logo/brand-logo-2.png">
-            </div>
         </div>
     </div>
 </div>
