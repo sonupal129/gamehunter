@@ -1,16 +1,10 @@
-import requests
+list1 = [1, 2, 3, 4, 5, 6]
+list2 = [5, 6, 6, 7, 9, 6]
 
 
-login_url = "https://spark.echoindia.in/api-auth/login/"
-session = requests.Session()
+for a,b in zip(list1, list2):
+    if a == b:
+        print(a,b)
+    continue
 
-
-response = session.post(login_url, data={"email": "spal@echoindia.in", "password": "Sonupal123"})
-print(response.status_code)
-print(response)
-
-
-# url = "https://spark.echoindia.in/api/programs/"
-# response = requests.get(url)
-# data = response.json()
-# print(data)
+print(tuple(range(7,12)))

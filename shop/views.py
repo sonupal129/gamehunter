@@ -54,13 +54,13 @@ class HomePageView(ListView):
         featured_playstation_games = cache.get("featured_playstation_games")
         if featured_playstation_games is None:
             featured_playstation_games = self.get_queryset().filter(category__name__in=['PS 4', 'PS 3'],
-                                                                    is_featured=True).order_by("-date")[:10]
+                                                                    is_featured=True).order_by("-date")[:14]
             cache.set("featured_playstation_games", featured_playstation_games)
 
         featured_xbox_games = cache.get("featured_xbox_games")
         if featured_xbox_games is None:
             featured_xbox_games = self.get_queryset().filter(category__name__in=['Xbox One', 'Xbox 360'],
-                                                             is_featured=True).order_by("-date")[:10]
+                                                             is_featured=True).order_by("-date")[:14]
             cache.set("featured_xbox_games", featured_xbox_games)
 
         new_arrived_products = cache.get("new_arrived_products")
@@ -276,8 +276,12 @@ def login_register_page(request):
         password = user_login_form.cleaned_data.get("password")
 
         if "@" in username:
-            user = User.objects.get(email=username)
-            kwargs = {"username": user.username}
+            try:
+                user = User.objects.get(email=username)
+                kwargs = {"username": user.username}
+            except ObjectDoesNotExist:
+                request.session["error"] = "Incorrect username or password"
+                return HttpResponseRedirect("")
         else:
             kwargs = {"username": username}
         user = authenticate(request, **kwargs, password=password)

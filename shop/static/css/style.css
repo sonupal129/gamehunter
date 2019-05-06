@@ -3249,9 +3249,9 @@ button.icon-cart span.count-style {
 }
 
 .nav-style.owl-carousel .owl-nav div {
-    background-color: #efefef;
+    background-color: #1c1c1c;
     border-radius: 3px;
-    color: #242424;
+    color: #fff;
     display: inline-block;
     font-size: 16px;
     height: 35px;
@@ -3266,7 +3266,7 @@ button.icon-cart span.count-style {
 }
 
 .nav-style.owl-carousel .owl-nav div:hover, .featured-product-active.owl-carousel > .owl-nav div:hover {
-    background-color: #0363cd;
+    background-color: #df2121;
     color: #fff;
 }
 
@@ -4025,7 +4025,7 @@ h4.sidebar-title.sidebar-title-width-2::before {
 .single-product-wrapper {
     display: flex;
     margin: 0 0 31px;
-    background: #f9f9f9 none repeat scroll 0 0;
+    background: #fff none repeat scroll 0 0;
 }
 
 .single-product-wrapper:last-child {
@@ -4048,7 +4048,8 @@ h4.sidebar-title.sidebar-title-width-2::before {
 
 .single-product-wrapper.single-product-game:hover{
     border-radius: 2px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 10px 0 25px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease-out 0s;
 }
 
 /* footer index-electronics-2 */
@@ -4194,7 +4195,7 @@ h4.sidebar-title.sidebar-title-width-2::before {
 }
 
 .best-pro-action-2 a {
-    background-color: #eef0f1;
+    background-color: #ff9900;
     border-radius: 3px;
     color: #242424;
     display: inline-block;
@@ -4205,7 +4206,7 @@ h4.sidebar-title.sidebar-title-width-2::before {
 }
 
 .best-pro-action-2 a:hover {
-    background-color: #0363cd;
+    background-color: #df2121;
     color: #fff;
 }
 
@@ -7861,7 +7862,7 @@ h4.setting-title {
 
 .nav-style-game.nav-style.owl-carousel .owl-nav div {
     background-color: #1c1c1c;
-    color: #ccc;
+    color: #fff;
 }
 
 .devita-product-game .product-img > span {

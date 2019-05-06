@@ -96,11 +96,7 @@
                         {% if product.genre %}
                         <p>Genre: <span>{{ product.genre }}</span></p>
                         {% endif %}
-                        {% if product.condition == 'U' %}
-                        <p>Item Condition: <span>Used</span></p>
-                        {% else %}
-                        <p>Item Condition: <span>New</span></p>
-                        {% endif %}
+                        <p>Item Condition: <span>{{ product.get_condition_display }}</span></p>
                         <p>Usually Shipped in: <span>2-4 Days</span></p>
                     </div>
                     {% if product.get_pay_per_game_subscription_price %}

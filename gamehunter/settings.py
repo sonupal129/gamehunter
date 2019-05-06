@@ -48,7 +48,9 @@ INSTALLED_APPS = [
     'django_slack',
     'background_task',
     'sorl.thumbnail',
+    'django_bleach',
     # 'compressor',
+
 
 ]
 

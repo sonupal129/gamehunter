@@ -87,203 +87,978 @@
 <!-- Featured Product Area Starts Here-->
 {% block featuredproducts %}
 <!-- Featured Products Area Starts -->
-<div class="best-selling-area pt-60 pb-45 best-selling-game">
+<div class="best-selling-area pt-60 pb-45 gray-bg">
     <div class="container">
-        <div class="top-bar section-border mb-5">
-            <div class="section-title-wrapper section-bg-white">
+        <div class="top-bar section-border mb-35">
+            <div class="section-title-wrapper section-bg-gray">
                 <h4 class="section-title">Featured Products</h4>
             </div>
-            <div class="product-tab-list-2 nav section-bg-white">
-                <a class="active" href="#game1" data-toggle="tab">
+            <div class="product-tab-list-2 nav section-bg-gray">
+                <a class="active" href="#home4" data-toggle="tab">
                     <h4>Playstation Games </h4>
                 </a>
                 {% if featured_xbox_games %}
-                <a href="#game2" data-toggle="tab">
+                <a href="#home5" data-toggle="tab">
                     <h4>Xbox Games </h4>
                 </a>
                 {% endif %}
-                <!--<a href="#game3" data-toggle="tab">-->
-                <!--<h4> Consoles </h4>-->
-                <!--</a>-->
-                <!--<a href="#game4" data-toggle="tab">-->
-                <!--<h4>Accessories </h4>-->
-                <!--</a>-->
             </div>
         </div>
         <div class="tab-content jump">
-            <div class="tab-pane active" id="game1">
-                <div class="height-empty"></div>
-                <div class="product-slider-nav-2 nav-style-res nav-style nav-style-game"></div>
-                <div class="featured-book-active product-slider owl-carousel">
-                    {% for playstationgame in featured_playstation_games %}
-                    <div class="devita-product-2 devita-product-game">
-                        <div class="product-img">
-                            <a href="{{ playstationgame.get_absolute_url }}">
-                                {% thumbnail playstationgame.get_default_photo.file "198x198" crop="center" quality=70 as im %}
-                                <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
-                                {% endthumbnail %}
-                            </a>
-                            {% if playstationgame.item_status == "I" %}
-                            {% if playstationgame.total_discount %}
-                            <span>{{ playstationgame.total_discount }}%</span>
-                            {% endif %}
-                            {% endif %}
-                        </div>
-                        <div class="list-col">
-                            <div class="gridview">
-                                <div class="product-content text-center">
-                                    <span>For {{ playstationgame.category.name|upper }}</span>
-                                    <h4>
-                                        <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.get_product_title_name|title}}</a>
-                                    </h4>
-                                    {% if playstationgame.item_status == "I" %}
-                                    {% ifequal playstationgame.total_discount 0 %}
-                                    <div class="product-price-wrapper">
-                                        <span>₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
+            <div class="tab-pane active" id="home4">
+                <div class="best-selling-active-2 nav-style owl-carousel">
+                    <div class="best-selling-bundle-2">
+                        <div class="row">
+                            <div class="col-lg-12 col-xl-8 col-md-12">
+                                {% with playstationgame=featured_playstation_games|slice:"0:7"|random %}
+                                <div class="best-selling-pro-wrapper mb-20 best-selling-big-img">
+                                    <div class="product-img best-selling-img">
+                                        <a href="{{ playstationgame.get_absolute_url }}">
+                                            {% thumbnail playstationgame.get_default_photo.file "380x380" crop="center" quality=70 as im %}
+                                            <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                            {% endthumbnail %}
+                                        </a>
+                                        {% if playstationgame.item_status == "I" and playstationgame.total_discount %}
+                                        <span>{{ playstationgame.total_discount }}%</span>
+                                        {% endif %}
                                     </div>
-                                    {% else %}
-                                    <div class="product-price-wrapper">
-                                        <span>₹ {{ playstationgame.get_mrp_and_selling_price|first }}</span>
-                                        <span class="product-price-old">₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
+                                    <div class="product-content best-pro-content best-selling-style-2">
+                                        <span>For {{ playstationgame.category.name|upper }}</span>
+                                        <h4>
+                                            <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.get_product_title_name|title}}</a>
+                                        </h4>
+                                        {% if playstationgame.item_status == "I" %}
+                                        {% ifequal playstationgame.total_discount 0 %}
+                                        <div class="product-price-wrapper">
+                                            <span>₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
+                                        </div>
+                                        {% else %}
+                                        <div class="product-price-wrapper">
+                                            <span>₹ {{ playstationgame.get_mrp_and_selling_price|first }}</span>
+                                            <span class="product-price-old">₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
+                                        </div>
+                                        {% endifequal %}
+                                        {% elif playstationgame.item_status == "S" %}
+                                        <div class="product-price-wrapper">
+                                            <span>Subscription Only</span>
+                                        </div>
+                                        {% endif %}
+                                        <div class="product-list">
+                                            <ul>
+                                                {% if playstationgame.developer %}
+                                                <li>{{ playstationgame.developer }}</li>
+                                                {% endif %}
+                                                {% if playstationgame.publisher %}
+                                                <li>{{ playstationgame.publisher }}</li>
+                                                {% endif %}
+                                                {% if playstationgame.launch_date %}
+                                                <li>{{ playstationgame.launch_date|date:"b Y"|title }}</li>
+                                                {% endif %}
+                                                <li>{{ playstationgame.get_condition_display }}</li>
+                                            </ul>
+                                        </div>
+                                        {% if playstationgame in cart.products.all or product in cart.pay_game_products.all %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">
+                                                Go to Cart
+                                            </a>
+                                        </div>
+                                        {% else %}
+                                        {% if playstationgame.item_status == "I" %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart" title="Add To Cart"
+                                               href="{% url 'carts:add' playstationgame.slug %}">
+                                                Add to Cart
+                                            </a>
+                                        </div>
+                                        {% elif playstationgame.get_pay_per_game_subscription_price %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart"
+                                               title="Get This Game on Subscription at rupee {{ playstationgame.get_pay_per_game_subscription_price }} Only"
+                                               href="{% url 'carts:pay-per-game-product' playstationgame.slug %}">
+                                                Get @ ₹ {{ playstationgame.get_pay_per_game_subscription_price.value }}
+                                                Only
+                                            </a>
+                                        </div>
+                                        {% else %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart" title="Buy Subscription"
+                                               href="{% url 'shop:subscription-list' %}">
+                                                Buy Subscription </a>
+                                        </div>
+                                        {% endif %}
+                                        {% endif %}
                                     </div>
-                                    {% endifequal %}
-                                    {% elif playstationgame.item_status == "S" %}
-                                    <div class="product-price-wrapper">
-                                        <span>Subscription Only</span>
-                                    </div>
-                                    {% endif %}
                                 </div>
-                                <div class="product-action-wrapper-2 text-center">
-                                    <div class="product-rating">
-                                        <i class="ion-android-star-outline theme-star"></i>
-                                        <i class="ion-android-star-outline theme-star"></i>
-                                        <i class="ion-android-star-outline theme-star"></i>
-                                        <i class="ion-android-star-outline theme-star"></i>
-                                        <i class="ion-android-star-outline"></i>
+                                {% endwith %}
+                                <div class="row">
+                                    {% for playstationgame in featured_playstation_games|slice:":2" %}
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="best-selling-pro-wrapper mb-20">
+                                            <div class="product-img">
+                                                <a href="{{ playstationgame.get_absolute_url }}">
+                                                    {% thumbnail playstationgame.get_default_photo.file "180x180" crop="center" quality=70 as im %}
+                                                    <img src="{{ im.url }}" height="{{ im.height }}"
+                                                         width="{{ im.width }}"></a>
+                                                    {% endthumbnail %}
+                                                </a>
+                                                {% if playstationgame.item_status == "I" and playstationgame.total_discount %}
+                                                <span>{{ playstationgame.total_discount }}%</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="product-content best-pro-content">
+                                                <span>For {{ playstationgame.category.name|upper }}</span>
+                                                <h4>
+                                                    <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.get_product_title_name|title}}</a>
+                                                </h4>
+                                                {% if playstationgame.item_status == "I" %}
+                                                {% ifequal playstationgame.total_discount 0 %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ playstationgame.get_mrp_and_selling_price|first }}</span>
+                                                    <span class="product-price-old">₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% endifequal %}
+                                                {% elif playstationgame.item_status == "S" %}
+                                                <div class="product-price-wrapper">
+                                                    <span>Subscription Only</span>
+                                                </div>
+                                                {% endif %}
+                                                {% if playstationgame in cart.products.all or product in cart.pay_game_products.all %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Go To Cart"
+                                                       href="{% url 'carts:cart' %}">
+                                                        Go to Cart
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                {% if playstationgame.item_status == "I" %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Add To Cart"
+                                                       href="{% url 'carts:add' playstationgame.slug %}">
+                                                        Add to Cart
+                                                    </a>
+                                                </div>
+                                                {% elif playstationgame.get_pay_per_game_subscription_price %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart"
+                                                       title="Get This Game on Subscription at rupee {{ playstationgame.get_pay_per_game_subscription_price }} Only"
+                                                       href="{% url 'carts:pay-per-game-product' playstationgame.slug %}">
+                                                        Get @ ₹ {{ playstationgame.get_pay_per_game_subscription_price.value }}
+                                                        Only
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Buy Subscription"
+                                                       href="{% url 'shop:subscription-list' %}">
+                                                        Buy Subscription </a>
+                                                </div>
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <p> {{ playstationgame.get_product_description|striptags|safe }}</p>
-                                    {% if playstationgame in cart.products.all or product in cart.pay_game_products.all %}
-                                    <div class="product-action">
-                                        <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">
-                                            Go to Cart
-                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-xl-4 col-md-12">
+                                <div class="row">
+                                    {% for playstationgame in featured_playstation_games|slice:"3:6" %}
+                                    <div class="col-lg-6 col-xl-12 col-md-6">
+                                        <div class="best-selling-pro-wrapper mb-20">
+                                            <div class="product-img">
+                                                <a href="{{ playstationgame.get_absolute_url }}">
+                                                    {% thumbnail playstationgame.get_default_photo.file "180x180" crop="center" quality=70 as im %}
+                                                    <img src="{{ im.url }}" height="{{ im.height }}"
+                                                         width="{{ im.width }}"></a>
+                                                    {% endthumbnail %}
+                                                </a>
+                                                {% if playstationgame.item_status == "I" and playstationgame.total_discount %}
+                                                <span>{{ playstationgame.total_discount }}%</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="product-content best-pro-content">
+                                                <span>For {{ playstationgame.category.name|upper }}</span>
+                                                <h4>
+                                                    <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.get_product_title_name|title}}</a>
+                                                </h4>
+                                                {% if playstationgame.item_status == "I" %}
+                                                {% ifequal playstationgame.total_discount 0 %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ playstationgame.get_mrp_and_selling_price|first }}</span>
+                                                    <span class="product-price-old">₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% endifequal %}
+                                                {% elif playstationgame.item_status == "S" %}
+                                                <div class="product-price-wrapper">
+                                                    <span>Subscription Only</span>
+                                                </div>
+                                                {% endif %}
+                                                {% if playstationgame in cart.products.all or product in cart.pay_game_products.all %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Go To Cart"
+                                                       href="{% url 'carts:cart' %}">
+                                                        Go to Cart
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                {% if playstationgame.item_status == "I" %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Add To Cart"
+                                                       href="{% url 'carts:add' playstationgame.slug %}">
+                                                        Add to Cart
+                                                    </a>
+                                                </div>
+                                                {% elif playstationgame.get_pay_per_game_subscription_price %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart"
+                                                       title="Get This Game on Subscription at rupee {{ playstationgame.get_pay_per_game_subscription_price }} Only"
+                                                       href="{% url 'carts:pay-per-game-product' playstationgame.slug %}">
+                                                        Get @ ₹ {{ playstationgame.get_pay_per_game_subscription_price.value }}
+                                                        Only
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Buy Subscription"
+                                                       href="{% url 'shop:subscription-list' %}">
+                                                        Buy Subscription </a>
+                                                </div>
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
                                     </div>
-                                    {% else %}
-                                    {% if playstationgame.item_status == "I" %}
-                                    <div class="product-action">
-                                        <a class="action-cart" title="Add To Cart" href="{% url 'carts:add' playstationgame.slug %}">
-                                            Add to Cart
-                                        </a>
-                                    </div>
-                                    {% elif playstationgame.get_pay_per_game_subscription_price %}
-                                    <div class="product-action">
-                                        <a class="action-cart"
-                                           title="Get This Game on Subscription at rupee {{ playstationgame.get_pay_per_game_subscription_price }} Only"
-                                           href="{% url 'carts:pay-per-game-product' playstationgame.slug %}">
-                                            Get @ ₹ {{ playstationgame.get_pay_per_game_subscription_price.value }} Only
-                                        </a>
-                                    </div>
-                                    {% else %}
-                                    <div class="product-action">
-                                        <a class="action-cart" title="Buy Subscription"
-                                           href="{% url 'shop:subscription-list' %}">
-                                            Buy Subscription </a>
-                                    </div>
-                                    {% endif %}
-                                    {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% if featured_xbox_games %}
-            <div class="tab-pane" id="game2">
-                <div class="height-empty"></div>
-                <div class="product-slider-nav-2 nav-style-res nav-style nav-style-game"></div>
-                <div class="featured-book-active product-slider owl-carousel">
-                    {% for xboxgame in featured_xbox_games %}
-                    <div class="devita-product-2 devita-product-game">
-                        <div class="product-img">
-                            <a href="{{ xboxgame.get_absolute_url }}">
-                                {% thumbnail xboxgame.get_default_photo.file "198x198" crop="center" quality=70 as im %}
-                                <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
-                            {% endthumbnail %}
-                            {% if xboxgame.item_status == "I" %}
-                            {% if xboxgame.total_discount %}
-                            <span>{{ xboxgame.total_discount }}%</span>
-                            {% endif %}
-                            {% endif %}
-                        </div>
-                        <div class="list-col">
-                            <div class="gridview">
-                                <div class="product-content text-center">
-                                    <span>For {{ xboxgame.category.name|upper }}</span>
-                                    <h4><a href="{{ xboxgame.get_absolute_url }}">
-                                        {{xboxgame.get_product_title_name|title }}</a>
-                                    </h4>
-                                    {% if xboxgame.item_status == "I" %}
-                                    {% ifequal xboxgame.total_discount 0 %}
-                                    <div class="product-price-wrapper">
-                                        <span>₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
-                                    </div>
-                                    {% else %}
-                                    <div class="product-price-wrapper">
-                                        <span>₹ {{ xboxgame.get_mrp_and_selling_price|first }}</span>
-                                        <span class="product-price-old">₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
-                                    </div>
-                                    {% endifequal %}
-                                    {% elif xboxgame.item_status == "S" %}
-                                    <div class="product-price-wrapper">
-                                        <span>Subscription Only</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                                <div class="product-action-wrapper-2 text-center">
-                                    <div class="product-rating">
-                                        <i class="ion-android-star-outline theme-star"></i>
-                                        <i class="ion-android-star-outline theme-star"></i>
-                                        <i class="ion-android-star-outline theme-star"></i>
-                                        <i class="ion-android-star-outline theme-star"></i>
-                                        <i class="ion-android-star-outline"></i>
-                                    </div>
-                                    <p> {{ xboxgame.get_product_description|striptags|safe }}</p>
-                                    {% if xboxgame.item_status == "I" %}
-                                    <div class="product-action">
-                                        <a class="action-cart" title="Add To Cart" href="{% url 'carts:add' xboxgame.slug %}">
-                                            Add to Cart
+                    <div class="best-selling-bundle-2">
+                        <div class="row">
+                            <div class="col-lg-12 col-xl-8 col-md-12">
+                                {% with playstationgame=featured_playstation_games|slice:"7:13"|random %}
+                                <div class="best-selling-pro-wrapper mb-20 best-selling-big-img">
+                                    <div class="product-img best-selling-img">
+                                        <a href="{{ playstationgame.get_absolute_url }}">
+                                            {% thumbnail playstationgame.get_default_photo.file "380x380" crop="center" quality=70 as im %}
+                                            <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                            {% endthumbnail %}
                                         </a>
+                                        {% if playstationgame.item_status == "I" and playstationgame.total_discount %}
+                                        <span>{{ playstationgame.total_discount }}%</span>
+                                        {% endif %}
                                     </div>
-                                    {% else %}
-                                    {% if xboxgame.get_pay_per_game_subscription_price %}
-                                    <div class="product-action">
-                                        <a class="action-cart"
-                                           title="Get This Game on Subscription at rupee {{ xboxgame.get_pay_per_game_subscription_price }} Only"
-                                           href="{% url 'carts:pay-per-game-product' xboxgame.slug %}">
-                                            Get @ ₹{{ xboxgame.get_pay_per_game_subscription_price }} Only </a>
+                                    <div class="product-content best-pro-content best-selling-style-2">
+                                        <span>For {{ playstationgame.category.name|upper }}</span>
+                                        <h4>
+                                            <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.get_product_title_name|title}}</a>
+                                        </h4>
+                                        {% if playstationgame.item_status == "I" %}
+                                        {% ifequal playstationgame.total_discount 0 %}
+                                        <div class="product-price-wrapper">
+                                            <span>₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
+                                        </div>
+                                        {% else %}
+                                        <div class="product-price-wrapper">
+                                            <span>₹ {{ playstationgame.get_mrp_and_selling_price|first }}</span>
+                                            <span class="product-price-old">₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
+                                        </div>
+                                        {% endifequal %}
+                                        {% elif playstationgame.item_status == "S" %}
+                                        <div class="product-price-wrapper">
+                                            <span>Subscription Only</span>
+                                        </div>
+                                        {% endif %}
+                                        <div class="product-list">
+                                            <ul>
+                                                {% if playstationgame.developer %}
+                                                <li>{{ playstationgame.developer }}</li>
+                                                {% endif %}
+                                                {% if playstationgame.publisher %}
+                                                <li>{{ playstationgame.publisher }}</li>
+                                                {% endif %}
+                                                {% if playstationgame.launch_date %}
+                                                <li>{{ playstationgame.launch_date|date:"b Y"|title }}</li>
+                                                {% endif %}
+                                                <li>{{ playstationgame.get_condition_display }}</li>
+                                            </ul>
+                                        </div>
+                                        {% if playstationgame in cart.products.all or product in cart.pay_game_products.all %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">
+                                                Go to Cart
+                                            </a>
+                                        </div>
+                                        {% else %}
+                                        {% if playstationgame.item_status == "I" %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart" title="Add To Cart"
+                                               href="{% url 'carts:add' playstationgame.slug %}">
+                                                Add to Cart
+                                            </a>
+                                        </div>
+                                        {% elif playstationgame.get_pay_per_game_subscription_price %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart"
+                                               title="Get This Game on Subscription at rupee {{ playstationgame.get_pay_per_game_subscription_price }} Only"
+                                               href="{% url 'carts:pay-per-game-product' playstationgame.slug %}">
+                                                Get @ ₹ {{ playstationgame.get_pay_per_game_subscription_price.value }}
+                                                Only
+                                            </a>
+                                        </div>
+                                        {% else %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart" title="Buy Subscription"
+                                               href="{% url 'shop:subscription-list' %}">
+                                                Buy Subscription </a>
+                                        </div>
+                                        {% endif %}
+                                        {% endif %}
                                     </div>
-                                    {% else %}
-                                    <div class="product-action">
-                                        <a class="action-cart" title="Buy Subscription"
-                                           href="{% url 'shop:subscription-list' %}">
-                                            Buy Subscription </a>
+                                </div>
+                                {% endwith %}
+                                <div class="row">
+                                    {% for playstationgame in featured_playstation_games|slice:"7:9" %}
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="best-selling-pro-wrapper mb-20">
+                                            <div class="product-img">
+                                                <a href="{{ playstationgame.get_absolute_url }}">
+                                                    {% thumbnail playstationgame.get_default_photo.file "180x180" crop="center" quality=70 as im %}
+                                                    <img src="{{ im.url }}" height="{{ im.height }}"
+                                                         width="{{ im.width }}"></a>
+                                                    {% endthumbnail %}
+                                                </a>
+                                                {% if playstationgame.item_status == "I" and playstationgame.total_discount %}
+                                                <span>{{ playstationgame.total_discount }}%</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="product-content best-pro-content">
+                                                <span>For {{ playstationgame.category.name|upper }}</span>
+                                                <h4>
+                                                    <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.get_product_title_name|title}}</a>
+                                                </h4>
+                                                {% if playstationgame.item_status == "I" %}
+                                                {% ifequal playstationgame.total_discount 0 %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ playstationgame.get_mrp_and_selling_price|first }}</span>
+                                                    <span class="product-price-old">₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% endifequal %}
+                                                {% elif playstationgame.item_status == "S" %}
+                                                <div class="product-price-wrapper">
+                                                    <span>Subscription Only</span>
+                                                </div>
+                                                {% endif %}
+                                                {% if playstationgame in cart.products.all or product in cart.pay_game_products.all %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Go To Cart"
+                                                       href="{% url 'carts:cart' %}">
+                                                        Go to Cart
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                {% if playstationgame.item_status == "I" %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Add To Cart"
+                                                       href="{% url 'carts:add' playstationgame.slug %}">
+                                                        Add to Cart
+                                                    </a>
+                                                </div>
+                                                {% elif playstationgame.get_pay_per_game_subscription_price %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart"
+                                                       title="Get This Game on Subscription at rupee {{ playstationgame.get_pay_per_game_subscription_price }} Only"
+                                                       href="{% url 'carts:pay-per-game-product' playstationgame.slug %}">
+                                                        Get @ ₹ {{ playstationgame.get_pay_per_game_subscription_price.value }}
+                                                        Only
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Buy Subscription"
+                                                       href="{% url 'shop:subscription-list' %}">
+                                                        Buy Subscription </a>
+                                                </div>
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
                                     </div>
-                                    {% endif %}
-                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-xl-4 col-md-12">
+                                <div class="row">
+                                    {% for playstationgame in featured_playstation_games|slice:"9:12" %}
+                                    <div class="col-lg-6 col-xl-12 col-md-6">
+                                        <div class="best-selling-pro-wrapper mb-20">
+                                            <div class="product-img">
+                                                <a href="{{ playstationgame.get_absolute_url }}">
+                                                    {% thumbnail playstationgame.get_default_photo.file "180x180" crop="center" quality=70 as im %}
+                                                    <img src="{{ im.url }}" height="{{ im.height }}"
+                                                         width="{{ im.width }}"></a>
+                                                    {% endthumbnail %}
+                                                </a>
+                                                {% if playstationgame.item_status == "I" and playstationgame.total_discount %}
+                                                <span>{{ playstationgame.total_discount }}%</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="product-content best-pro-content">
+                                                <span>For {{ playstationgame.category.name|upper }}</span>
+                                                <h4>
+                                                    <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.get_product_title_name|title}}</a>
+                                                </h4>
+                                                {% if playstationgame.item_status == "I" %}
+                                                {% ifequal playstationgame.total_discount 0 %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ playstationgame.get_mrp_and_selling_price|first }}</span>
+                                                    <span class="product-price-old">₹ {{ playstationgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% endifequal %}
+                                                {% elif playstationgame.item_status == "S" %}
+                                                <div class="product-price-wrapper">
+                                                    <span>Subscription Only</span>
+                                                </div>
+                                                {% endif %}
+                                                {% if playstationgame in cart.products.all or product in cart.pay_game_products.all %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Go To Cart"
+                                                       href="{% url 'carts:cart' %}">
+                                                        Go to Cart
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                {% if playstationgame.item_status == "I" %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Add To Cart"
+                                                       href="{% url 'carts:add' playstationgame.slug %}">
+                                                        Add to Cart
+                                                    </a>
+                                                </div>
+                                                {% elif playstationgame.get_pay_per_game_subscription_price %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart"
+                                                       title="Get This Game on Subscription at rupee {{ playstationgame.get_pay_per_game_subscription_price }} Only"
+                                                       href="{% url 'carts:pay-per-game-product' playstationgame.slug %}">
+                                                        Get @ ₹ {{ playstationgame.get_pay_per_game_subscription_price.value }}
+                                                        Only
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Buy Subscription"
+                                                       href="{% url 'shop:subscription-list' %}">
+                                                        Buy Subscription </a>
+                                                </div>
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
             </div>
-            {% endif %}
+            <div class="tab-pane" id="home5">
+                <div class="best-selling-active-2 nav-style owl-carousel">
+                    <div class="best-selling-bundle-2">
+                        <div class="row">
+                            <div class="col-lg-12 col-xl-8 col-md-12">
+                                {% with xboxgame=featured_xbox_games|slice:"0:7"|random %}
+                                <div class="best-selling-pro-wrapper mb-20 best-selling-big-img">
+                                    <div class="product-img best-selling-img">
+                                        <a href="{{ xboxgame.get_absolute_url }}">
+                                            {% thumbnail xboxgame.get_default_photo.file "380x380" crop="center" quality=70 as im %}
+                                            <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                            {% endthumbnail %}
+                                        </a>
+                                        {% if xboxgame.item_status == "I" and xboxgame.total_discount %}
+                                        <span>{{ xboxgame.total_discount }}%</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="product-content best-pro-content best-selling-style-2">
+                                        <span>For {{ xboxgame.category.name|upper }}</span>
+                                        <h4>
+                                            <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.get_product_title_name|title}}</a>
+                                        </h4>
+                                        {% if xboxgame.item_status == "I" %}
+                                        {% ifequal xboxgame.total_discount 0 %}
+                                        <div class="product-price-wrapper">
+                                            <span>₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
+                                        </div>
+                                        {% else %}
+                                        <div class="product-price-wrapper">
+                                            <span>₹ {{ xboxgame.get_mrp_and_selling_price|first }}</span>
+                                            <span class="product-price-old">₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
+                                        </div>
+                                        {% endifequal %}
+                                        {% elif xboxgame.item_status == "S" %}
+                                        <div class="product-price-wrapper">
+                                            <span>Subscription Only</span>
+                                        </div>
+                                        {% endif %}
+                                        <div class="product-list">
+                                            <ul>
+                                                {% if xboxgame.developer %}
+                                                <li>{{ xboxgame.developer }}</li>
+                                                {% endif %}
+                                                {% if xboxgame.publisher %}
+                                                <li>{{ xboxgame.publisher }}</li>
+                                                {% endif %}
+                                                {% if xboxgame.launch_date %}
+                                                <li>{{ xboxgame.launch_date|date:"b Y"|title }}</li>
+                                                {% endif %}
+                                                <li>{{ xboxgame.get_condition_display }}</li>
+                                            </ul>
+                                        </div>
+                                        {% if xboxgame in cart.products.all or product in cart.pay_game_products.all %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">
+                                                Go to Cart
+                                            </a>
+                                        </div>
+                                        {% else %}
+                                        {% if xboxgame.item_status == "I" %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart" title="Add To Cart"
+                                               href="{% url 'carts:add' xboxgame.slug %}">
+                                                Add to Cart
+                                            </a>
+                                        </div>
+                                        {% elif xboxgame.get_pay_per_game_subscription_price %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart"
+                                               title="Get This Game on Subscription at rupee {{ xboxgame.get_pay_per_game_subscription_price }} Only"
+                                               href="{% url 'carts:pay-per-game-product' xboxgame.slug %}">
+                                                Get @ ₹ {{ xboxgame.get_pay_per_game_subscription_price.value }}
+                                                Only
+                                            </a>
+                                        </div>
+                                        {% else %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart" title="Buy Subscription"
+                                               href="{% url 'shop:subscription-list' %}">
+                                                Buy Subscription </a>
+                                        </div>
+                                        {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endwith %}
+                                <div class="row">
+                                    {% for xboxgame in featured_xbox_games|slice:":2" %}
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="best-selling-pro-wrapper mb-20">
+                                            <div class="product-img">
+                                                <a href="{{ xboxgame.get_absolute_url }}">
+                                                    {% thumbnail xboxgame.get_default_photo.file "180x180" crop="center" quality=70 as im %}
+                                                    <img src="{{ im.url }}" height="{{ im.height }}"
+                                                         width="{{ im.width }}"></a>
+                                                    {% endthumbnail %}
+                                                </a>
+                                                {% if xboxgame.item_status == "I" and xboxgame.total_discount %}
+                                                <span>{{ xboxgame.total_discount }}%</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="product-content best-pro-content">
+                                                <span>For {{ xboxgame.category.name|upper }}</span>
+                                                <h4>
+                                                    <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.get_product_title_name|title}}</a>
+                                                </h4>
+                                                {% if xboxgame.item_status == "I" %}
+                                                {% ifequal xboxgame.total_discount 0 %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ xboxgame.get_mrp_and_selling_price|first }}</span>
+                                                    <span class="product-price-old">₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% endifequal %}
+                                                {% elif xboxgame.item_status == "S" %}
+                                                <div class="product-price-wrapper">
+                                                    <span>Subscription Only</span>
+                                                </div>
+                                                {% endif %}
+                                                {% if xboxgame in cart.products.all or product in cart.pay_game_products.all %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Go To Cart"
+                                                       href="{% url 'carts:cart' %}">
+                                                        Go to Cart
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                {% if xboxgame.item_status == "I" %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Add To Cart"
+                                                       href="{% url 'carts:add' xboxgame.slug %}">
+                                                        Add to Cart
+                                                    </a>
+                                                </div>
+                                                {% elif xboxgame.get_pay_per_game_subscription_price %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart"
+                                                       title="Get This Game on Subscription at rupee {{ xboxgame.get_pay_per_game_subscription_price }} Only"
+                                                       href="{% url 'carts:pay-per-game-product' xboxgame.slug %}">
+                                                        Get @ ₹ {{ xboxgame.get_pay_per_game_subscription_price.value }}
+                                                        Only
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Buy Subscription"
+                                                       href="{% url 'shop:subscription-list' %}">
+                                                        Buy Subscription </a>
+                                                </div>
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-xl-4 col-md-12">
+                                <div class="row">
+                                    {% for xboxgame in featured_xbox_games|slice:"3:6" %}
+                                    <div class="col-lg-6 col-xl-12 col-md-6">
+                                        <div class="best-selling-pro-wrapper mb-20">
+                                            <div class="product-img">
+                                                <a href="{{ xboxgame.get_absolute_url }}">
+                                                    {% thumbnail xboxgame.get_default_photo.file "180x180" crop="center" quality=70 as im %}
+                                                    <img src="{{ im.url }}" height="{{ im.height }}"
+                                                         width="{{ im.width }}"></a>
+                                                    {% endthumbnail %}
+                                                </a>
+                                                {% if xboxgame.item_status == "I" and xboxgame.total_discount %}
+                                                <span>{{ xboxgame.total_discount }}%</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="product-content best-pro-content">
+                                                <span>For {{ xboxgame.category.name|upper }}</span>
+                                                <h4>
+                                                    <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.get_product_title_name|title}}</a>
+                                                </h4>
+                                                {% if xboxgame.item_status == "I" %}
+                                                {% ifequal xboxgame.total_discount 0 %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ xboxgame.get_mrp_and_selling_price|first }}</span>
+                                                    <span class="product-price-old">₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% endifequal %}
+                                                {% elif xboxgame.item_status == "S" %}
+                                                <div class="product-price-wrapper">
+                                                    <span>Subscription Only</span>
+                                                </div>
+                                                {% endif %}
+                                                {% if xboxgame in cart.products.all or product in cart.pay_game_products.all %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Go To Cart"
+                                                       href="{% url 'carts:cart' %}">
+                                                        Go to Cart
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                {% if xboxgame.item_status == "I" %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Add To Cart"
+                                                       href="{% url 'carts:add' xboxgame.slug %}">
+                                                        Add to Cart
+                                                    </a>
+                                                </div>
+                                                {% elif xboxgame.get_pay_per_game_subscription_price %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart"
+                                                       title="Get This Game on Subscription at rupee {{ xboxgame.get_pay_per_game_subscription_price }} Only"
+                                                       href="{% url 'carts:pay-per-game-product' xboxgame.slug %}">
+                                                        Get @ ₹ {{ xboxgame.get_pay_per_game_subscription_price.value }}
+                                                        Only
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Buy Subscription"
+                                                       href="{% url 'shop:subscription-list' %}">
+                                                        Buy Subscription </a>
+                                                </div>
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="best-selling-bundle-2">
+                        <div class="row">
+                            <div class="col-lg-12 col-xl-8 col-md-12">
+                                {% with xboxgame=featured_xbox_games|slice:"7:13"|random %}
+                                <div class="best-selling-pro-wrapper mb-20 best-selling-big-img">
+                                    <div class="product-img best-selling-img">
+                                        <a href="{{ xboxgame.get_absolute_url }}">
+                                            {% thumbnail xboxgame.get_default_photo.file "380x380" crop="center" quality=70 as im %}
+                                            <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                                            {% endthumbnail %}
+                                        </a>
+                                        {% if xboxgame.item_status == "I" and xboxgame.total_discount %}
+                                        <span>{{ xboxgame.total_discount }}%</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="product-content best-pro-content best-selling-style-2">
+                                        <span>For {{ xboxgame.category.name|upper }}</span>
+                                        <h4>
+                                            <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.get_product_title_name|title}}</a>
+                                        </h4>
+                                        {% if xboxgame.item_status == "I" %}
+                                        {% ifequal xboxgame.total_discount 0 %}
+                                        <div class="product-price-wrapper">
+                                            <span>₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
+                                        </div>
+                                        {% else %}
+                                        <div class="product-price-wrapper">
+                                            <span>₹ {{ xboxgame.get_mrp_and_selling_price|first }}</span>
+                                            <span class="product-price-old">₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
+                                        </div>
+                                        {% endifequal %}
+                                        {% elif xboxgame.item_status == "S" %}
+                                        <div class="product-price-wrapper">
+                                            <span>Subscription Only</span>
+                                        </div>
+                                        {% endif %}
+                                        <div class="product-list">
+                                            <ul>
+                                                {% if xboxgame.developer %}
+                                                <li>{{ xboxgame.developer }}</li>
+                                                {% endif %}
+                                                {% if xboxgame.publisher %}
+                                                <li>{{ xboxgame.publisher }}</li>
+                                                {% endif %}
+                                                {% if xboxgame.launch_date %}
+                                                <li>{{ xboxgame.launch_date|date:"b Y"|title }}</li>
+                                                {% endif %}
+                                                <li>{{ xboxgame.get_condition_display }}</li>
+                                            </ul>
+                                        </div>
+                                        {% if xboxgame in cart.products.all or product in cart.pay_game_products.all %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">
+                                                Go to Cart
+                                            </a>
+                                        </div>
+                                        {% else %}
+                                        {% if xboxgame.item_status == "I" %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart" title="Add To Cart"
+                                               href="{% url 'carts:add' xboxgame.slug %}">
+                                                Add to Cart
+                                            </a>
+                                        </div>
+                                        {% elif xboxgame.get_pay_per_game_subscription_price %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart"
+                                               title="Get This Game on Subscription at rupee {{ xboxgame.get_pay_per_game_subscription_price }} Only"
+                                               href="{% url 'carts:pay-per-game-product' xboxgame.slug %}">
+                                                Get @ ₹ {{ xboxgame.get_pay_per_game_subscription_price.value }}
+                                                Only
+                                            </a>
+                                        </div>
+                                        {% else %}
+                                        <div class="best-pro-action-2">
+                                            <a class="action-cart" title="Buy Subscription"
+                                               href="{% url 'shop:subscription-list' %}">
+                                                Buy Subscription </a>
+                                        </div>
+                                        {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endwith %}
+                                <div class="row">
+                                    {% for xboxgame in featured_xbox_games|slice:"7:9" %}
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="best-selling-pro-wrapper mb-20">
+                                            <div class="product-img">
+                                                <a href="{{ xboxgame.get_absolute_url }}">
+                                                    {% thumbnail xboxgame.get_default_photo.file "180x180" crop="center" quality=70 as im %}
+                                                    <img src="{{ im.url }}" height="{{ im.height }}"
+                                                         width="{{ im.width }}"></a>
+                                                    {% endthumbnail %}
+                                                </a>
+                                                {% if xboxgame.item_status == "I" and xboxgame.total_discount %}
+                                                <span>{{ xboxgame.total_discount }}%</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="product-content best-pro-content">
+                                                <span>For {{ xboxgame.category.name|upper }}</span>
+                                                <h4>
+                                                    <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.get_product_title_name|title}}</a>
+                                                </h4>
+                                                {% if xboxgame.item_status == "I" %}
+                                                {% ifequal xboxgame.total_discount 0 %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ xboxgame.get_mrp_and_selling_price|first }}</span>
+                                                    <span class="product-price-old">₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% endifequal %}
+                                                {% elif xboxgame.item_status == "S" %}
+                                                <div class="product-price-wrapper">
+                                                    <span>Subscription Only</span>
+                                                </div>
+                                                {% endif %}
+                                                {% if xboxgame in cart.products.all or product in cart.pay_game_products.all %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Go To Cart"
+                                                       href="{% url 'carts:cart' %}">
+                                                        Go to Cart
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                {% if xboxgame.item_status == "I" %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Add To Cart"
+                                                       href="{% url 'carts:add' xboxgame.slug %}">
+                                                        Add to Cart
+                                                    </a>
+                                                </div>
+                                                {% elif xboxgame.get_pay_per_game_subscription_price %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart"
+                                                       title="Get This Game on Subscription at rupee {{ xboxgame.get_pay_per_game_subscription_price }} Only"
+                                                       href="{% url 'carts:pay-per-game-product' xboxgame.slug %}">
+                                                        Get @ ₹ {{ xboxgame.get_pay_per_game_subscription_price.value }}
+                                                        Only
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Buy Subscription"
+                                                       href="{% url 'shop:subscription-list' %}">
+                                                        Buy Subscription </a>
+                                                </div>
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-xl-4 col-md-12">
+                                <div class="row">
+                                    {% for xboxgame in featured_xbox_games|slice:"9:12" %}
+                                    <div class="col-lg-6 col-xl-12 col-md-6">
+                                        <div class="best-selling-pro-wrapper mb-20">
+                                            <div class="product-img">
+                                                <a href="{{ xboxgame.get_absolute_url }}">
+                                                    {% thumbnail xboxgame.get_default_photo.file "180x180" crop="center" quality=70 as im %}
+                                                    <img src="{{ im.url }}" height="{{ im.height }}"
+                                                         width="{{ im.width }}"></a>
+                                                    {% endthumbnail %}
+                                                </a>
+                                                {% if xboxgame.item_status == "I" and xboxgame.total_discount %}
+                                                <span>{{ xboxgame.total_discount }}%</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="product-content best-pro-content">
+                                                <span>For {{ xboxgame.category.name|upper }}</span>
+                                                <h4>
+                                                    <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.get_product_title_name|title}}</a>
+                                                </h4>
+                                                {% if xboxgame.item_status == "I" %}
+                                                {% ifequal xboxgame.total_discount 0 %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-price-wrapper">
+                                                    <span>₹ {{ xboxgame.get_mrp_and_selling_price|first }}</span>
+                                                    <span class="product-price-old">₹ {{ xboxgame.get_mrp_and_selling_price|last }}</span>
+                                                </div>
+                                                {% endifequal %}
+                                                {% elif xboxgame.item_status == "S" %}
+                                                <div class="product-price-wrapper">
+                                                    <span>Subscription Only</span>
+                                                </div>
+                                                {% endif %}
+                                                {% if xboxgame in cart.products.all or product in cart.pay_game_products.all %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Go To Cart"
+                                                       href="{% url 'carts:cart' %}">
+                                                        Go to Cart
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                {% if xboxgame.item_status == "I" %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Add To Cart"
+                                                       href="{% url 'carts:add' xboxgame.slug %}">
+                                                        Add to Cart
+                                                    </a>
+                                                </div>
+                                                {% elif xboxgame.get_pay_per_game_subscription_price %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart"
+                                                       title="Get This Game on Subscription at rupee {{ xboxgame.get_pay_per_game_subscription_price }} Only"
+                                                       href="{% url 'carts:pay-per-game-product' xboxgame.slug %}">
+                                                        Get @ ₹ {{ xboxgame.get_pay_per_game_subscription_price.value }}
+                                                        Only
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                <div class="product-action best-pro-action">
+                                                    <a class="action-cart" title="Buy Subscription"
+                                                       href="{% url 'shop:subscription-list' %}">
+                                                        Buy Subscription </a>
+                                                </div>
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<!-- Featured Products Area Ends Here - ->
 {% endblock %}
+<!-- Featured Products Area Ends Here - ->
+
 <!-- Featured Product Area Ends Here-->
 
 <!-- Coverpage Center Area Starts Here-->
@@ -303,13 +1078,13 @@
 <!-- Homepage-Console-Category Area Starts Here-->
 {% block consolecategory %}
 <!-- Console Category Area Starts -->
-<div class="product-area pt-60 pb-65 product-area-game">
+<div class="product-area pt-60 pb-65 product-area-game gray-bg-7">
     <div class="container">
         <div class="row">
             <div class="col-lg-4">
                 <div class="new-arrivals-area mrg-top-md mrg-top-sm">
                     <div class="section-border mb-40">
-                        <h4 class="section-title white-title section-bg-white">What's New</h4>
+                        <h4 class="section-title white-title section-bg-gray">What's New</h4>
                     </div>
                     <div class="product-slider-active-2 nav-style nav-style-game owl-carousel">
                         <div class="single-product-bundle">
@@ -412,7 +1187,7 @@
             <div class="col-lg-4">
                 <div class="new-arrivals-area mrg-top-md mrg-top-sm">
                     <div class="section-border mb-40">
-                        <h4 class="section-title white-title section-bg-white">New Released Games</h4>
+                        <h4 class="section-title white-title section-bg-gray">New Released Games</h4>
                     </div>
                     <div class="product-slider-active-2 nav-style nav-style-game owl-carousel">
                         <div class="single-product-bundle">
@@ -516,7 +1291,7 @@
             <div class="col-lg-4">
                 <div class="new-arrivals-area">
                     <div class="section-border mb-40">
-                        <h4 class="section-title white-title section-bg-white">Trending in Community</h4>
+                        <h4 class="section-title white-title section-bg-gray">Trending in Community</h4>
                     </div>
                     <div class="product-slider-active-2 nav-style nav-style-game owl-carousel">
                         <div class="single-product-bundle">

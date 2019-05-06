@@ -14,6 +14,7 @@ from uuid import uuid4
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.utils.html import mark_safe, html_safe, force_text, format_html, escape
+import bleach
 # Create your models here.
 
 
@@ -397,14 +398,14 @@ class Blog(models.Model):
     def get_blog_title_name(self):
         if len(self.title) > 40:
             title = (self.title[:35] + '...').title()
-            return title.strip()
-        return mark_safe(self.title.title())
+            return str(title.strip())
+        return str(self.title)
 
     def get_blog_description(self):
-        if len(self.description) > 100:
+        if len(str(self.description)) > 100:
             description = self.description[:130] + '...'
-            return description
-        return self.description
+            return str(description)
+        return str(self.description)
 
 
 class BlogAttribute(models.Model):
