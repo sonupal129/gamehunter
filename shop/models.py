@@ -7,6 +7,7 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 from django.core.exceptions import ObjectDoesNotExist
 import datetime, os
+from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
 from django.contrib.auth.models import User
@@ -124,7 +125,6 @@ class Plan(models.Model):
         ("SB", "Subscription Based"),
         ("GB", "Game Based"),
     }
-
     name = models.CharField(max_length=200)
     type = models.CharField(max_length=20, choices=type_choices, default="SB")
     duration = models.PositiveSmallIntegerField(default=0)
@@ -155,21 +155,32 @@ class Plan(models.Model):
         return reverse("shop:subscription-detail", kwargs={'slug': self.slug})
 
     def get_plan_selling_price(self):
-        if self.type == "SB":
-            if self.discount != 0:
-                final_selling_price = self.subscription_amount - (self.subscription_amount * self.discount // 100)
-                return final_selling_price
+        if self.type == "SB" and self.discount != 0:
+            final_selling_price = self.subscription_amount - (self.subscription_amount * self.discount // 100)
+            return final_selling_price
+        else:
             return self.subscription_amount
-        return self.subscription_amount
 
-    def get_monthly_subscription_selling_price(self):
+    def get_monthly_subscription_selling_price(self, cached=True):
+        cache_key = '_'.join([self.get_absolute_url(), "monthly_subscription_price"])
+        cached_value = cache.get(cache_key)
+        if cached and cached_value:
+            return cached_value
         if self.type == "SB":
             monthly_selling_price = self.get_plan_selling_price() // self.duration
+            cache.set(cache_key, monthly_selling_price)
             return monthly_selling_price
+        return ""
 
-    def get_monthly_subscription_mrp(self):
-        monthly_selling_mrp = self.subscription_amount // self.duration
-        return monthly_selling_mrp
+    def get_monthly_subscription_mrp(self, cached=True):
+        cache_key = '_'.join([self.get_absolute_url(), "monthly_subscription_mrp"])
+        cached_value = cache.get(cache_key)
+        if cached_value and cached:
+            return cached_value
+        else:
+            monthly_selling_mrp = self.subscription_amount // self.duration
+            cache.set(cache_key, monthly_selling_mrp)
+            return monthly_selling_mrp
 
     def is_object_of_plan_class(self):
         if isinstance(self, Plan):
@@ -282,10 +293,15 @@ class Product(models.Model):
             return description[:95] + '...'
         return description
 
-    def get_pay_per_game_subscription_price(self):
+    def get_pay_per_game_subscription_price(self, cached=True):
+        cache_key = '_'.join([self.get_absolute_url(), "pay_per_game_subscription_price"])
+        cached_value = cache.get(cache_key)
+        if cached_value and cached:
+            return cached_value
         attr = Attribute.objects.get(attribute="game_based_plan_price")
         try:
             game_price_attribute = ProductAttribute.objects.filter(product=self, attribute=attr).first()
+            cache.set(cache_key, game_price_attribute)
             return game_price_attribute
         except ObjectDoesNotExist:
             return ""
@@ -320,12 +336,18 @@ class Product(models.Model):
         mrp = (selling_price * 100) // (100 - self.total_discount)
         return selling_price, mrp
 
-    def game_trailer(self):
+    def game_trailer(self, cached=True):
+        cache_key = '_'.join([self.get_absolute_url(), "game_trailor"])
+        cached_value = cache.get(cache_key)
+        if cached and cached_value:
+            return cached_value
         try:
             trailer = ProductAttribute.objects.get(attribute__attribute="game_trailer", product=self)
+            cache.set(cache_key, trailer.value)
             return trailer.value
         except ObjectDoesNotExist:
-            return ""
+            trailer = ""
+            return trailer
 
     def photos_in_ascendant(self):
         if self.photo_set.all():

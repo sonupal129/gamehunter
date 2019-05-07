@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView, DetailView, ListView
-from django.views import generic
 from .models import *
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login
 from .forms import *
 from django.core.cache import cache
@@ -12,10 +10,7 @@ from carts.models import *
 from django.db.models import Q
 from shop.debug import log_exceptions
 from django.views.generic.edit import UpdateView, FormView
-from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
 from shop.emails import send_password_reset_email
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode, force_bytes
 # Create your views here.
 
 
@@ -32,47 +27,55 @@ class HomePageView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        products = Product.objects.filter(active=True, item_status__in=["I", "S"])
-        return products
+        cache_key = "_".join([self.request.get_raw_uri(), "homepage_products_lists"])
+        cached_value = cache.get(cache_key)
+        print(cache_key)
+        if cached_value is None:
+            products = Product.objects.filter(active=True, item_status__in=["I", "S"])
+            cache.set(cache_key, products, 30*60*9)
+            return products
+        else:
+            return cached_value
 
     def blogs_list(self):
         blogs = Blog.objects.filter(status="P").order_by('-date_created')[:5]
         return blogs
 
     def trending_products_list(self):
-        atr = Attribute.objects.get(attribute="trending")
-        pd = ProductAttribute.objects.filter(attribute=atr).order_by('-value')[:12]
-        products = [at.product for at in pd]
-        return products
+        cache_key = '_'.join([self.request.get_raw_uri(), "trending_products"])
+        cached_value = cache.get(cache_key)
+        if cached_value is None:
+            atr = Attribute.objects.get(attribute="trending")
+            pd = ProductAttribute.objects.filter(attribute=atr).order_by('-value')[:12]
+            products = [at.product for at in pd]
+            cache.set(cache_key, products, 30*60*9)
+            return products
+        else:
+            return cached_value
 
     def get_home_page_products(self):
         new_released_games = cache.get("new_released_games")
         if new_released_games is None:
             new_released_games = self.get_queryset().order_by("-launch_date")[:12]
-            cache.set("new_released_games", new_released_games)
+            cache.set("new_released_games", new_released_games, 30*60*9)
 
         featured_playstation_games = cache.get("featured_playstation_games")
         if featured_playstation_games is None:
             featured_playstation_games = self.get_queryset().filter(category__name__in=['PS 4', 'PS 3'],
                                                                     is_featured=True).order_by("-date")[:14]
-            cache.set("featured_playstation_games", featured_playstation_games)
+            cache.set("featured_playstation_games", featured_playstation_games, 30*60*9)
 
         featured_xbox_games = cache.get("featured_xbox_games")
         if featured_xbox_games is None:
             featured_xbox_games = self.get_queryset().filter(category__name__in=['Xbox One', 'Xbox 360'],
                                                              is_featured=True).order_by("-date")[:14]
-            cache.set("featured_xbox_games", featured_xbox_games)
-
+            cache.set("featured_xbox_games", featured_xbox_games, 30*60*9)
         new_arrived_products = cache.get("new_arrived_products")
         if new_arrived_products is None:
             new_arrived_products = self.get_queryset().order_by("-date")[:12]
-            cache.set("new_arrived_products", new_arrived_products)
+            cache.set("new_arrived_products", new_arrived_products, 30*60*9)
+        return new_released_games, featured_playstation_games, featured_xbox_games, new_arrived_products
 
-        trending_products = cache.get("trending_products")
-        if trending_products is None:
-            trending_products = self.trending_products_list()
-            cache.set("trending_products", trending_products)
-        return new_released_games, featured_playstation_games, featured_xbox_games, new_arrived_products, trending_products
 
     def get_home_page_banner(self):
         qs = PromoCard.objects.filter(active=True).order_by("-date")
@@ -86,7 +89,7 @@ class HomePageView(ListView):
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
         try:
-            new_released_games, featured_playstation_games, featured_xbox_games, new_arrived_products, trending_products = self.get_home_page_products()
+            new_released_games, featured_playstation_games, featured_xbox_games, new_arrived_products = self.get_home_page_products()
             top_coverpage, center_coverpage, bottom_coverpage, left_banner, right_banner = self.get_home_page_banner()
             context['cart'] = get_cart_obj(self.request)
             blogs = cache.get("homepage_blogs")
@@ -94,7 +97,7 @@ class HomePageView(ListView):
                 blogs = self.blogs_list()
                 cache.set("homepage_blogs", blogs)
             context['articles'] = blogs
-            context['trending_products'] = trending_products
+            context['trending_products'] = self.trending_products_list()
             context['new_released_games'] = new_released_games
             context['new_arrived_products'] = new_arrived_products
             context['featured_playstation_games'] = featured_playstation_games
@@ -117,8 +120,14 @@ class ProductListView(ListView):
     @log_exceptions("Product List Querysets Function")
     def get_queryset(self):
         sort_by = self.request.GET.get("sort_by")
-        queryset = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
-                                          item_status__in=["I", "S"])
+        cache_key = self.request.get_raw_uri()
+        cached_value = cache.get(cache_key)
+        if cached_value is None:
+            queryset = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
+                                              item_status__in=["I", "S"])
+            cache.set(cache_key, queryset, 9600)
+        else:
+            queryset = cached_value
         if self.request.method == "GET":
             if sort_by == "name":
                 return queryset.order_by("name")
@@ -190,8 +199,13 @@ class ArticleListView(ListView):
     context_object_name = "articles"
 
     def get_queryset(self):
-        articles = Blog.objects.filter(status="P").order_by("-date")
-        return articles
+        cache_key = "blog_list_view_page"
+        cached_value = cache.get("blog_list_view_page")
+        if cached_value is None:
+            articles = Blog.objects.filter(status="P").order_by("-date")
+            cache.set(cache_key, articles, 60*30*6)
+            return articles
+        return cached_value
 
 
 class ArticleDetailView(DetailView):
@@ -216,8 +230,13 @@ class SubscriptionPlanView(ListView):
     context_object_name = 'plans'
 
     def get_queryset(self):
-        plans = Plan.objects.filter(active=True).order_by('subscription_amount')
-        return plans
+        cache_key = "game_hunter_rental_plan_list"
+        cached_value = cache.get(cache_key)
+        if cached_value:
+            return cached_value
+        else:
+            plans = Plan.objects.filter(active=True).order_by('duration')
+            return plans
 
 
 class SubscriptionDetailView(DetailView):
@@ -322,9 +341,13 @@ class ProductSearchView(ListView):
 
     def get_queryset(self):
         keywords = self.request.GET.get("keywords")
-        qs = Product.objects.filter(active=True)
-        if keywords:
-            return qs.filter(Q(name__icontains=keywords, item_status__in=["S", "I"]))
+        cache_key = self.request.get_raw_uri()
+        cached_value = cache.get(cache_key)
+        if cached_value is None:
+            qs = Product.objects.filter(Q(name__icontains=keywords, item_status__in=["S", "I"]), active=True)
+            cache.set(cache_key, qs, 1200)
+            return qs
+        return cached_value
 
     def get_context_data(self, **kwargs):
         context = super(ProductSearchView, self).get_context_data(**kwargs)

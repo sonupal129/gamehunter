@@ -7,6 +7,8 @@ from django.contrib.admin import ModelAdmin
 from .csv_importer_exporter import *
 from shop.debug import ExceptionLog
 from django.db import connection
+from django.core.cache import cache
+from django.conf import settings
 # Register your models here.
 
 admin.site.site_header = 'Game Hunter Admin';
@@ -54,9 +56,20 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductAttributeInline, PhotoInline]
     filter_horizontal = ('plan',)
     search_fields = ["name"]
-    list_filter = ["item_status", "active", "category", "condition"]
+    list_filter = ["item_status", "active", "category", "condition", "is_featured"]
     actions = ["out_of_stock_selected_products", "in_stock_selected_products", "subscription_only_selected_products",
                "make_active_selected_products", "make_inactive_selected_products"]
+
+    def save_model(self, request, obj, form, change):
+        domain = request.META['HTTP_HOST']
+        protocol = 'https'
+        if settings.DEBUG:
+            protocol = 'http'
+        complete_domain = protocol + '://' + domain + '/'
+        cache_keys_list = [complete_domain + "_homepage_products_lists", "new_released_games", "new_arrived_products",
+                           "featured_playstation_games", "featured_xbox_games", "trending_products"]
+        cache.delete_many(cache_keys_list)
+        return super().save_model(request, obj, form, change)
 
     def out_of_stock_selected_products(self, request, queryset):
         queryset.update(item_status='O')
@@ -103,7 +116,9 @@ class BlogAdmin(admin.ModelAdmin):
     search_fields = ("title",)
     list_filter = ("status", "blog_type",)
 
-admin.site.register(Blog, BlogAdmin)
+    def save_model(self, request, obj, form, change):
+        cache.delete("blog_list_view_page")
+        return super().save_model(request, obj, form, change)
 
 
 class PlanAdmin(admin.ModelAdmin):
@@ -112,6 +127,10 @@ class PlanAdmin(admin.ModelAdmin):
               ('subscription_amount', 'security_deposit', 'refundable', 'discount'),
               'term_condition',
               ('image', 'image1')]
+
+    def save_model(self, request, obj, form, change):
+        cache.delete("game_hunter_rental_plan_list")
+        return super().save_model(request, obj, form, change)
 
 
 class PromoCardAdmin(admin.ModelAdmin):
@@ -166,3 +185,4 @@ admin.site.register(Brand, BrandAdmin)
 admin.site.register(Genre)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ExceptionLog, ExceptionAdmin)
+admin.site.register(Blog, BlogAdmin)

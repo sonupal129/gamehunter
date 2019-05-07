@@ -22,113 +22,88 @@
     </div>
 </div>
 {% endif %}
-<div class="blog-area pt-65 pb-65 blog-game">
+<div class="best-selling-area pt-60 pb-45 gray-bg">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="tab-content jump">
-                    <div class="tab-pane active" id="product-list">
-                        <div class="row">
-                            <div class="col-lg-12">
-                            {% for plan in plans %}
-                                <div class="product-list-wrapper shop-border mb-40 pb-40">
-                                    <div class="product-img">
-                                        <a href="{{ plan.get_absolute_url }}">
-                                        {% thumbnail plan.image.file "240x240" crop="center" quality=70 as im %}
-                                            <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
-                                        {% endthumbnail %}
-                                        </a>
-                                        {% if plan.discount %}
-                                        <span> {{ plan.discount }}% Off!</span>
-                                        {% endif %}
-                                    </div>
-                                    <div class="product-list-content">
-                                        {% if plan.type == "SB" %}
-                                        <span>₹ {{ plan.get_plan_selling_price }} for {{ plan.duration }} Months</span>
-                                        {% else %}
-                                        <span>Buy with ₹ {{ plan.get_security_deposit }} One Time Registration Fees </span>
-                                        {% endif %}
-                                        <h4><a href="{{ plan.get_absolute_url }}">{{ plan.name }}</a></h4>
-                                        <div class="product-rating">
-                                            <i class="ion-android-star-outline theme-star"></i>
-                                            <i class="ion-android-star-outline theme-star"></i>
-                                            <i class="ion-android-star-outline theme-star"></i>
-                                            <i class="ion-android-star-outline theme-star"></i>
-                                            <i class="ion-android-star-outline"></i>
-                                        </div>
-                                        <div class="product-price-wrapper">
-                                            {% if plan.type == "SB" %}
-                                            {% if plan.discount != 0 %}
-                                            <span class="product-price-old">₹ {{ plan.get_monthly_subscription_mrp }}</span>
-                                            <span>₹ {{ plan.get_monthly_subscription_selling_price }} monthly</span>
-                                            {% else %}
-                                            <span>₹ {{ plan.get_monthly_subscription_mrp }} monthly (for {{ plan.duration }} months)</span>
-                                            {% endif %}
-                                            {% else %}
-                                            <span style="font-weight: bold;">Get Any Game at Rupee 300/500 Only*</span>
-                                            {% endif %}
-                                        </div>
-                                        <p>{{ plan.get_plan_description|striptags|safe }}</p>
-                                        <div class="product-action">
-                                        {% if user.is_authenticated %}
-                                        {% if user.userprofile.has_subscription %}
-                                            <a class="action-cart" href="#" style="background-color: #ff9900;"
-                                               title="Choose Your Games"> Choose Your Games </a>
-                                        {% else %}
-                                            <a class="action-cart" href="{% url 'carts:add-plan' plan.slug %}"
-                                               title="Add to Cart"> Add to Cart </a>
-                                        {% endif %}
-                                        {% else %}
-                                            <a class="action-cart" href="{% url 'carts:add-plan' plan.slug %}"
-                                               title="Add to Cart"> Add to Cart </a>
-                                        {% endif %}
-                                        </div>
-                                    </div>
+        <div class="tab-content jump">
+            <div class="tab-pane active">
+                <div class="row">
+                    {% for plan in plans %}
+                    <div class="col-xl-12 col-lg-12 col-md-16">
+                        <div class="best-selling-pro-wrapper mb-20 best-selling-big-img">
+                            <div class="product-img best-selling-img">
+                                <a href="{{ plan.get_absolute_url }}">
+                                    {% thumbnail plan.image.file "380x380" crop="center" quality=70 as im %}
+                                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+                                    {% endthumbnail %}
+                                </a>
+                                {% if plan.discount %}
+                                <span>{{ plan.discount }}% Off!</span>
+                                {% endif %}
+                            </div>
+                            <div class="product-content best-pro-content best-selling-style-2">
+                                {% if plan.type == "SB" %}
+                                <span>₹ {{ plan.get_plan_selling_price }} for {{ plan.duration }} Months</span>
+                                {% else %}
+                                <span>Buy with ₹ {{ plan.get_security_deposit }} One Time Registration Fees </span>
+                                {% endif %}
+                                <h4>
+                                    <a href="{{ plan.get_absolute_url }}">{{ plan.name }}</a>
+                                </h4>
+                                <div class="product-price-wrapper">
+                                    {% if plan.type == "SB" %}
+                                    {% if plan.discount != 0 %}
+                                    <span class="product-price-old">₹ {{ plan.get_monthly_subscription_mrp }}</span>
+                                    <span>₹ {{ plan.get_monthly_subscription_selling_price }} monthly</span>
+                                    {% else %}
+                                    <span>₹ {{ plan.get_monthly_subscription_mrp }} monthly (for {{ plan.duration }} months)</span>
+                                    {% endif %}
+                                    {% else %}
+                                    <span style="font-weight: bold;">Get Any Game at Rupee 300/500 Only*</span>
+                                    {% endif %}
                                 </div>
-                            {% endfor %}
+                                <div class="product-list">
+                                    <ul>
+                                        {% if plan.type == "SB" %}
+                                        <li>Get Per Month at Rupee: <span> ₹ {{ plan.get_monthly_subscription_selling_price }} </span></li>
+                                        {% if plan.swaps > 0 %}
+                                        <li>Available Monthly Swaps: <span>{{ plan.available_swaps }} Swaps</span></li>
+                                        {% endif %}
+                                        <li>Security Deposit: {% if plan.security_deposit > 0 and plan.refundable %}
+                                            <span>₹ {{ plan.security_deposit }} Refundable!</span>
+                                            {% elif plan.security_deposit > 0 and not plan.refundable %}
+                                            <span>₹ {{ plan.security_deposit }} Not Refundable!</span>{% endif %}</li>
+                                        {% else %}
+                                        <li>One Time Plan Subscription Fees: <span>₹ {{ plan.security_deposit }}</span></li>
+                                        <li>Plan Validity: <span>{{ plan.duration }} Month</span></li>
+                                        {% if plan.available_swaps %}
+                                        <li>Game Swaping Period: <span>Play Unlimited* or {{ plan.available_swaps }} Months*</span></li>
+                                        {% endif %}
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                                <div class="best-pro-action-2">
+                                    {% if user.is_authenticated %}
+                                    {% if user.userprofile.has_subscription %}
+                                    <a class="action-cart" href="#" style="background-color: #ff9900;"
+                                       title="Choose Your Games"> Choose Your Games </a>
+                                    {% else %}
+                                    <a class="action-cart" href="{% url 'carts:add-plan' plan.slug %}"
+                                       title="Add to Cart"> Add to Cart </a>
+                                    {% endif %}
+                                    {% else %}
+                                    <a class="action-cart" href="{% url 'carts:add-plan' plan.slug %}"
+                                       title="Add to Cart"> Add to Cart </a>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
 {% include 'shop/include/shop-service-page.html' %}
 {% endblock %}
 <!-- Nav-bar Area End Here-->
-
-<!-- Coverpage Area Starts Here-->
-{% block coverpage %}
-{% endblock %}
-<!-- Coverpage Area End Here-->
-
-<!-- Featured Product Area Starts Here-->
-{% block featuredproducts %}
-{% endblock %}
-<!-- Featured Product Area Ends Here-->
-
-<!-- Banner-1 Area Starts Here-->
-{% block banner1 %}
-{% endblock %}
-<!-- Banner-1 Area Ends Here-->
-
-<!-- Homepage-Console-Category Area Starts Here-->
-{% block consolecategory %}
-{% endblock %}
-<!-- Homepage-Console-Category Area Ends Here-->
-
-<!-- Banner-2 Area Starts Here-->
-{% block banner2 %}
-{% endblock %}
-<!-- Banner-2 Area Ends Here-->
-
-<!-- Homepage-Blogs Area Starts Here-->
-{% block blogging %}
-{% endblock %}
-<!-- Homepage-Blogs Area Ends Here-->
-<!-- Footer Area Start Here -->
-{% block footer %}
-{% endblock %}
-<!-- Footer Area Ends -->

@@ -87,11 +87,11 @@
                         <p>Subscription Duration: <span>{{ plan.duration }} Month</span></p>
                         {% endif %}
                         {% if plan.swaps > 0 %}
-                        <p>Available Swaps: <span>{{ plan.monthly_available_swaps }} Swap in Month</span>
+                        <p>Available Swaps: <span>{{ plan.available_swaps }} Swap in Month</span>
                             {% endif %}
-                            {% if plan.security_deposit > 0 %}
-                        <p>Security Deposit: <span>₹ {{ plan.security_deposit }} Refundable!</span>
-                            {% endif %}
+                        <p>Security Deposit: {% if plan.security_deposit > 0 and plan.refundable %}<span>₹ {{ plan.security_deposit }} Refundable!</span>
+                            {% elif plan.security_deposit > 0 and not plan.refundable %}<span>₹ {{ plan.security_deposit }} Not Refundable!</span>
+                        {% endif %}</p>
                     </div>
                     {% else %}
                     <span>₹ {{ plan.security_deposit }} One Time Registration Fees</span>

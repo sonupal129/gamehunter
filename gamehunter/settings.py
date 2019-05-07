@@ -195,8 +195,8 @@ BASE_PAYMENT_URL = "https://test.instamojo.com/api/1.1/payment-requests/"
 PAYEMENT_REDIRECT_URL = "http://127.0.0.1:8000/cart/payment/successful"
 
 # Sitemaps Details
-# if DEBUG:
-SITE_ID = 2
+if DEBUG:
+    SITE_ID = 2
 
 # Django Caches
 if not DEBUG:
@@ -204,7 +204,7 @@ if not DEBUG:
         'default': {
             'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
             'LOCATION': 'd:/Game Hunter/testcache/',
-            'TIMEOUT': 18000,
+            'TIMEOUT': 86400,
         }
     }
 
