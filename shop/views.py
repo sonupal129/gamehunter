@@ -400,26 +400,6 @@ class SellYourGamesView(FormView):
         return super().form_valid(form)
 
 
-# def forget_password(request):
-#     forget_password_form = ResetPasswordForm(request.POST or None)
-#     context = {
-#         'form': forget_password_form,
-#     }
-#     if request.session.get("error", None):
-#         context["error"] = request.session.get("error")
-#         del request.session["error"]
-#
-#     if forget_password_form.is_valid():
-#         email = forget_password_form.cleaned_data.get("email")
-#         print(email)
-#         try:
-#             user = User.objects.get(email=email)
-#         except ObjectDoesNotExist:
-#             request.session["error"] = 'User not Found Please Register Yourself'
-#         else:
-#
-#     return render(request, "shop/registrations/password_reset.html", context)
-
 def reset_password(request):
     reset_form = ResetPasswordForm(request.POST or None)
     context = {
