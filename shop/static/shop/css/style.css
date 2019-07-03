@@ -2437,6 +2437,7 @@ button.icon-cart span.count-style {
     text-transform: capitalize;
     display: block;
     text-align: left;
+    font-size: 12px;
 }
 
 .main-menu ul li ul li a:hover {
@@ -2450,13 +2451,15 @@ button.icon-cart span.count-style {
 
 .main-menu nav > ul > li > ul.mega-menu {
     padding-left: 375px;
+    width: 80%;
 }
 
 .main-menu ul li ul > li.mega-menu-title, .sidebar-menu ul li ul > li.mega-menu-title {
     color: #242424;
     font-size: 14px;
     font-weight: 500;
-    margin: 0 0 17px;
+    margin: 10px 0 17px;
+
 }
 
 .main-menu nav > ul > li > ul.mega-menu > li {
@@ -2464,7 +2467,7 @@ button.icon-cart span.count-style {
     display: inline-block;
     float: left;
     margin-right: 16px;
-    width: 12.5%;
+    width: 18.5%;
 }
 
 /* slider area */

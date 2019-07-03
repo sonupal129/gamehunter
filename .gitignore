@@ -1,5 +1,7 @@
 local_settings.py
 db.sqlite3
+manage.sublime-workspace
+/.vscode
 /media
 /static
 /d:/Game Hunter/testcache/

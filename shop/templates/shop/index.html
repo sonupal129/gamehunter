@@ -14,73 +14,69 @@
 
 <!-- Coverpage Area Starts Here-->
 {% block coverpage %}
-{% if coverpage_top %}
-<div class="slider-active owl-dot-style-2 owl-dot-red owl-carousel">
-    <div class="single-slider pt-130 pb-140 bg-img"
-         style="background-image:url({{ coverpage_top.get_promo_image.file.url }});">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-7">
-                    <div class="slider-content-5 slider-animated-1 text-center">
-                        {% if coverpage_top.name %}<h2 class="animated">{{ coverpage_top.name }}</h2>{% endif %}
-                        {% if coverpage_top.description %}<h4 class="animated">{{ coverpage_top.description }}</h4>
-                        {% endif %}
-                        {% if coverpage_top.link %}
-                        <div class="slider-btn red-color-2 mt-75">
-                            <a class="animated" href="{{ coverpage_top.link }}">Shop Now</a>
+<div class="slider-banner-area pt-40 pb-10">
+    {% if coverpage_top %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+                <div class="slider-area">
+                    <div class="slider-active owl-dot-style-2 owl-carousel">
+                        {% for coverpage in coverpage_top %}
+                        <div class="single-slider pt-70 pb-70 bg-img pl-60 slider-height-2" style="background-image:url({{ coverpage.get_promo_image.file.url }}); width: 777px; height: 420px;">
+                            <div class="slider-content-2 slider-animated-1">
+                                {% if coverpage.name %}<h2 class="animated">{{ coverpage.name }}</h2>{% endif %}
+                                {% if coverpage.description %}<h3 class="animated">{{ coverpage.description }}</h3>{% endif %}
+                                {% if coverpage.link %}
+                                <div class="slider-btn slider-btn-2 mt-65">
+                                    <a class="animated" href="{{ coverpage.link }}">Shop Now</a>
+                                </div>
+                                {% endif %}
+                            </div>
                         </div>
-                        {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-{% if banner_left and banner_right %}
-<div class="banner-area pt-65">
-    <div class="container">
-        <div class="row">
-            {% if banner_left.link %}
-            <div class="col-lg-6 col-md-6">
-                <div class="banner-img banner-hover banner-mrg">
-                    <a href="{{ banner_left.link }}">
-                    {% thumbnail banner_left.get_promo_image.file "570x160" crop="center" quality=70 as im %}
-                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
-                    {% endthumbnail %}
-                </div>
-            </div>
-            {% else %}
-            <div class="col-lg-6 col-md-6">
-                <div class="banner-img banner-mrg">
-                    {% thumbnail banner_left.get_promo_image.file "570x160" crop="center" quality=70 as im %}
-                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
-                    {% endthumbnail %}
-                </div>
-            </div>
-            {% endif %}
-            {% if banner_right.link %}
-            <div class="col-lg-6 col-md-6">
-                <div class="banner-img banner-hover">
-                    <a href="{{ banner_right.link }}">
-                    {% thumbnail banner_right.get_promo_image.file "570x160" crop="center" quality=70 as im %}
-                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
-                    {% endthumbnail %}
-                </div>
-            </div>
-            {% else %}
-            <div class="col-lg-6 col-md-6">
-                <div class="banner-img">
-                    {% thumbnail banner_right.get_promo_image.file "570x160" crop="center" quality=70 as im %}
-                        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
-                    {% endthumbnail %}
+            {% if banner_left and banner_right %}
+            <div class="col-lg-4 col-md-12">
+                <div class="banner-area banner-mrg-top">
+                    {% if banner_left.link %}
+                    <div class="banner-img mb-10 banner-hover">
+                        <a href="{{ banner_left.link }}">
+                            {% thumbnail banner_left.get_promo_image.file "383x206" crop="center" quality=70 as im %}
+                            <img alt="" src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+                            {% endthumbnail %}
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="banner-img mb-10">
+                        {% thumbnail banner_left.get_promo_image.file "383x206" crop="center" quality=70 as im %}
+                        <img alt="" src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+                        {% endthumbnail %}
+                    </div>
+                    {% endif %}
+                    {% if banner_right.link %}
+                    <div class="banner-img banner-hover">
+                        <a href="{{ banner_right.link }}">
+                            {% thumbnail banner_right.get_promo_image.file "383x206" crop="center" quality=70 as im %}
+                            <img alt="" src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+                            {% endthumbnail %}
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="banner-img">
+                        {% thumbnail banner_right.get_promo_image.file "383x206" crop="center" quality=70 as im %}
+                        <img alt="" src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+                        {% endthumbnail %}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             {% endif %}
         </div>
     </div>
+    {% endif %}
 </div>
-{% endif %}
 {% endblock %}
 <!-- Coverpage Area End Here-->
 

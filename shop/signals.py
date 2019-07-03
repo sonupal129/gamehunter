@@ -14,7 +14,7 @@ from shop.models import ProductAttribute
 @receiver(m2m_changed, sender=Product.plan.through)
 def add_delete_pay_per_game_price(sender, instance, **kwargs):
     """This Signal function update pay per game price based on product mrp"""
-    attr = Attribute.objects.get(attribute="game_based_plan_price")
+    attr = Attribute.objects.get(name="game_based_plan_price")
     action = kwargs.get("action")
     if instance and action == "pre_remove":
         if instance.plan.filter(type="GB", id__in=kwargs.get("pk_set")):
@@ -45,7 +45,7 @@ def add_delete_pay_per_game_price(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Product)
 def update_pay_per_game_price(sender, instance, **kwargs):
-    attr = Attribute.objects.get(attribute="game_based_plan_price")
+    attr = Attribute.objects.get(name="game_based_plan_price")
     if instance.get_pay_per_game_subscription_price():
         obj = instance.get_pay_per_game_subscription_price()
         if instance.mrp <= 1499:
@@ -62,7 +62,7 @@ def update_pay_per_game_price(sender, instance, **kwargs):
 @receiver(post_save, sender=Product)
 def create_product_redirect_url(sender, instance, created, **kwargs):
     site = Site.objects.get(id=settings.SITE_ID)
-    attr = Attribute.objects.get(attribute="old_slug")
+    attr = Attribute.objects.get(name="old_slug")
     old_slug = instance.get_old_slug()
     if created:
         ProductAttribute.objects.create(attribute=attr, value=instance.slug, product=instance)

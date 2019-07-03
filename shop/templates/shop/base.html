@@ -32,23 +32,23 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
     <!-- all css here -->
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
-    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/slick.css' %}">
-    <link rel="stylesheet" href="{% static 'css/chosen.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/chosen.min.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/ionicons.min.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{% static 'css/pe-icon-7-stroke.css' %}">
-    <link rel="stylesheet" href="{% static 'css/meanmenu.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
-    <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
-    <script src="{% static 'js/vendor/modernizr-2.8.3.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'shop/css/pe-icon-7-stroke.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/meanmenu.min.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/jquery-ui.css' %}">
+    <script src="{% static 'shop/js/vendor/modernizr-2.8.3.min.js' %}"></script>
 
 </head>
 <body>
-<header class="header-area bg-img" style='background-image: url({% static "img/bg/bg-14.jpg" %}' );>
+<header class="header-area bg-img" style='background-image: url({% static "shop/img/bg/bg-14.jpg" %}' );>
 
 <!-- Facebook Pixel Code -->
     <script>
@@ -144,7 +144,7 @@ fbq('track', 'PageView');
                 <div class="col-lg-3 col-md-12">
                     <div class="logo logo-mrg">
                         <a href="{% url 'shop:homepage' %}">
-                            <img src="{% static 'img/logo/logo.png' %}" alt="">
+                            <img src="{% static 'shop/img/logo/logo.png' %}" alt="">
                         </a>
                     </div>
                 </div>
@@ -156,7 +156,7 @@ fbq('track', 'PageView');
                                 <div class="header-contact-icon">
                                     <!--<i class="pe-7s-headphones"></i>-->
 
-                                    <img src="{% static 'img/logo/whatsapp.svg' %}" alt="" width="35px"
+                                    <img src="{% static 'shop/img/logo/whatsapp.svg' %}" alt="" width="35px"
                                          height="35px">
                                 </div>
                                 <div class="header-contact-content">
@@ -199,7 +199,7 @@ fbq('track', 'PageView');
                 <div class="col-12">
                     <div class="logo mobile-logo">
                         <a href="{% url 'shop:homepage' %}">
-                            <img alt="" src="{% static 'img/logo/logo.png' %}">
+                            <img alt="" src="{% static 'shop/img/logo/logo.png' %}">
                         </a>
                     </div>
                 </div>
@@ -240,34 +240,190 @@ fbq('track', 'PageView');
             <div class="main-menu main-none">
                 <nav>
                     <ul>
-                        <li><a href="#">Playstation Games<i class="ion-chevron-down"></i></a>
-                            <ul class="submenu">
-                                <!--<li><a href="#">Playstation 3</a></li>-->
-                                <li><a href="/products/playstation-games/ps-4">Playstation 4</a></li>
+                        <li class="mega-menu-position"><a href="{% url 'shop:product-list' slug='games' %}"> Games <i
+                                class="ion-chevron-down"></i> </a>
+                            <ul class="mega-menu">
+                                <li>
+                                    <ul>
+                                        <li class="mega-menu-title">Platform</li>
+                                        <li><a href="{% url 'shop:product-list' slug='games/playstation-games' %}">Playstation Games</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games/xbox-games' %}">Xbox Games</a></li>
+                                        <li><a name="raju-rastogi" href="#">Nintendo Games</a></li>
+                                        <li><a href="#">PC Games</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li class="mega-menu-title">Gift Cards</li>
+                                        <li><a href="#">Playstation Gift Cards</a></li>
+                                        <li><a href="#">Xbox Gift Cards</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <ul>
+                                        <li class="mega-menu-title">Genre</li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=action-adventure">Action-Adventure</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=sports">Sports</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=shooter">Shooter</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=racing">Racing</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=open world">Open World</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=survival">Survival</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=simulation">Simulation</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=fighting">Fighting</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}">View All</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <ul>
+                                        <li class="mega-menu-title">Publishers</li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=rockstar games">Rockstar Games</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=ubisoft">Ubisoft</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=square enix">Square Enix</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=electronic arts">Electronic Arts</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=sega">Sega</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=konami">Konami</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=cd projekt red">CD Projekt Red</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}">View All</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <ul>
+                                        <li class="mega-menu-title">Game by Type</li>
+                                        <li><a href="#">Digital Games</a></li>
+                                        <li><a href="#">Boxed Games</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li class="mega-menu-title">Extras</li>
+                                        <li><a href="{% url 'shop:subscription-list' %}">Subscriptions</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
-                        <li><a href="#">Xbox Games<i class="ion-chevron-down"></i></a>
-                            <ul class="submenu">
-                                <!--<li><a href="#">Xbox 360</a></li>-->
-                                <li><a href="/products/xbox-games/xbox-one">Xbox One</a></li>
+                        <li class="mega-menu-position"><a href="#"> Electronics <i
+                                class="ion-chevron-down"></i> </a>
+                            <ul class="mega-menu">
+                                <li>
+                                    <ul>
+                                        <li class="mega-menu-title">Consoles</li>
+                                        <li><a href="#">Playstation</a></li>
+                                        <li><a href="#">Xbox</a></li>
+                                        <li><a href="#">Nintendo</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <ul>
+                                        <li class="mega-menu-title">Computers</li>
+                                        <li><a href="#">Gaming PC</a></li>
+                                        <li><a href="#">Computer Components</a></li>
+                                        <li><a href="#">PC Games</a></li>
+                                        <li><a href="#">Keyboard & Mouse</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <ul>
+                                        <li class="mega-menu-title">Accessories</li>
+                                        <li><a href="#">Gamepads</a></li>
+                                        <li><a href="#">Skins</a></li>
+                                        <li><a href="#">Controller</a></li>
+                                        <li><a href="#">Others</a></li>
+                                        <li><a href="#">Add on Cards</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
-                        <li><a href="{% url 'shop:coming-soon' %}">consoles<i class="ion-chevron-down"></i></a>
-                            <ul class="submenu">
-                                <li><a href="#">Playstation</a></li>
-                                <li><a href="#">Xbox</a></li>
-                                <li><a href="#">Nintendo</a></li>
+                        <li><a href="{% url 'shop:subscription-list' %}">Subscriptions</a></li>
+                        <li class="mega-menu-position"><a
+                                href="{% url 'shop:coming-soon' %}"> play on rent <i
+                                class="ion-chevron-down"></i> </a>
+                            <ul class="mega-menu">
+                                <li>
+                                    <ul>
+                                        <li class="mega-menu-title">Platform</li>
+                                        <li><a href="{% url 'shop:product-list' slug='games/playstation-games' %}?rent=available">Playstation
+                                            Games</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games/xbox-games' %}?rent=available">Xbox
+                                            Games</a></li>
+                                        <li><a name="raju-rastogi" href="#">Nintendo Games</a></li>
+                                        <li><a href="#">PC Games</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li class="mega-menu-title">Consoles</li>
+                                        <li><a href="#">Playstation</a></li>
+                                        <li><a href="#">Xbox</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <ul>
+                                        <li class="mega-menu-title">Genre</li>
+                                        <li>
+                                            <a href="{% url 'shop:product-list' slug='games' %}?&genre=action-adventure&rent=available">Action-Adventure</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'shop:product-list' slug='games' %}?&genre=sports&rent=available">Sports</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'shop:product-list' slug='games' %}?&genre=shooter&rent=available">Shooter</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'shop:product-list' slug='games' %}?&genre=racing&rent=available">Racing</a>
+                                        </li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=open world&rent=available">Open
+                                            World</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=survival&rent=available">Survival</a>
+                                        </li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=simulation&rent=available">Simulation</a>
+                                        </li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=fighting&rent=available">Fighting</a>
+                                        </li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&rent=available">View All</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <ul>
+                                        <li class="mega-menu-title">Publishers</li>
+                                        <li>
+                                            <a href="{% url 'shop:product-list' slug='games' %}?&publisher=rockstar games&rent=available">Rockstar
+                                                Games</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=ubisoft&rent=available">Ubisoft</a>
+                                        </li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=square enix&rent=available">Square
+                                            Enix</a></li>
+                                        <li>
+                                            <a href="{% url 'shop:product-list' slug='games' %}?&publisher=electronic arts&rent=available">Electronic
+                                                Arts</a></li>
+                                        <li>
+                                            <a href="{% url 'shop:product-list' slug='games' %}?&publisher=sega"&rent=available>Sega</a>
+                                        </li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=konami&rent=available">Konami</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'shop:product-list' slug='games' %}?&publisher=cd projekt red&rent=available">CD
+                                                Projekt Red</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&rent=available">View All</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
-                        <li><a href="{% url 'shop:subscription-list' %}"><b><u>Subscriptions</u></b></a></li>
-                        <li><a href="{% url 'shop:coming-soon' %}">collectives/accessories</a></li>
-                        <li><a href="{% url 'shop:coming-soon' %}">events<i class="ion-chevron-down"></i></a>
-                            <ul class="submenu">
-                                <li><a href="#">Upcoming Events</a></li>
-                                <li><a href="#">Gallery</a></li>
+                        <li class="mega-menu-position"><a href="#"> Merchandise <i class="ion-chevron-down"></i></a>
+                            <ul class="mega-menu">
+                                <li>
+                                    <ul>
+                                        <li class="mega-menu-title">Apparel</li>
+                                        <li><a href="#">Men</a></li>
+                                        <li><a href="#">Women</a></li>
+                                        <li><a href="#">Accessories</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <ul>
+                                        <li class="mega-menu-title">Collectible & Toys</li>
+                                        <li><a href="#">Action Figures</a></li>
+                                        <li><a href="#">Collectibles</a></li>
+                                        <li><a href="#">Others</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
-                        <li><a href="{% url 'shop:articles' %}">gaming charcha</a></li>
+                        <li><a href="{% url 'shop:coming-soon' %}">events</a></li>
+                        <li><a href="#">gaming charcha</a></li>
                     </ul>
                 </nav>
             </div>
@@ -310,7 +466,7 @@ fbq('track', 'PageView');
 <!-- Homepage-Blogs Area Ends Here-->
 
 <!-- Footer Area Starts -->
-<footer class="footer-area pt-60 bg-img" style='background-image: url({% static "img/bg/bg-15.jpg" %}' );>
+<footer class="footer-area pt-60 bg-img" style='background-image: url({% static "shop/img/bg/bg-15.jpg" %}' );>
     <div class="container">
         <div class="row">
             <div class="col-lg-4 col-md-6">
@@ -425,7 +581,7 @@ fbq('track', 'PageView');
                             </ul>
                         </div>
                         <div class="payment-icon mt-20">
-                            <img src="{% static 'img/icon-img/payment.png' %}" alt="">
+                            <img src="{% static 'shop/img/icon-img/payment.png' %}" alt="">
                         </div>
                     </div>
                 </div>
@@ -445,14 +601,14 @@ fbq('track', 'PageView');
     </div>
 </footer>
 <!-- all js here -->
-<script src="{% static 'js/vendor/jquery-1.12.0.min.js' %}"></script>
-<script src="{% static 'js/popper.js' %}"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/ajax-mail.js' %}"></script>
-<script src="{% static 'js/owl.carousel.min.js' %}"></script>
-<script src="{% static 'js/plugins.js' %}"></script>
-<script src="{% static 'js/main.js' %}"></script>
-<script src="{% static 'js/video.popup.js' %}"></script>
+<script src="{% static 'shop/js/vendor/jquery-1.12.0.min.js' %}"></script>
+<script src="{% static 'shop/js/popper.js' %}"></script>
+<script src="{% static 'shop/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'shop/js/ajax-mail.js' %}"></script>
+<script src="{% static 'shop/js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'shop/js/plugins.js' %}"></script>
+<script src="{% static 'shop/js/main.js' %}"></script>
+<script src="{% static 'shop/js/video.popup.js' %}"></script>
 <!-- Start of Async Drift Code -->
 <script>
 "use strict";

@@ -1,5 +1,4 @@
 from django.db import models
-from treebeard.mp_tree import MP_Node
 from ckeditor.fields import RichTextField
 from django.urls import reverse
 from django.db.models.signals import post_save
@@ -16,6 +15,7 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.utils.html import mark_safe, html_safe, force_text, format_html, escape
 import bleach
+from mptt.models import MPTTModel, TreeForeignKey
 # Create your models here.
 
 
@@ -61,39 +61,47 @@ def other_file_upload_location(instance, filename):
         pass
 
 
-class Category(MP_Node):
+class Category(MPTTModel):
     class Meta:
         verbose_name_plural = "Categories"
 
-    name = models.CharField(max_length=50, unique=True, default='')
+    name = models.CharField(max_length=100, unique=True, default='')
+    parent = TreeForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='children')
     slug = models.SlugField(db_index=True, null=True, blank=True)
     category_title_meta = models.CharField(max_length=50, null=True, blank=True)
     category_description_meta = models.CharField(max_length=100, null=True, blank=True)
 
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
     def __str__(self):
         return self.name
 
+    def get_category_tree(self, include_self=True):
+        obj = [c for c in self.get_descendants() if self.get_descendants().count() > 0]
+        if include_self:
+            obj.append(self)
+        return obj
+
     def save(self, *args, **kwargs):
-        if not self.is_root():
-            slug_list = set(slugify(ancestor.slug) for ancestor in self.get_ancestors())
-            self.slug = '/'.join(slug_list) + "/%s" % slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
+        if not self.is_root_node():
+            slug_list = [slugify(ancestor.name) for ancestor in self.get_ancestors(include_self=True)]
+            print(slug_list)
+            self.slug = '/'.join(slug_list)
         else:
             self.slug = slugify(self.name)
         return super(Category, self).save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        """Returns the url to access a particular instance of Family."""
-        return reverse("shop:product-list", kwargs={'slug': self.slug})
-
-
-class Attribute(MP_Node):
-    attribute = models.CharField(max_length=50, unique=True, default='')
+class Attribute(MPTTModel):
+    name = models.CharField(max_length=50, unique=True, default='')
+    parent = TreeForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name="children")
 
     def __str__(self):
-        return self.attribute
+        return self.name
 
-    class Meta:
-        verbose_name = "Attribute"
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
 
 class Brand(models.Model):
@@ -238,7 +246,7 @@ class PromoCard(models.Model):
 class Product(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True, db_index=True)
     name = models.CharField(max_length=100, db_index=True)
-    plan = models.ManyToManyField(Plan, related_name='plans', blank=True)
+    plan = models.ManyToManyField(Plan, blank=True)
     slug = models.SlugField('Slug', max_length=120, blank=False, default='', db_index=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     description = RichTextField(config_name='default', blank=True)
@@ -293,38 +301,31 @@ class Product(models.Model):
             return description[:95] + '...'
         return description
 
+    def get_product_attribute(self, attribute_name: str):
+        try:
+            return self.productattribute.get(attribute__name=attribute_name)
+        except ObjectDoesNotExist:
+            return "" 
+
     def get_pay_per_game_subscription_price(self, cached=True):
         cache_key = '_'.join([self.get_absolute_url(), "pay_per_game_subscription_price"])
         cached_value = cache.get(cache_key)
         if cached_value and cached:
             return cached_value
-        attr = Attribute.objects.get(attribute="game_based_plan_price")
-        try:
-            game_price_attribute = ProductAttribute.objects.filter(product=self, attribute=attr).first()
-            cache.set(cache_key, game_price_attribute)
-            return game_price_attribute
-        except ObjectDoesNotExist:
-            return ""
+        price = self.get_product_attribute(attribute_name="game_based_plan_price")
+        cache.set(cache_key, price)
+        return price
 
     def get_old_slug(self):
-        attr = Attribute.objects.get(attribute="old_slug")
-        try:
-            slug = ProductAttribute.objects.get(product=self, attribute=attr)
-            return slug
-        except ObjectDoesNotExist:
-            return ""
+        return self.get_product_attribute("old_slug")
 
     def add_to_trending_products(self):
-        atr = Attribute.objects.get(attribute="trending")
-        try:
-            attr = ProductAttribute.objects.get(product=self, attribute=atr)
-        except ObjectDoesNotExist:
-            ProductAttribute.objects.create(product=self, attribute=atr, value=1)
-        else:
-            new_value = int(attr.value)
-            new_value += 1
-            attr.value = new_value
+        attr = self.get_product_attribute("trending")
+        if attr:
+            attr.value = int(attr.value) + 1
             attr.save()
+        else:
+            ProductAttribute.objects.create(product=self, attribute=Attribute.objects.get(name="trending"), value=1)
 
     def get_default_photo(self):
         if not hasattr(self, '__default_photo'):
@@ -337,17 +338,16 @@ class Product(models.Model):
         return selling_price, mrp
 
     def game_trailer(self, cached=True):
-        cache_key = '_'.join([self.get_absolute_url(), "game_trailor"])
+        cache_key = '_'.join([self.get_absolute_url(), "game_trailer"])
         cached_value = cache.get(cache_key)
         if cached and cached_value:
             return cached_value
-        try:
-            trailer = ProductAttribute.objects.get(attribute__attribute="game_trailer", product=self)
+        trailer = self.get_product_attribute("game_trailer")
+        if trailer:
             cache.set(cache_key, trailer.value)
             return trailer.value
-        except ObjectDoesNotExist:
-            trailer = ""
-            return trailer
+        else:
+            return None
 
     def photos_in_ascendant(self):
         if self.photo_set.all():

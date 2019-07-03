@@ -1,0 +1,88 @@
+{% load thumbnail %}
+
+<div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-12 mb-30">
+    <div class="devita-product-2 mrg-inherit">
+        <div class="product-img">
+            <a href="{{ product.get_absolute_url }}">
+                {% thumbnail product.get_default_photo.file "210x210" crop="center" as im %}
+                <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+            {% endthumbnail %}
+            {% ifequal product.item_status 'I' %}
+            {% if product.total_discount %}
+            <span>{{product.total_discount}}%</span>
+            {% endif %}
+            {% endifequal %}
+        </div>
+        <div class="list-col">
+            <div class="gridview">
+                <div class="product-content text-center">
+                    <span>For {{ product.category.name|upper }}</span>
+                    <h4><a href="{{ product.get_absolute_url }}">
+                            {{ product.get_product_title_name|title }}</a></h4>
+                    {% if product.item_status == 'O' %}
+                    <div class="product-price-wrapper">
+                        <span> Out of Stock </span>
+                    </div>
+                    {% elif product.item_status == 'S' %}
+                    <div class="product-price-wrapper">
+                        <span> Subscription Only </span>
+                    </div>
+                    {% else %}
+                    {% ifequal product.total_discount 0 %}
+                    <div class="product-price-wrapper">
+                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
+                    </div>
+                    {% else %}
+                    <div class="product-price-wrapper">
+                        <span>₹ {{ product.get_mrp_and_selling_price|first }}</span>
+                        <span class="product-price-old">₹ {{ product.get_mrp_and_selling_price|last }}</span>
+                    </div>
+                    {% endifequal %}
+                    {% endif %}
+                </div>
+                <div class="product-action-wrapper-2 text-center">
+                    <div class="product-rating">
+                        <i class="ion-android-star-outline theme-star"></i>
+                        <i class="ion-android-star-outline theme-star"></i>
+                        <i class="ion-android-star-outline theme-star"></i>
+                        <i class="ion-android-star-outline theme-star"></i>
+                        <i class="ion-android-star-outline"></i>
+                    </div>
+                    <p class="product-description-wrapper">{{ product.get_product_description|safe }}</p>
+                    <div class="product-action">
+                        <!--<a class="same-action" title="Wishlist" href="#">-->
+                        <!--<i class="fa fa-heart-o"></i>-->
+                        <!--</a>-->
+                        {% if product in cart.products.all or product in cart.pay_game_products.all %}
+                        <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">
+                            Go to Cart
+                        </a>
+                        {% else%}
+                        {% if product.item_status == 'I' %}
+                        <a class="action-cart" title="Add To Cart" href="{% url 'carts:add' product.slug %}">
+                            Add to Cart
+                        </a>
+                        {% elif product.get_pay_per_game_subscription_price and product.item_status == "S" %}
+                        <a class="action-cart"
+                            title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price.value }} Only"
+                            href="{% url 'carts:pay-per-game-product' product.slug %}">
+                            Get @ ₹
+                            {{ product.get_pay_per_game_subscription_price.value }}
+                            Only
+                        </a>
+                        {% elif product.item_status == "S" %}
+                        <a class="action-cart" title="Buy Subscription" href="{% url 'shop:subscription-list' %}">
+                            Buy Subscription
+                        </a>
+                        {% endif %}
+                        {% endif %}
+                        <!--<a class="same-action compare-mrg" data-target="#exampleCompare"-->
+                        <!--data-toggle="modal" title="Compare" href="#">-->
+                        <!--<i class="fa fa-sliders fa-rotate-90"></i>-->
+                        <!--</a>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

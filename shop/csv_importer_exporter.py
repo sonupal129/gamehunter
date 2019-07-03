@@ -52,10 +52,7 @@ def upload_products(filepath):
         if row.get("Category") in games_category:
             category = Category.objects.get(name__iexact=row.get("Category"))
             data["category"] = category
-            print(category)
-            print(row.get("Name"))
             product = Product.objects.filter(name__iexact=row.get("Name"), category=category).first()
-            print(product)
             if product:
                 product.name = row.get("Name")
                 product.description = data.get("description")
@@ -95,8 +92,11 @@ def upload_products(filepath):
                 product.manufacturer = data.get("manufacturer")
                 product.genre = data.get("genre")
                 product.save()
+                print(product)
                 if row.get("Plan"):
                     prod_plan = Plan.objects.get(name__iexact=row.get("Plan", ""))
+                    print(prod_plan)
+                    print(product)
                     product.plan.add(prod_plan)
                 new_product_added += 1
                 time.sleep(1)

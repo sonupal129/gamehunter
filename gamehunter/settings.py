@@ -41,8 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.redirects',
     # other apps
-    'treebeard',
-    'adminsortable',
+    'mptt',
     'ckeditor',
     'post_office',
     'django_slack',
@@ -102,7 +101,7 @@ DATABASES = {
         'NAME': 'hunterdatabase',
         'USER': 'postgres',
         'PASSWORD': '123456',
-        'HOST': 'localhost'
+        'HOST': 'localhost',
     }
 }
 

@@ -1,7 +1,4 @@
 from django.contrib import admin
-from adminsortable.admin import NonSortableParentAdmin, SortableTabularInline
-from treebeard.admin import TreeAdmin
-from treebeard.forms import movenodeform_factory
 from .models import *
 from django.contrib.admin import ModelAdmin
 from .csv_importer_exporter import *
@@ -9,21 +6,23 @@ from shop.debug import ExceptionLog
 from django.db import connection
 from django.core.cache import cache
 from django.conf import settings
+from mptt.admin import DraggableMPTTAdmin
 # Register your models here.
 
 admin.site.site_header = 'Game Hunter Admin';
 admin.site.site_title = 'Game Hunter Admin';
 
 
-class AttributeAdmin(TreeAdmin):
-    form = movenodeform_factory(Attribute, exclude='slug')
+class AttributeAdmin(DraggableMPTTAdmin):
+    list_display = ('tree_actions','indented_title', 'parent',)
+    
 
 
 admin.site.register(Attribute, AttributeAdmin)
 
 
-class CategoryAdmin(TreeAdmin):
-    form = movenodeform_factory(Category, exclude='slug')
+class CategoryAdmin(DraggableMPTTAdmin):
+    list_display = ('tree_actions','indented_title', 'parent',)
     readonly_fields = ("slug",)
 
 
@@ -44,7 +43,7 @@ class ProductAttributeInline(admin.TabularInline):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field is self.model.attribute.field:
             try:
-                kwargs["queryset"] = Attribute.objects.get(attribute="Product").get_children()
+                kwargs["queryset"] = Attribute.objects.get(name="Product").get_children()
             except IndexError:
                 print("PRODUCT attribute is not available in attribute Model, kindly add it with it's children ")
         return super(ProductAttributeInline, self).formfield_for_foreignkey(db_field, request, **kwargs)

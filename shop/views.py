@@ -37,15 +37,11 @@ class HomePageView(ListView):
         else:
             return cached_value
 
-    def blogs_list(self):
-        blogs = Blog.objects.filter(status="P").order_by('-date_created')[:5]
-        return blogs
-
     def trending_products_list(self):
         cache_key = '_'.join([self.request.get_raw_uri(), "trending_products"])
         cached_value = cache.get(cache_key)
         if cached_value is None:
-            atr = Attribute.objects.get(attribute="trending")
+            atr = Attribute.objects.get(name="trending")
             pd = ProductAttribute.objects.filter(attribute=atr).order_by('-value')[:12]
             products = [at.product for at in pd]
             cache.set(cache_key, products, 30*60*9)
@@ -79,7 +75,7 @@ class HomePageView(ListView):
 
     def get_home_page_banner(self):
         qs = PromoCard.objects.filter(active=True).order_by("-date")
-        top_coverpage = qs.filter(type="coverpage_top").first()
+        top_coverpage = qs.filter(type="coverpage_top")[:3]
         center_coverpage = qs.filter(type="coverpage_center").first()
         bottom_coverpage = qs.filter(type="coverpage_bottom").first()
         left_banner = qs.filter(type="banner_left").first()
@@ -93,9 +89,6 @@ class HomePageView(ListView):
             top_coverpage, center_coverpage, bottom_coverpage, left_banner, right_banner = self.get_home_page_banner()
             context['cart'] = get_cart_obj(self.request)
             blogs = cache.get("homepage_blogs")
-            if blogs is None:
-                blogs = self.blogs_list()
-                cache.set("homepage_blogs", blogs)
             context['articles'] = blogs
             context['trending_products'] = self.trending_products_list()
             context['new_released_games'] = new_released_games
@@ -114,7 +107,7 @@ class HomePageView(ListView):
 
 class ProductListView(ListView):
     paginate_by = 20
-    template_name = 'shop/product-list.html'
+    template_name = 'shop/product_list/product-list.html'
     context_object_name = "products"
 
     @log_exceptions("Product List Querysets Function")
@@ -123,8 +116,8 @@ class ProductListView(ListView):
         cache_key = self.request.get_raw_uri()
         cached_value = cache.get(cache_key)
         if cached_value is None:
-            queryset = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
-                                              item_status__in=["I", "S"])
+            categories = Category.objects.filter(slug=self.kwargs.get("slug")).get_descendants(include_self=True)
+            queryset = Product.objects.filter(category__in=categories, active=True, item_status__in=["I", "S"])
             cache.set(cache_key, queryset, 9600)
         else:
             queryset = cached_value
@@ -139,7 +132,8 @@ class ProductListView(ListView):
 
     @log_exceptions("Product Side List Filter Function")
     def get_side_list_filter(self):
-        products = Product.objects.filter(category__slug=self.kwargs.get("slug"), active=True,
+        categories = Category.objects.filter(slug=self.kwargs.get("slug")).get_descendants(include_self=True)
+        products = Product.objects.filter(category__in=categories, active=True,
                                           item_status__in=["I", "S"])
         publishers = products.filter(publisher__name__isnull=False).values("publisher__name").distinct()
         developers = products.filter(developer__name__isnull=False).values("developer__name").distinct()
@@ -149,7 +143,7 @@ class ProductListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
         try:
-            context['category'] = Category.objects.get(slug=self.kwargs.get("slug"))
+            context['categories'] = Category.objects.get(slug=self.kwargs.get("slug")).get_ancestors(include_self=True)
         except IndexError:
             print("category not available")
 

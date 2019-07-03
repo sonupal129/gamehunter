@@ -1,39 +1,51 @@
-from shop.models import Product, ProductAttribute, Attribute
-from carts.models import Cart
-from django.utils import timezone
-import datetime
-from carts.models import Cart
+from shop.models import ProductAttribute
+from urllib.request import urlopen
+from bs4 import BeautifulSoup as soup
+import time
+from background_task import background
 # Start Writing Functions Below
 
+@background(schedule=30)
+def product_updater():
+    """This Function is A Task which update products mrp, discount and status from gametheshop on daily"""
+    qs = ProductAttribute.objects.select_related('product').filter(attribute__name="source_url")[:5]
+    for atr in qs:
+        time.sleep(2)
+        single_product_update(atr.value, atr.product)
+    return "All Product Data Updated"
 
-def update_pay_per_game_product_price():
-    """This function run as task, where it checks all products, and update pay per game price of product which
-    has/has not game based plan"""
 
-    attr = Attribute.objects.get(attribute="game_based_plan_price")
-    products = Product.objects.filter(active=True, item_status__in=["I", "S"])
-    for product in products:
-        if product.plan.filter(type="GB"):
-            game_price_attribute = ProductAttribute.objects.filter(product=product, attribute=attr).first()
-            if game_price_attribute:
-                if product.mrp <= 1499:
-                    game_price_attribute.value = 300
-                elif product.mrp > 1500 < 4000:
-                    game_price_attribute.value = 500
-                else:
-                    del game_price_attribute
-                game_price_attribute.save()
-            else:
-                if product.mrp <= 1499:
-                    subscription_game_price = ProductAttribute(attribute=attr, value=300, product=product)
-                elif product.mrp > 1500 < 4000:
-                    subscription_game_price = ProductAttribute(attribute=attr, value=500, product=product)
-                else:
-                    pass
-                subscription_game_price.save()
-        else:
-            game_price_attribute = ProductAttribute.objects.filter(product=product, attribute=attr)
-            if game_price_attribute:
-                del game_price_attribute
-    return "All Products Pay Per Price Been Updated!"
+def single_product_update(url, product):
+    """Takes url and product objects as parameter and updated product price from gametheshop"""
+    try:
+        read_url = urlopen(url).read()
+        url_data = soup(read_url, "html.parser")
+        product_data = url_data.find("div", {"id": "ctl00_ContentPlaceHolder1_divOfferDetails"})
+    except:
+        print("Wrong Url Provided")
+        pass
+    try:
+        image = product_data.find("div", {"class": "prc-mn-dv"}).img["src"]
+    except AttributeError:
+        try:
+            image = product_data.find("img", {"class": "vrt-mdl"}).get("src")
+        except AttributeError:
+            pass
+    if image == "https://s3-ap-southeast-1.amazonaws.com/cdn.gamestheshop.com/image/offer-available.png":
+        product.mrp = int(product_data.find("span", {"class": "lnr-thr mrp-nmbr"}).text.replace(",", ""))
+        product.item_status = "I"
+        product.discount = int(product_data.find("span", {"class": "tf-percnt"}).text.replace("%", ""))
+    elif image == "https://s3-ap-southeast-1.amazonaws.com/cdn.gamestheshop.com/image/in-stock.png":
+        product.mrp = int(url_data.find("td", {"class": "gt-pr-blk vrt-top"}).text.replace(",", ""))
+        product.item_status = "I"
+        product.discount = 0
+    elif image == "https://s3-ap-southeast-1.amazonaws.com/cdn.gamestheshop.com/image/sold-out.png":
+        product.item_status = "O"
+    product.save()
+    return f"{product.name} Data Updated"
+
+
+# product_updater(repeat=Task.DAILY, )
+
+
 
