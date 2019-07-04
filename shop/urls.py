@@ -16,7 +16,6 @@ from shop.emails import send_password_reset_email
 app_name = 'shop'
 
 sitemaps = {
-    "blogs": BlogSiteMap,
     "categories": CategorySiteMap,
     "plans": PlanSiteMap,
     "products": ProductSiteMap,
@@ -32,7 +31,6 @@ urlpatterns = [
     path('', HomePageView.as_view(), name='homepage'),
     # path('consoles/', views.ProductListView.as_view(), name='consoles'),
     # path('gaming-accessories/', views.ProductListView.as_view(), name='gaming-accessories'),
-    path('articles/', ArticleListView.as_view(), name='articles'),
     path('about-us/', cache_page(86400)(AboutUsView.as_view()), name='about-us'),
     path('contact-us/', cache_page(86400)(ContactUsView.as_view()), name='contact-us'),
     path('privacy-policy/', cache_page(86400)(PrivacyPolicyView.as_view()), name='privacy-policy'),
@@ -43,7 +41,6 @@ urlpatterns = [
     path('login/', login_register_page, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('subscription-plans/', SubscriptionPlanView.as_view(), name='subscription-list'),
-    path('articles/<slug:slug>', ArticleDetailView.as_view(), name='article-detail'),
     path('search/', ProductSearchView.as_view(), name='search'),
     path('<slug:slug>', ProductDetailView.as_view(), name='product-detail'),
     path('products/<path:slug>/', ProductListView.as_view(), name='product-list'),

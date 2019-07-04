@@ -21,11 +21,11 @@ class Migration(migrations.Migration):
             name='blog_type',
             field=models.CharField(choices=[('blog', 'Blog'), ('deals', 'Deals'), ('news', 'News')], default='blog', max_length=10),
         ),
-        migrations.AlterField(
-            model_name='blog',
-            name='card_image',
-            field=models.ImageField(help_text='For Better Viewing Experience Please make sure Image size should be 250W x 250H', null=True, upload_to=shop.models.other_file_upload_location, validators=[shop.models.Blog.validate_card_image]),
-        ),
+        # migrations.AlterField(
+        #     model_name='blog',
+        #     name='card_image',
+        #     field=models.ImageField(help_text='For Better Viewing Experience Please make sure Image size should be 250W x 250H', null=True, upload_to=shop.models.other_file_upload_location, validators=[shop.models.Blog.validate_card_image]),
+        # ),
         migrations.AlterField(
             model_name='product',
             name='condition',

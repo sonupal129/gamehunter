@@ -53,8 +53,8 @@ class Migration(migrations.Migration):
                 ('blog_type', models.CharField(choices=[('blog', 'Blog'), ('news', 'News'), ('deals', 'Deals')], default='blog', max_length=10)),
                 ('description', ckeditor.fields.RichTextField()),
                 ('slug', models.SlugField(default='', max_length=120)),
-                ('card_image', models.ImageField(help_text='For Better Viewing Experience Please make sure Image size should be 370W x 220H', null=True, upload_to=shop.models.other_file_upload_location, validators=[shop.models.Blog.validate_card_image])),
-                ('cover_image', models.ImageField(help_text='For Better Viewing Experience Please make sure Image size should be 872W x 472H', null=True, upload_to=shop.models.other_file_upload_location, validators=[shop.models.Blog.validate_cover_image])),
+                # ('card_image', models.ImageField(help_text='For Better Viewing Experience Please make sure Image size should be 370W x 220H', null=True, upload_to=shop.models.other_file_upload_location, validators=[shop.models.Blog.validate_card_image])),
+                # ('cover_image', models.ImageField(help_text='For Better Viewing Experience Please make sure Image size should be 872W x 472H', null=True, upload_to=shop.models.other_file_upload_location, validators=[shop.models.Blog.validate_cover_image])),
             ],
         ),
         migrations.CreateModel(

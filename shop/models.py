@@ -248,18 +248,18 @@ class Product(models.Model):
     name = models.CharField(max_length=100, db_index=True)
     plan = models.ManyToManyField(Plan, blank=True)
     slug = models.SlugField('Slug', max_length=120, blank=False, default='', db_index=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
     description = RichTextField(config_name='default', blank=True)
     launch_date = models.DateField(blank=True, null=True, db_index=True)
     item_status = models.CharField(choices={('I', 'In Stock'), ('O', 'Out of Stock'), ('S', 'Subscription Only'),},
                                    max_length=20, default='O')
     developer = models.ForeignKey(Brand, limit_choices_to={'is_developer': True}, null=True, blank=True,
-                                  on_delete=models.CASCADE, related_name='developer')
+                                  on_delete=models.SET_NULL, related_name='developer')
     publisher = models.ForeignKey(Brand, limit_choices_to={'is_publisher': True}, null=True, blank=True,
-                                  on_delete=models.CASCADE, related_name='publisher')
+                                  on_delete=models.SET_NULL, related_name='publisher')
     manufacturer = models.ForeignKey(Brand, limit_choices_to={'is_manufacturer': True}, null=True, blank=True,
-                                     on_delete=models.CASCADE, related_name='manufacturer')
-    genre = models.ForeignKey(Genre, null=True, blank=True, on_delete=models.CASCADE)
+                                     on_delete=models.SET_NULL, related_name='manufacturer')
+    genre = models.ForeignKey(Genre, null=True, blank=True, on_delete=models.SET_NULL)
     condition = models.CharField(max_length=10, choices={('U', 'Used'), ('N', 'New')}, default='N', null=True, blank=True)
     mrp = models.DecimalField(default=0, blank=False, max_digits=5, decimal_places=0,
                               validators=[min_value_validator])
@@ -378,66 +378,6 @@ class Photo(models.Model):
 
     class Meta:
         ordering = ["item_order"]
-
-
-class Blog(models.Model):
-    date = models.DateTimeField(auto_now_add=True, null=True, blank=True, db_index=True)
-    title = models.CharField(max_length=150, help_text='Title Name of Blog/Article', db_index=True)
-    blog_type = models.CharField(max_length=10, choices={('news', 'News'), ('blog', 'Blog'), ('deals', 'Deals')},
-                                 default='blog')
-    description = RichTextField(config_name='default')
-    date_created = models.DateField(auto_created=True)
-    slug = models.SlugField(blank=False, default='', max_length=120, db_index=True)
-    product = models.ManyToManyField(Product, related_name='blog', blank=True)
-    status = models.CharField(choices={("P", "Published"), ("U", "Unpublished")}, max_length=15, default="U")
-
-    def validate_card_image(self):
-        limit = 370 * 220
-        if self.size > limit:
-            raise ValidationError(f"Uploaded Image W*H Should be {limit} in size")
-
-    def validate_cover_image(self):
-        limit = 872 * 472
-        if self.size > limit:
-            raise ValidationError(f"Uploaded Image W*H Should be {limit} in size")
-
-    card_image = models.ImageField(
-        help_text='For Better Viewing Experience Please make sure Image size should be 250W x 250H',
-        upload_to=other_file_upload_location, blank=False, null=True, validators=[validate_card_image])
-    cover_image = models.ImageField(upload_to=other_file_upload_location, blank=False, null=True, validators=[validate_cover_image],
-                                    help_text='For Better Viewing Experience Please make sure Image size should be 872W x 472H')
-
-    def __str__(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return reverse("shop:article-detail", args=[self.slug])
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
-        return super(Blog, self).save(*args, **kwargs)
-
-    def get_blog_title_name(self):
-        if len(self.title) > 40:
-            title = (self.title[:35] + '...').title()
-            return str(title.strip())
-        return str(self.title)
-
-    def get_blog_description(self):
-        if len(str(self.description)) > 100:
-            description = self.description[:130] + '...'
-            return str(description)
-        return str(self.description)
-
-
-class BlogAttribute(models.Model):
-    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE, db_index=True)
-    value = models.CharField(max_length=200, help_text='Will Update Soon', blank=True)
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, blank=True, null=True)
-
-    class Meta:
-        verbose_name_plural = "Blog Attribute"
-
 
 class UserProfile(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)

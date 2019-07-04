@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import *
+from shop.models import *
 from django.contrib.admin import ModelAdmin
 from .csv_importer_exporter import *
 from shop.debug import ExceptionLog
@@ -9,20 +9,19 @@ from django.conf import settings
 from mptt.admin import DraggableMPTTAdmin
 # Register your models here.
 
-admin.site.site_header = 'Game Hunter Admin';
-admin.site.site_title = 'Game Hunter Admin';
+admin.site.site_header = 'Game Hunter Admin'
+admin.site.site_title = 'Game Hunter Admin'
 
 
 class AttributeAdmin(DraggableMPTTAdmin):
-    list_display = ('tree_actions','indented_title', 'parent',)
-    
+    list_display = ('tree_actions', 'indented_title', 'parent',)
 
 
 admin.site.register(Attribute, AttributeAdmin)
 
 
 class CategoryAdmin(DraggableMPTTAdmin):
-    list_display = ('tree_actions','indented_title', 'parent',)
+    list_display = ('tree_actions', 'indented_title', 'parent',)
     readonly_fields = ("slug",)
 
 
@@ -43,9 +42,11 @@ class ProductAttributeInline(admin.TabularInline):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field is self.model.attribute.field:
             try:
-                kwargs["queryset"] = Attribute.objects.get(name="Product").get_children()
+                kwargs["queryset"] = Attribute.objects.get(
+                    name="Product").get_children()
             except IndexError:
-                print("PRODUCT attribute is not available in attribute Model, kindly add it with it's children ")
+                print(
+                    "PRODUCT attribute is not available in attribute Model, kindly add it with it's children ")
         return super(ProductAttributeInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 
@@ -55,7 +56,8 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductAttributeInline, PhotoInline]
     filter_horizontal = ('plan',)
     search_fields = ["name"]
-    list_filter = ["item_status", "active", "category", "condition", "is_featured"]
+    list_filter = ["item_status", "active",
+                   "category", "condition", "is_featured"]
     actions = ["out_of_stock_selected_products", "in_stock_selected_products", "subscription_only_selected_products",
                "make_active_selected_products", "make_inactive_selected_products"]
 
@@ -92,36 +94,9 @@ class ProductAdmin(admin.ModelAdmin):
         print(len(connection.queries))
         return self.message_user(request, f"{queryset.count()} products marked inactive")
 
-
-class BlogAttributeInline(admin.TabularInline):
-    model = BlogAttribute
-    fields = ['attribute', 'value']
-    extra = 1
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field is self.model.attribute.field:
-            try:
-                kwargs["queryset"] = Attribute.objects.get(attribute="Blogs").get_children()
-            except IndexError:
-                print("BLOG attribute is not available in attribute Model, kindly add it with it's children ")
-        return super(BlogAttributeInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
-
-
-class BlogAdmin(admin.ModelAdmin):
-    exclude = ('slug',)
-    list_display = ('title', 'date_created', 'status',)
-    inlines = [BlogAttributeInline]
-    raw_id_fields = ['product']
-    search_fields = ("title",)
-    list_filter = ("status", "blog_type",)
-
-    def save_model(self, request, obj, form, change):
-        cache.delete("blog_list_view_page")
-        return super().save_model(request, obj, form, change)
-
-
 class PlanAdmin(admin.ModelAdmin):
-    list_display = ('name', 'subscription_amount', 'security_deposit', "active")
+    list_display = ('name', 'subscription_amount',
+                    'security_deposit', "active")
     fields = ['name', 'type', 'duration', 'additional_month', 'swaps', 'description', 'active',
               ('subscription_amount', 'security_deposit', 'refundable', 'discount'),
               'term_condition',
@@ -148,7 +123,8 @@ class AddressAdmin(admin.ModelAdmin):
 
 
 class BrandAdmin(admin.ModelAdmin):
-    fields = ['name', 'description', 'image', ('is_developer', 'is_publisher', 'is_manufacturer')]
+    fields = ['name', 'description', 'image',
+              ('is_developer', 'is_publisher', 'is_manufacturer')]
     search_fields = ["name"]
     list_display = ["name", "is_developer", "is_publisher", "is_manufacturer"]
     list_filter = ["is_developer", "is_publisher", "is_manufacturer"]
@@ -184,4 +160,4 @@ admin.site.register(Brand, BrandAdmin)
 admin.site.register(Genre)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ExceptionLog, ExceptionAdmin)
-admin.site.register(Blog, BlogAdmin)
+

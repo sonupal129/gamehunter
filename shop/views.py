@@ -187,38 +187,6 @@ class ProductDetailView(DetailView):
         return context
 
 
-class ArticleListView(ListView):
-    template_name = 'shop/blog.html'
-    model = Blog
-    context_object_name = "articles"
-
-    def get_queryset(self):
-        cache_key = "blog_list_view_page"
-        cached_value = cache.get("blog_list_view_page")
-        if cached_value is None:
-            articles = Blog.objects.filter(status="P").order_by("-date")
-            cache.set(cache_key, articles, 60*30*6)
-            return articles
-        return cached_value
-
-
-class ArticleDetailView(DetailView):
-    template_name = 'shop/blog-details.html'
-    model = Blog
-    context_object_name = "article"
-
-    # def get_rececnt_articles(self):
-    #     if self.request
-
-    def get_context_data(self, **kwargs):
-        context = super(ArticleDetailView, self).get_context_data(**kwargs)
-        try:
-            context['recent_articles'] = Blog.objects.filter(status="P").order_by('-date')[:10]
-        except IndexError:
-            print("Article Not Available or Minimum 5 Articles required to render")
-        return context
-
-
 class SubscriptionPlanView(ListView):
     template_name = 'shop/plan.html'
     context_object_name = 'plans'
