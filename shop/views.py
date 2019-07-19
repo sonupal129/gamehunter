@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView, DetailView, ListView
 from .models import *
 from django.contrib.auth import authenticate, login
-from .forms import *
+from shop.forms import *
 from django.core.cache import cache
 from django.http import HttpResponse, Http404
 from django.views.decorators.cache import cache_page
@@ -11,6 +11,8 @@ from django.db.models import Q
 from shop.debug import log_exceptions
 from django.views.generic.edit import UpdateView, FormView
 from shop.emails import send_password_reset_email
+from shop.filters import ProductFilter
+from django.core.paginator import Paginator
 # Create your views here.
 
 
@@ -106,17 +108,21 @@ class HomePageView(ListView):
 
 
 class ProductListView(ListView):
-    paginate_by = 20
     template_name = 'shop/product_list/product-list.html'
-    context_object_name = "products"
+    paginate_by = 20
+    context_object_name = 'products'
 
     @log_exceptions("Product List Querysets Function")
     def get_queryset(self):
         sort_by = self.request.GET.get("sort_by")
+        slug= self.kwargs.get("rent")
         cache_key = self.request.get_raw_uri()
         cached_value = cache.get(cache_key)
+        print(self.kwargs)
+        print(self.kwargs.get("rent"))
+        
         if cached_value is None:
-            categories = Category.objects.filter(slug=self.kwargs.get("slug")).get_descendants(include_self=True)
+            categories = Category.objects.filter(slug="games").get_descendants(include_self=True)
             queryset = Product.objects.filter(category__in=categories, active=True, item_status__in=["I", "S"])
             cache.set(cache_key, queryset, 9600)
         else:
@@ -128,29 +134,21 @@ class ProductListView(ListView):
                 return queryset.order_by("mrp")
             else:
                 return queryset.order_by("-date")
-        return queryset
+        return super(ProductListView, self).get_queryset(**kwargs)
 
-    @log_exceptions("Product Side List Filter Function")
-    def get_side_list_filter(self):
-        categories = Category.objects.filter(slug=self.kwargs.get("slug")).get_descendants(include_self=True)
-        products = Product.objects.filter(category__in=categories, active=True,
-                                          item_status__in=["I", "S"])
-        publishers = products.filter(publisher__name__isnull=False).values("publisher__name").distinct()
-        developers = products.filter(developer__name__isnull=False).values("developer__name").distinct()
-        genres = products.filter(genre__genre__isnull=False).values("genre__genre").distinct()
-        return publishers, developers, genres
-
+    # def get_paginate_by(self):
+    #     return Paginator(self.get_queryset().qs, 20)
+    
+    
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
         try:
             context['categories'] = Category.objects.get(slug=self.kwargs.get("slug")).get_ancestors(include_self=True)
         except IndexError:
             print("category not available")
-
-        publishers, developers, genres = self.get_side_list_filter()
-        context['developers'] = developers
-        context['publishers'] = publishers
-        context['genres'] = genres
+        pd = ProductFilter(self.request.GET, queryset=self.get_queryset())
+        context["products"] = pd.qs
+        context["products_form"] = pd.form
         context["cart"] = get_cart_obj(self.request)
         return context
 
@@ -158,7 +156,7 @@ class ProductListView(ListView):
 class ProductDetailView(DetailView):
     model = Product
     context_object_name = "product"
-    template_name = 'shop/product-details.html'
+    template_name = 'shop/product_details/product-details.html'
 
     def get_object(self, queryset=None):
         obj = super(ProductDetailView, self).get_object(queryset=queryset)
@@ -384,3 +382,12 @@ def reset_password(request):
 def clear_cache(request):
     cache.clear()
     return HttpResponse("Cache cleared for website")
+
+
+def test_view(request):
+    # filter = ProductFilter(request.GET, queryset=Product.objects.all())
+    # print(filter.form)
+    form = MyTestForm()
+
+
+    return render(request, 'shop/test.html', context={"form": form})

@@ -1,0 +1,32 @@
+{% if product.item_status == 'I' or product.item_status == 'S' %}
+<p>{{ product.description|truncatechars:300|safe }}</p>
+<!--<div class="pro-dec-feature">-->
+<!--<ul>-->
+<!--<li><input type="checkbox"> Protection Plan: <span> 2 year  $4.99</span></li>-->
+<!--<li><input type="checkbox"> Remote Holder: <span> $9.99</span></li>-->
+<!--<li><input type="checkbox"> Koral Alexa Voice Remote Case: <span> Red  $16.99</span></li>-->
+<!--<li><input type="checkbox"> Amazon Basics HD Antenna: <span>25 Mile  $14.99</span></li>-->
+<!--</ul>-->
+<!--</div>-->
+{% endif %}
+<div class="quality-add-to-cart">
+    <!--<div class="quality">-->
+    <!--<label>Qty:</label>-->
+    <!--<input class="cart-plus-minus-box" type="text" name="qtybutton" value="02">-->
+    <!--</div>-->
+    {% if product in cart.products.all or product in cart.pay_game_products.all %}
+    <div class="product-action">
+        <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">Go
+            to Cart</a>
+    </div>
+    {% elif product.item_status == 'I' %}
+    <div class="product-action">
+        <!--<div class="quality">-->
+        <!--<label>Qty:</label>-->
+        <!--<input class="cart-plus-minus-box" type="text" name="qtybutton" value="02">-->
+        <!--</div>-->
+        <a id="add-to-cart" class="action-cart" title="Add To Cart" href="{% url 'carts:add' product.slug %}">Add to
+            Cart</a>
+    </div>
+    {% endif %}
+</div>

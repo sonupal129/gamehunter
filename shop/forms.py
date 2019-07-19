@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-
-
+from django.forms import ModelForm
+from shop.models import Product, Brand
 
 class SignUpForm(forms.Form):
     email = forms.EmailField(max_length=30, required=True, widget=forms.EmailInput(attrs={
@@ -76,3 +76,15 @@ class ResetPasswordForm(forms.Form):
     email = forms.EmailField(max_length=30, widget=forms.EmailInput(attrs={
         "placeholder": "Email",
     }))
+
+
+class ProductForm(ModelForm):
+    class Meta:
+        model = Product
+        fields = ["name", "developer", "publisher"]
+
+class MyTestForm(forms.Form):
+    developer = forms.ModelMultipleChoiceField(queryset=Brand.objects.all(), widget=forms.CheckboxSelectMultiple)
+    publisher = forms.ModelMultipleChoiceField(queryset=Brand.objects.all(), widget=forms.CheckboxSelectMultiple)
+    
+

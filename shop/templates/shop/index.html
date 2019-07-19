@@ -25,7 +25,7 @@
                         <div class="single-slider pt-70 pb-70 bg-img pl-60 slider-height-2" style="background-image:url({{ coverpage.get_promo_image.file.url }}); width: 777px; height: 420px;">
                             <div class="slider-content-2 slider-animated-1">
                                 {% if coverpage.name %}<h2 class="animated">{{ coverpage.name }}</h2>{% endif %}
-                                {% if coverpage.description %}<h3 class="animated">{{ coverpage.description }}</h3>{% endif %}
+                                {% if coverpage.description %}<h3 class="animated">{{ coverpage.description|linebreaks }}</h3>{% endif %}
                                 {% if coverpage.link %}
                                 <div class="slider-btn slider-btn-2 mt-65">
                                     <a class="animated" href="{{ coverpage.link }}">Shop Now</a>
@@ -121,7 +121,7 @@
                                     <div class="product-content best-pro-content best-selling-style-2">
                                         <span>For {{ playstationgame.category.name|upper }}</span>
                                         <h4>
-                                            <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.get_product_title_name|title}}</a>
+                                            <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.name|truncatechars:50|title}}</a>
                                         </h4>
                                         {% if playstationgame.item_status == "I" %}
                                         {% ifequal playstationgame.total_discount 0 %}
@@ -205,7 +205,7 @@
                                             <div class="product-content best-pro-content">
                                                 <span>For {{ playstationgame.category.name|upper }}</span>
                                                 <h4>
-                                                    <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.get_product_title_name|title}}</a>
+                                                    <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.name|truncatechars:35|title}}</a>
                                                 </h4>
                                                 {% if playstationgame.item_status == "I" %}
                                                 {% ifequal playstationgame.total_discount 0 %}
@@ -280,7 +280,7 @@
                                             <div class="product-content best-pro-content">
                                                 <span>For {{ playstationgame.category.name|upper }}</span>
                                                 <h4>
-                                                    <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.get_product_title_name|title}}</a>
+                                                    <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.name|truncatechars:40|title}}</a>
                                                 </h4>
                                                 {% if playstationgame.item_status == "I" %}
                                                 {% ifequal playstationgame.total_discount 0 %}
@@ -356,7 +356,7 @@
                                     <div class="product-content best-pro-content best-selling-style-2">
                                         <span>For {{ playstationgame.category.name|upper }}</span>
                                         <h4>
-                                            <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.get_product_title_name|title}}</a>
+                                            <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.name|truncatechars:50|title}}</a>
                                         </h4>
                                         {% if playstationgame.item_status == "I" %}
                                         {% ifequal playstationgame.total_discount 0 %}
@@ -440,7 +440,7 @@
                                             <div class="product-content best-pro-content">
                                                 <span>For {{ playstationgame.category.name|upper }}</span>
                                                 <h4>
-                                                    <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.get_product_title_name|title}}</a>
+                                                    <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.name|truncatechars:40|title}}</a>
                                                 </h4>
                                                 {% if playstationgame.item_status == "I" %}
                                                 {% ifequal playstationgame.total_discount 0 %}
@@ -515,7 +515,7 @@
                                             <div class="product-content best-pro-content">
                                                 <span>For {{ playstationgame.category.name|upper }}</span>
                                                 <h4>
-                                                    <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.get_product_title_name|title}}</a>
+                                                    <a href="{{ playstationgame.get_absolute_url }}">{{playstationgame.name|truncatechars:40|title}}</a>
                                                 </h4>
                                                 {% if playstationgame.item_status == "I" %}
                                                 {% ifequal playstationgame.total_discount 0 %}
@@ -595,7 +595,7 @@
                                     <div class="product-content best-pro-content best-selling-style-2">
                                         <span>For {{ xboxgame.category.name|upper }}</span>
                                         <h4>
-                                            <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.get_product_title_name|title}}</a>
+                                            <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.name|truncatechars:50|title}}</a>
                                         </h4>
                                         {% if xboxgame.item_status == "I" %}
                                         {% ifequal xboxgame.total_discount 0 %}
@@ -679,7 +679,7 @@
                                             <div class="product-content best-pro-content">
                                                 <span>For {{ xboxgame.category.name|upper }}</span>
                                                 <h4>
-                                                    <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.get_product_title_name|title}}</a>
+                                                    <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.name|truncatechars:40|title}}</a>
                                                 </h4>
                                                 {% if xboxgame.item_status == "I" %}
                                                 {% ifequal xboxgame.total_discount 0 %}
@@ -754,7 +754,7 @@
                                             <div class="product-content best-pro-content">
                                                 <span>For {{ xboxgame.category.name|upper }}</span>
                                                 <h4>
-                                                    <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.get_product_title_name|title}}</a>
+                                                    <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.name|truncatechars:40|title}}</a>
                                                 </h4>
                                                 {% if xboxgame.item_status == "I" %}
                                                 {% ifequal xboxgame.total_discount 0 %}
@@ -830,7 +830,7 @@
                                     <div class="product-content best-pro-content best-selling-style-2">
                                         <span>For {{ xboxgame.category.name|upper }}</span>
                                         <h4>
-                                            <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.get_product_title_name|title}}</a>
+                                            <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.name|truncatechars:50|title}}</a>
                                         </h4>
                                         {% if xboxgame.item_status == "I" %}
                                         {% ifequal xboxgame.total_discount 0 %}
@@ -914,7 +914,7 @@
                                             <div class="product-content best-pro-content">
                                                 <span>For {{ xboxgame.category.name|upper }}</span>
                                                 <h4>
-                                                    <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.get_product_title_name|title}}</a>
+                                                    <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.name|truncatechars:40|title}}</a>
                                                 </h4>
                                                 {% if xboxgame.item_status == "I" %}
                                                 {% ifequal xboxgame.total_discount 0 %}
@@ -989,7 +989,7 @@
                                             <div class="product-content best-pro-content">
                                                 <span>For {{ xboxgame.category.name|upper }}</span>
                                                 <h4>
-                                                    <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.get_product_title_name|title}}</a>
+                                                    <a href="{{ xboxgame.get_absolute_url }}">{{xboxgame.name|truncatechars:40|title}}</a>
                                                 </h4>
                                                 {% if xboxgame.item_status == "I" %}
                                                 {% ifequal xboxgame.total_discount 0 %}
@@ -1096,11 +1096,11 @@
                                     <span>For {{ product.category.name|upper }}</span>
                                     <h4>
                                         <a href="{{ product.get_absolute_url }}">
-                                            {{product.get_product_title_name|title}}</a>
+                                            {{product.name|truncatechars:30|title}}</a>
                                     </h4>
-                                    <!--<div class="product-price-wrapper">-->
-                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
-                                    <!--</div>-->
+                                    <div class="product-price-wrapper">
+                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -1119,11 +1119,11 @@
                                     <span>For {{ product.category.name|upper }}</span>
                                     <h4>
                                         <a href="{{ product.get_absolute_url }}">
-                                            {{product.get_product_title_name|title}}</a>
+                                            {{product.name|truncatechars:30|title}}</a>
                                     </h4>
-                                    <!--<div class="product-price-wrapper">-->
-                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
-                                    <!--</div>-->
+                                    <div class="product-price-wrapper">
+                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -1143,11 +1143,11 @@
                                     <span>For {{ product.category.name|upper }}</span>
                                     <h4>
                                         <a href="{{ product.get_absolute_url }}">
-                                            {{product.get_product_title_name|title}}</a>
+                                            {{product.name|truncatechars:30|title}}</a>
                                     </h4>
-                                    <!--<div class="product-price-wrapper">-->
-                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
-                                    <!--</div>-->
+                                    <div class="product-price-wrapper">
+                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -1167,11 +1167,11 @@
                                     <span>For {{ product.category.name|upper }}</span>
                                     <h4>
                                         <a href="{{ product.get_absolute_url }}">
-                                            {{product.get_product_title_name|title}}</a>
+                                            {{product.name|truncatechars:30|title}}</a>
                                     </h4>
-                                    <!--<div class="product-price-wrapper">-->
-                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
-                                    <!--</div>-->
+                                    <div class="product-price-wrapper">
+                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -1199,11 +1199,11 @@
                                     <span>For {{ product.category.name|upper }}</span>
                                     <h4>
                                         <a href="{{ product.get_absolute_url }}">
-                                            {{product.get_product_title_name|title}}</a>
+                                            {{product.name|truncatechars:30|title}}</a>
                                     </h4>
-                                    <!--<div class="product-price-wrapper">-->
-                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
-                                    <!--</div>-->
+                                    <div class="product-price-wrapper">
+                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -1222,11 +1222,11 @@
                                     <span>For {{ product.category.name|upper }}</span>
                                     <h4>
                                         <a href="{{ product.get_absolute_url }}">
-                                            {{product.get_product_title_name|title}}</a>
+                                            {{product.name|truncatechars:30|title}}</a>
                                     </h4>
-                                    <!--<div class="product-price-wrapper">-->
-                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
-                                    <!--</div>-->
+                                    <div class="product-price-wrapper">
+                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -1246,11 +1246,11 @@
                                     <span>For {{ product.category.name|upper }}</span>
                                     <h4>
                                         <a href="{{ product.get_absolute_url }}">
-                                            {{product.get_product_title_name|title}}</a>
+                                            {{product.name|truncatechars:30|title}}</a>
                                     </h4>
-                                    <!--<div class="product-price-wrapper">-->
-                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
-                                    <!--</div>-->
+                                    <div class="product-price-wrapper">
+                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -1271,11 +1271,11 @@
                                     <span>For {{ product.category.name|upper }}</span>
                                     <h4>
                                         <a href="{{ product.get_absolute_url }}">
-                                            {{product.get_product_title_name|title}}</a>
+                                            {{product.name|truncatechars:30|title}}</a>
                                     </h4>
-                                    <!--<div class="product-price-wrapper">-->
-                                        <!--<span>₹ {{ product.get_mrp_and_selling_price|last }}</span>-->
-                                    <!--</div>-->
+                                    <div class="product-price-wrapper">
+                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -1304,12 +1304,12 @@
                                     <span>For {{ product.category.name|upper }}</span>
                                     <h4>
                                         <a href="{{ product.get_absolute_url }}">
-                                            {{product.get_product_title_name|title}}
+                                            {{product.name|truncatechars:30|title}}
                                         </a>
                                     </h4>
-                                    <!--<div class="product-price-wrapper">-->
-                                        <!--<span>₹ 3760</span>-->
-                                    <!--</div>-->
+                                    <div class="product-price-wrapper">
+                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -1329,12 +1329,12 @@
                                     <span>For {{ product.category.name|upper }}</span>
                                     <h4>
                                         <a href="{{ product.get_absolute_url }}">
-                                            {{product.get_product_title_name|title}}
+                                            {{product.name|truncatechars:30|title}}
                                         </a>
                                     </h4>
-                                    <!--<div class="product-price-wrapper">-->
-                                        <!--<span>₹ 3760</span>-->
-                                    <!--</div>-->
+                                    <div class="product-price-wrapper">
+                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -1355,12 +1355,12 @@
                                     <span>For {{ product.category.name|upper }}</span>
                                     <h4>
                                         <a href="{{ product.get_absolute_url }}">
-                                            {{product.get_product_title_name|title}}
+                                            {{ product.name|truncatechars:30|title }}
                                         </a>
                                     </h4>
-                                    <!--<div class="product-price-wrapper">-->
-                                        <!--<span>₹ 3760</span>-->
-                                    <!--</div>-->
+                                    <div class="product-price-wrapper">
+                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -1381,12 +1381,12 @@
                                     <span>For {{ product.category.name|upper }}</span>
                                     <h4>
                                         <a href="{{ product.get_absolute_url }}">
-                                            {{product.get_product_title_name|title}}
+                                            {{product.name|truncatechars:30|title}}
                                         </a>
                                     </h4>
-                                    <!--<div class="product-price-wrapper">-->
-                                        <!--<span>₹ 3760</span>-->
-                                    <!--</div>-->
+                                    <div class="product-price-wrapper">
+                                        <span>₹ {{ product.get_mrp_and_selling_price|last }}</span>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}

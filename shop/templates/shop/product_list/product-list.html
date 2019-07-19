@@ -1,6 +1,7 @@
 {% extends 'shop/base.html' %}
 {% load staticfiles %}
 {% load thumbnail %}
+{% load mytags %}
 <!-- Site Title -->{% block title%}
 
 <title>Rent | Buy | Sell {{ categories.last.name }} Games Online at GameHunter
@@ -74,46 +75,39 @@
                     <!--<div class="price_slider_amount">--><!--<div class="label-input">-->
                     <!--<input type="text" id="amount" name="price" placeholder="Add Your Price"/>--><!--</div>-->
                     <!--<button type="button">Filter</button>--><!--</div>--><!--</div>--><!--</div>-->
-                    {% if developers %}
-                    <div class="shop-widget mt-40 shop-sidebar-border pt-35"><h4 class="shop-sidebar-title">
-                        Developer</h4>
-                        <div class="sidebar-list-style mt-20">
-                            <ul>
-                                {% for developer in developers %}
-                                {% if developer.developer__name != None %}
-                                <li><input name="developers" type="checkbox"><a href="#">{{ developer.developer__name }}</a></li>
-                                {% endif %}
-                                {% endfor %}
-                            </ul>
+                    {% if products_form.developer %}
+                    <form id="filter_form" method="GET">
+                        <div class="shop-widget mt-40 shop-sidebar-border pt-35">
+                            <h4 class="shop-sidebar-title">
+                                Developer</h4>
+                            <div class="sidebar-list-style mt-20">
+                                <ul>
+                                    <li onclick="document.forms['filter_form'].submit();">{{ products_form.developer }}</li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    {% endif %}
-                    {% if publishers %}
-                    <div class="shop-widget mt-40 shop-sidebar-border pt-35"><h4 class="shop-sidebar-title">
-                        Publisher</h4>
-                        <div class="sidebar-list-style mt-20">
-                            <ul>
-                                {% for publisher in publishers %}
-                                {% if publisher.publisher__name != None %}
-                                <li><input type="checkbox"><a href="#">{{ publisher.publisher__name }}</a></li>
-                                {% endif %}
-                                {% endfor %}
-                            </ul>
+                        {% endif %}
+                        {% if products_form.publisher %}
+                        <div class="shop-widget mt-40 shop-sidebar-border pt-35">
+                            <h4 class="shop-sidebar-title">
+                                Publisher</h4>
+                            <div class="sidebar-list-style mt-20">
+                                <ul>
+                                    <li onclick="document.forms['filter_form'].submit();">{{ products_form.publisher }}</li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    {% endif %}
-                    {% if genres %}
-                    <div class="shop-widget mt-40 shop-sidebar-border pt-35"><h4 class="shop-sidebar-title">Genre</h4>
-                        <div class="sidebar-list-style mt-20">
-                            <ul>
-                                {% for genre in genres %}
-                                {% if genre.genre__genre != None %}
-                                <li><input type="checkbox"><a href="#">{{ genre.genre__genre }}</a></li>
-                                {% endif %}
-                                {% endfor %}
-                            </ul>
+                        {% endif %}
+                        {% if products_form.publisher %}
+                        <div class="shop-widget mt-40 shop-sidebar-border pt-35">
+                            <h4 class="shop-sidebar-title">Genre</h4>
+                            <div class="sidebar-list-style mt-20">
+                                <ul>
+                                    <li onclick="document.forms['filter_form'].submit();">{{ products_form.genre }}</li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                     {% endif %}
                     <!--<div class="shop-widget mt-40 shop-sidebar-border pt-35"><h4 class="shop-sidebar-title">By-->
                     <!--Launch Year</h4>-->
@@ -137,6 +131,7 @@
                 <!--</div>-->
                 <div class="shop-topbar-wrapper">
                     <div class="shop-topbar-left">
+                            <h1><a href="?{% url_add request 'sort_by' 'name' %}">{{ page_obj }}</a></h1>
                         {% include 'shop/include/upper_paginator.html' %}
                         <div class="product-sorting-wrapper">
                             <!--<div class="product-shorting shorting-style"><label>View:</label><select>-->
@@ -145,10 +140,10 @@
                             <!--<option value=""> 30</option>-->
                             <!--</select>-->
                             <!--</div>-->
-                            <form action="{{ request.path }}" method="GET">
+                            <form method="GET">
                             <div class="product-show shorting-style">
                                 <label>Sort by:</label>
-                                <select onchange="this.form.submit();" name="sort_by">
+                                <select name="sort_by">
                                     <option name="date" value="date"> Date (Default)</option>
                                     <option name="name" value="name"> Name (A-Z)</option>
                                     <option name="price" value="price"> Price (low to high)</option>
@@ -161,7 +156,7 @@
                         <div class="tab-pane active pb-20" id="product-grid">
                             <div class="row">
                                 {% for product in products %}
-                                {% include 'shop/product_list/product_buy.html' %}    
+                                {% include 'shop/product_list/product_list_rent.html' %}
                                 {% endfor %}
                             </div>
                             {% include 'shop/include/lower_paginator.html' %}

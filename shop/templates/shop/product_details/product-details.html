@@ -100,69 +100,10 @@
                         <p>Usually Shipped in: <span>2-4 Days</span></p>
                     </div>
                     {% if product.get_pay_per_game_subscription_price %}
-                    <div class="my-alert alert-orange">
-                        <div class="Message-icon">
-                            <i class="fa fa-exclamation" style="font-size:36px"></i>
-                        </div>
-                        <div class="Message-body">
-                            <p>To rent a game for Rs 300 or 500, you will have to buy a plan of rupee 2000.</p>
-                        </div>
-                    </div>
+                    {% include 'shop/product_details/product-details_rent.html' %}
+                    {% else %}
+                    {% include 'shop/product_details/product-details_buy.html' %}
                     {% endif %}
-                    {% if product.item_status == 'I' or product.item_status == 'S' %}
-                    <p>{{product.description|striptags|safe|slice:":300"}}</p>
-                    <!--<div class="pro-dec-feature">-->
-                    <!--<ul>-->
-                    <!--<li><input type="checkbox"> Protection Plan: <span> 2 year  $4.99</span></li>-->
-                    <!--<li><input type="checkbox"> Remote Holder: <span> $9.99</span></li>-->
-                    <!--<li><input type="checkbox"> Koral Alexa Voice Remote Case: <span> Red  $16.99</span></li>-->
-                    <!--<li><input type="checkbox"> Amazon Basics HD Antenna: <span>25 Mile  $14.99</span></li>-->
-                    <!--</ul>-->
-                    <!--</div>-->
-                    {% endif %}
-                    <div class="quality-add-to-cart">
-                        <!--<div class="quality">-->
-                        <!--<label>Qty:</label>-->
-                        <!--<input class="cart-plus-minus-box" type="text" name="qtybutton" value="02">-->
-                        <!--</div>-->
-                        {% if product in cart.products.all or product in cart.pay_game_products.all %}
-                        <div class="product-action">
-                            <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">Go
-                                to Cart</a>
-                        </div>
-                        {% else %}
-                        {% if product.item_status == 'I' %}
-                        <div class="product-action">
-                            <!--<div class="quality">-->
-                                <!--<label>Qty:</label>-->
-                                <!--<input class="cart-plus-minus-box" type="text" name="qtybutton" value="02">-->
-                            <!--</div>-->
-                            <a id="add-to-cart" class="action-cart" title="Add To Cart"
-                               href="{% url 'carts:add' product.slug %}">Add to
-                                Cart</a>
-                            {% if product.get_pay_per_game_subscription_price %}
-                            <span style="padding-left: 15px; padding-right: 15px; font-size: 24px;">Or</span>
-                            <a class="action-cart"
-                               title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price.value }} Only"
-                               href="{% url 'carts:pay-per-game-product' product.slug %}">Get @
-                                ₹{{ product.get_pay_per_game_subscription_price.value }} Only</a>
-                            {% endif %}
-                        </div>
-                        {% elif product.item_status == 'S' %}
-                        <div class="product-action">
-                            <a class="action-cart" title="Buy Subscription" href="{% url 'shop:subscription-list' %}">Buy
-                                Subscription</a>
-                            {% if product.get_pay_per_game_subscription_price %}
-                            <span style="padding-left: 15px; padding-right: 15px; font-size: 24px;">Or</span>
-                            <a class="action-cart"
-                               title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price.value }} Only"
-                               href="{% url 'carts:pay-per-game-product' product.slug %}">Get @
-                                ₹{{ product.get_pay_per_game_subscription_price.value }} Only</a>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                        {% endif %}
-                    </div>
                     <!--<div class="pro-dec-categories">-->
                     <!--<ul>-->
                     <!--<li class="categories-title">Available for:</li>-->

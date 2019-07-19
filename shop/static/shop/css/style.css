@@ -3832,7 +3832,7 @@ button.icon-cart span.count-style {
 }
 
 .slider-content-2 h3 {
-    color: #242424;
+    color: #fff;
     font-size: 36px;
     margin: 0;
 }
@@ -3842,12 +3842,15 @@ button.icon-cart span.count-style {
 }
 
 .slider-btn.slider-btn-2 a {
-    color: #0363cd;
-    border: 2px solid #0363cd;
+    color: #fff;
+    border: 2px solid #ff9900;
+    background-color: #ff9900;
 }
 
 .slider-btn.slider-btn-2 a:hover {
     color: #fff;
+    background-color: #df2121;
+    border: 2px solid #df2121;
 }
 
 .owl-dot-style-2 .owl-dot {
@@ -8296,7 +8299,7 @@ h4.shop-sidebar-title {
 
 .total-pages > p {
     margin: 4px 0 0;
-    color: #9b9f9f;
+    color: #454545;
 }
 
 .shop-border {

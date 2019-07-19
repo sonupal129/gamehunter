@@ -77,11 +77,8 @@ class Category(MPTTModel):
     def __str__(self):
         return self.name
 
-    def get_category_tree(self, include_self=True):
-        obj = [c for c in self.get_descendants() if self.get_descendants().count() > 0]
-        if include_self:
-            obj.append(self)
-        return obj
+    def get_absolute_url(self):
+        return reverse("shop:product-list", kwargs={"slug": self.slug}) 
 
     def save(self, *args, **kwargs):
         super(Category, self).save(*args, **kwargs)
@@ -289,17 +286,6 @@ class Product(models.Model):
     def get_absolute_url(self):
         """Returns the url to access a particular instance of Family."""
         return reverse("shop:product-detail", kwargs={'slug': self.slug})
-
-    def get_product_title_name(self):
-        if len(self.name) > 35:
-            return self.name[:35] + '...'
-        return self.name
-
-    def get_product_description(self):
-        description = self.description
-        if len(description) > 95:
-            return description[:95] + '...'
-        return description
 
     def get_product_attribute(self, attribute_name: str):
         try:
