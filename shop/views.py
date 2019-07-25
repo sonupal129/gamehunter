@@ -110,45 +110,41 @@ class HomePageView(ListView):
 class ProductListView(ListView):
     template_name = 'shop/product_list/product-list.html'
     paginate_by = 20
-    context_object_name = 'products'
+    
 
     @log_exceptions("Product List Querysets Function")
     def get_queryset(self):
         sort_by = self.request.GET.get("sort_by")
-        slug= self.kwargs.get("rent")
         cache_key = self.request.get_raw_uri()
         cached_value = cache.get(cache_key)
-        print(self.kwargs)
-        print(self.kwargs.get("rent"))
-        
+        rent = self.kwargs.get("rent")
+
         if cached_value is None:
-            categories = Category.objects.filter(slug="games").get_descendants(include_self=True)
-            queryset = Product.objects.filter(category__in=categories, active=True, item_status__in=["I", "S"])
+            categories = Category.objects.filter(slug=self.kwargs.get("slug")).get_descendants(include_self=True)
+            queryset = Product.objects.filter(category__in=categories, active=True, item_status__in=["I"])
+            if rent:
+                product_attributes = ProductAttribute.objects.filter(attribute__name="game_based_plan_price", value__isnull=False).values_list('product', flat=True).distinct()
+                queryset = queryset.filter(id__in=product_attributes)
             cache.set(cache_key, queryset, 9600)
         else:
             queryset = cached_value
-        if self.request.method == "GET":
-            if sort_by == "name":
-                return queryset.order_by("name")
-            elif sort_by == "price":
-                return queryset.order_by("mrp")
-            else:
-                return queryset.order_by("-date")
-        return super(ProductListView, self).get_queryset(**kwargs)
+        return queryset
 
-    # def get_paginate_by(self):
-    #     return Paginator(self.get_queryset().qs, 20)
-    
-    
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
+        product_list = ProductFilter(self.request.GET, queryset=self.get_queryset())
+        page = self.request.GET.get("page", 1)
+        paginator = Paginator(product_list.qs, 20)
         try:
-            context['categories'] = Category.objects.get(slug=self.kwargs.get("slug")).get_ancestors(include_self=True)
-        except IndexError:
-            print("category not available")
-        pd = ProductFilter(self.request.GET, queryset=self.get_queryset())
-        context["products"] = pd.qs
-        context["products_form"] = pd.form
+            products = paginator.page(page)
+        except PageNotInteger:
+            products = paginator.page(1)
+        except EmptyPage:
+            products = paginator.page(paginator.num_pages)
+        context["filter_categories"] = Category.objects.get(slug=self.kwargs.get("slug"))
+        context["products"] = products
+        context["products_form"] = product_list.form
+        context["paginator"] = paginator
         context["cart"] = get_cart_obj(self.request)
         return context
 
@@ -296,7 +292,7 @@ def login_register_page(request):
 
 
 class ProductSearchView(ListView):
-    template_name = "shop/product-list.html"
+    template_name = "shop/product_list/product-list.html"
     context_object_name = "products"
 
     def get_queryset(self):
@@ -385,9 +381,7 @@ def clear_cache(request):
 
 
 def test_view(request):
-    # filter = ProductFilter(request.GET, queryset=Product.objects.all())
-    # print(filter.form)
-    form = MyTestForm()
-
-
-    return render(request, 'shop/test.html', context={"form": form})
+    filter = ProductFilter(data=request.GET, queryset=Product.objects.all())
+    
+    # form = MyTestForm()
+    return render(request, 'shop/test.html', context={"filter": filter})

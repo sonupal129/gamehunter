@@ -1,5 +1,7 @@
 {% load staticfiles %}
+
 {% url 'carts:cart' as cart_url %}
+{% load mytags %}
 
 <!doctype html>
 <html class="no-js" lang="zxx">
@@ -166,6 +168,7 @@ fbq('track', 'PageView');
                         </a>
                         <div class="header-search-4 middle-same header-search-4-red">
                             <form class="header-search-form" action="{% url 'shop:search' %}" method="GET">
+                                
                                 <input name="keywords" type="text" placeholder="Search for products here ..." required >
                                 <button>
                                     <i class="ion-ios-search-strong"></i>
@@ -331,7 +334,7 @@ fbq('track', 'PageView');
                         </li>
                         <li><a href="{% url 'shop:subscription-list' %}">Subscriptions</a></li>
                         <li class="mega-menu-position"><a
-                                href="{% url 'shop:rent-product-list' slug='games' %}"> play on rent <i
+                                href="{% url 'shop:rent-product-list' slug='games' %}?rent=available"> play on rent <i
                                 class="ion-chevron-down"></i> </a>
                             <ul class="mega-menu">
                                 <li>
@@ -492,8 +495,9 @@ fbq('track', 'PageView');
                         <ul>
                             <li><a class="facebook" target="_blank" href="https://www.facebook.com/gamehunter.in/"><i
                                     class="ion-social-facebook"></i></a></li>
-                            <!--<li><a class="twitter" href="#"><i class="ion-social-twitter"></i></a></li>-->
-                            <!--<li><a class="instagram" href="#"><i class="ion-social-instagram-outline"></i></a></li>-->
+                            
+                            <!-- <li><a class="twitter" href="#"><i class="ion-social-twitter"></i></a></li> -->
+                            <li><a class="linkedin" target="_blank" href="https://in.linkedin.com/company/gamehunter"><i class="ion-social-linkedin-outline"></i></a></li>
                             <!--<li><a class="youtube" href="#"><i class="ion-social-youtube-outline"></i></a></li>-->
                         </ul>
                     </div>

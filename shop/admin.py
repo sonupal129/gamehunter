@@ -108,7 +108,7 @@ class PlanAdmin(admin.ModelAdmin):
 
 
 class PromoCardAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', 'active')
+    list_display = ('name', 'promocard_type', 'active')
     inlines = [PhotoInline]
 
 

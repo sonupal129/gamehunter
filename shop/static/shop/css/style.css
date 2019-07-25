@@ -3458,15 +3458,15 @@ button.icon-cart span.count-style {
     color: #ee0f0f;
 }
 
-.social-icon li a.instagram {
-    background-color: #c619b8;
-    border: 2px solid #c619b8;
+.social-icon li a.linkedin {
+    background-color: #0077B5;
+    border: 2px solid #0077B5;
 }
 
-.social-icon li a.instagram:hover {
+.social-icon li a.linkedin:hover {
     background-color: #fff;
     border: 2px solid #fff;
-    color: #c619b8;
+    color: #0077B5;
 }
 
 .social-icon li a.googleplus {
@@ -7993,7 +7993,7 @@ h4.shop-sidebar-title {
 }
 
 .shop-catigory ul > li a {
-    color: #fbf1f1;
+    color: #242424;
     display: block;
 }
 
@@ -8468,7 +8468,7 @@ h4.shop-sidebar-title {
     top: 0;
     bottom: 0;
     width: 100%;
-    background-color: #000000;
+    background-color: #fff;
     z-index: 99;
     opacity: .3;
 }

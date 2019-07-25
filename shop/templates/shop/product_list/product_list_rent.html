@@ -3,7 +3,7 @@
 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-12 mb-30">
     <div class="devita-product-2 mrg-inherit">
         <div class="product-img">
-            <a href="{{ product.get_absolute_url }}">
+            <a href="{{ product.get_absolute_url }}?rent=available">
                 {% thumbnail product.get_default_photo.file "210x210" crop="center" as im %}
                 <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
             {% endthumbnail %}
@@ -12,7 +12,7 @@
             <div class="gridview">
                 <div class="product-content text-center">
                     <span>For {{ product.category.name|upper }}</span>
-                    <h4><a href="{{ product.get_absolute_url }}">
+                    <h4><a href="{{ product.get_absolute_url }}?rent=available">
                             {{ product.name|truncatechars:30|title }}</a></h4>
                     {% if product.get_pay_per_game_subscription_price %}
                     <div class="product-price-wrapper">

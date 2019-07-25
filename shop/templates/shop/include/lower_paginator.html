@@ -1,12 +1,15 @@
+{% load mytags %}
+
+
 {% if is_paginated %}
 <div class="pagination-total-pages">
     <div class="pagination-style">
         <ul>
-            {% if page_obj.number >= 1 %}
-            <li><a class="prev-next prev" href="?page=1"><i class="ion-ios-arrow-left"></i>First</a></li>
+            {% if page_obj.number > 1 %}
+            <li><a class="prev-next prev" href="?{% url_add request 'page' 1 %}"><i class="ion-ios-arrow-left"></i>First</a></li>
             {% endif %}
             {% if page_obj.has_previous %}
-            <li><a class="prev-next prev" href="?page={{ page_obj.previous_page_number }}"><i
+            <li><a class="prev-next prev" href="?{% url_add request 'page' page_obj.previous_page_number %}"><i
                     class="ion-ios-arrow-left"></i>Previous</a></li>
             {% endif %}
 
@@ -14,16 +17,16 @@
             {% if page_obj.number == page_num %}
             <li><a class="active" href="#">{{ page_num }}</a></li>
             {% elif page_num > page_obj.number|add:'-3' and page_num < page_obj.number|add:'3' %}
-            <li><a class="active" href="?page={{ page_num }}">{{ page_num }}</a></li>
+            <li><a class="active" href="?{% url_add request 'page' page_num %}">{{ page_num }}</a></li>
             {% endif %}
             {% endfor %}
             {% if page_obj.has_next %}
-            <li><a class="prev-next next" href="?page={{ page_obj.next_page_number }}">Next<i
+            <li><a class="prev-next next" href="?{% url_add request 'page' page_obj.next_page_number %}">Next<i
                     class="ion-ios-arrow-right"></i></a>
                 {% endif %}
 
                 {% if page_obj.number != paginator.num_pages %}
-            <li><a class="prev-next next" href="?page={{ paginator.num_page }}">Last<i class="ion-ios-arrow-right"></i></a>
+            <li><a class="prev-next next" href="?{% url_add request 'page' paginator.num_pages %}">Last<i class="ion-ios-arrow-right"></i></a>
                 {% endif %}
         </ul>
     </div>

@@ -7,11 +7,9 @@
                 {% thumbnail product.get_default_photo.file "210x210" crop="center" as im %}
                 <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
             {% endthumbnail %}
-            {% ifequal product.item_status 'I' %}
             {% if product.total_discount %}
             <span>{{product.total_discount}}%</span>
             {% endif %}
-            {% endifequal %}
         </div>
         <div class="list-col">
             <div class="gridview">
@@ -31,7 +29,7 @@
                     {% else %}
                     <div class="product-price-wrapper">
                         <span>₹ {{ product.get_mrp_and_selling_price|first }}</span>
-                        <span class="product-price-old">₹ {{ product.description|truncatechars:90|last }}</span>
+                        <span class="product-price-old">₹ {{ product.get_mrp_and_selling_price|last }}</span>
                     </div>
                     {% endifequal %}
                     {% endif %}
@@ -44,7 +42,7 @@
                         <i class="ion-android-star-outline theme-star"></i>
                         <i class="ion-android-star-outline"></i>
                     </div>
-                    <p class="product-description-wrapper">{{ product.get_product_description|safe }}</p>
+                    <p class="product-description-wrapper">{{ product.description|truncatechars:90|safe }}</p>
                     <div class="product-action">
                         <!--<a class="same-action" title="Wishlist" href="#">-->
                         <!--<i class="fa fa-heart-o"></i>-->

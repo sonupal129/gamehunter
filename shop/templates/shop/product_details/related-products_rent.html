@@ -1,0 +1,70 @@
+{% load thumbnail %}
+
+<div class="product-area pb-45">
+      <div class="container">
+            <div class="section-border mb-10">
+                  <h4 class="section-title section-bg-white">Related Products</h4>
+            </div>
+            <div class="product-slider-nav nav-style"></div>
+            <div class="headphone-slider-active product-slider owl-carousel nav-style">
+                  {% for product in related_products %}
+                  {% if product.get_pay_per_game_subscription_price %}
+                  <div class="devita-product-2">
+                        <div class="product-img black-bg-5">
+                              <a href="{{ product.get_absolute_url }}">
+                                    {% thumbnail product.get_default_photo.file "206x206" crop="center" as im %}
+                                    <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
+                              {% endthumbnail %}
+                        </div>
+                        <div class="list-col">
+                              <div class="gridview">
+                                    <div class="product-content text-center">
+                                          <span>For {{ product.category.name }}</span>
+                                          <h4><a href="{{ product.get_absolute_url }}">
+                                                      {{ product.name|truncatechars:25|title }} </a></h4>
+                                          {% if product.get_pay_per_game_subscription_price %}
+                                          <div class="product-price-wrapper">
+                                                <span>Subscription Only</span>
+                                          </div>
+                                          {% endif %}
+                                    </div>
+                                    <div class="product-action-wrapper-2 text-center">
+                                          <div class="product-rating">
+                                                <i class="ion-android-star-outline theme-star"></i>
+                                                <i class="ion-android-star-outline theme-star"></i>
+                                                <i class="ion-android-star-outline theme-star"></i>
+                                                <i class="ion-android-star-outline theme-star"></i>
+                                                <i class="ion-android-star-outline"></i>
+                                          </div>
+                                          <p class="product-description-wrapper">
+                                                {{ product.description|truncatechars:90|safe }} </p>
+                                          {% if product in cart.products.all or product in cart.pay_game_products.all %}
+                                          <div class="product-action">
+                                                <a class="action-cart" title="Go to Cart" href="{% url 'carts:cart' %}">
+                                                      Go to Cart
+                                                </a>
+                                          </div>
+                                          {% elif product.get_pay_per_game_subscription_price %}
+                                          <div class="product-action">
+                                                <a class="action-cart"
+                                                      title="Get This Game on Subscription at rupee {{ product.get_pay_per_game_subscription_price.value }} Only"
+                                                      href="{% url 'carts:pay-per-game-product' product.slug %}">
+                                                      Get @ ₹{{ product.get_pay_per_game_subscription_price.value }}
+                                                      Only </a>
+                                          </div>
+                                          {% elif product.item_status == "S" %}
+                                          <div class="product-action">
+                                                <a class="action-cart" title="Buy Subscription"
+                                                      href="{% url 'shop:subscription-list' %}">
+                                                      Buy Subscription </a>
+                                          </div>
+                                          {% endif %}
+                                    </div>
+                              </div>
+                        </div>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+            </div>
+      </div>
+</div>

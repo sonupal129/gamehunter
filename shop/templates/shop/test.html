@@ -1,14 +1,32 @@
-<form method="GET" id="my_form">
-      
+<form method="GET" id="form1">
+
       <!-- <li onclick="document.forms['my_form'].submit();">{{ f }}</li> -->
-      <li>{{ form }}</li>
+      <li>{{ filter.form.developer }}</li>
       <!-- <li>{{ form.publisher }}</li> -->
-      <button type="submit">Submit</button>
 </form>
 
+<form method="GET" id="form2">
+      <label>rajud</label>
+      {{ filter.form.sort_by }}
+</form>
+<form method="GET" id="form3">
+      <li>{{ filter.form.name }}</li>
+</form>
 
-<!-- <ul>
-      {% for product in products.qs %}
+<script language="javascript">
+      submitForms = function () {
+            document.forms["form1"].submit();
+            document.forms["form2"].submit();
+            document.forms["form3"].submit();
+      }
+</script>
+
+<input type="button" value="Raju" onclick="submitForms()">
+
+<ul>
+      <h1>{{ filter.qs.count }}</h1>
+      {% for product in filter.qs %}
       <ol>{{ product }}</ol>
       {% endfor %}
-</ul> -->
+</ul>
+

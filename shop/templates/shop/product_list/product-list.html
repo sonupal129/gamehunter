@@ -1,19 +1,21 @@
 {% extends 'shop/base.html' %}
 {% load staticfiles %}
 {% load thumbnail %}
-{% load mytags %}
-<!-- Site Title -->{% block title%}
 
-<title>Rent | Buy | Sell {{ categories.last.name }} Games Online at GameHunter
-</title>{% endblock %}{% block navbar %}
-{% if categories %}
+<!-- Site Title -->
+{% block title%}
+<title>Rent | Buy | Sell {{ filter_categories.last.name }} Games Online at GameHunter
+</title>
+{% endblock %}
+{% block navbar %}
+{% if filter_categories %}
 <div class="breadcrumb-area gray-bg-5">
     <div class="container">
         <div class="breadcrumb-content">
             <ul>
                 <li><a href="{% url 'shop:homepage' %}">HOME </a></li>
-                {% for category in categories %}
-                {% if category == categories.last %}
+                {% for category in filter_categories.get_parent_with_self %}
+                {% if category == filter_categories.get_parent_with_self.last %}
                 <li class="active">{{ category.name|upper }}</li>
                 {% else %}
                 <li><a href="{% url 'shop:product-list' category.slug %}">{{ category.name|upper }}</a></li>
@@ -25,89 +27,88 @@
 </div>
 {% endif %}
 <div class="shop-page-area pt-30 pb-65">
+    <form method="GET" id="filter_form">
+            {% if request.GET.rent %}
+                <input type="hidden" name="rent" value="available" />
+            {% endif %}
+            {% if request.GET.keywords %}
+                <input type="hidden" name="rent" value="available" />
+            {% endif %}
     <div class="container">
         {% if products %}
         <div class="row">
             <div class="col-lg-3">
                 <div class="shop-sidebar-wrapper gray-bg-7 mrg-top-md mrg-top-sm">
-                    <!--<div class="shop-widget"><h4 class="shop-sidebar-title">Shop By Categories</h4>-->
-                    <!--<div class="shop-catigory">-->
-                    <!--<ul id="faq">-->
-                    <!--<li><a data-toggle="collapse" data-parent="#faq" href="#shop-catigory-1">-->
-                    <!--{{ category_name.get_root }}<i class="ion-ios-arrow-down"></i></a>-->
-                    <!--<ul id="shop-catigory-1" class="panel-collapse collapse show">-->
-                    <!--<li><a href="#">Accessories</a></li>-->
-                    <!--<li><a href="#">Bags & Cases</a></li>-->
-                    <!--<li><a href="#">Binoculars & Scopes</a></li>-->
-                    <!--<li><a href="#">Digital Cameras</a></li>-->
-                    <!--<li><a href="#">Film Photography</a></li>-->
-                    <!--</ul>-->
-                    <!--</li>-->
-                    <!--<li><a data-toggle="collapse" data-parent="#faq" href="#shop-catigory-2">Living room <i-->
-                    <!--class="ion-ios-arrow-down"></i></a>-->
-                    <!--<ul id="shop-catigory-2" class="panel-collapse collapse">-->
-                    <!--<li><a href="#">Accessories</a></li>-->
-                    <!--<li><a href="#">Bags & Cases</a></li>-->
-                    <!--<li><a href="#">Binoculars & Scopes</a></li>-->
-                    <!--<li><a href="#">Digital Cameras</a></li>-->
-                    <!--<li><a href="#">Film Photography</a></li>-->
-                    <!--</ul>-->
-                    <!--</li>-->
-                    <!--<li><a data-toggle="collapse" data-parent="#faq" href="#shop-catigory-3">Lighting-->
-                    <!--Furniture <i class="ion-ios-arrow-down"></i></a>-->
-                    <!--<ul id="shop-catigory-3" class="panel-collapse collapse">-->
-                    <!--<li><a href="#">Accessories</a></li>-->
-                    <!--<li><a href="#">Bags & Cases</a></li>-->
-                    <!--<li><a href="#">Binoculars & Scopes</a></li>-->
-                    <!--<li><a href="#">Digital Cameras</a></li>-->
-                    <!--<li><a href="#">Film Photography</a></li>-->
-                    <!--</ul>-->
-                    <!--</li>-->
-                    <!--<li><a href="#">Outdoor</a></li>-->
-                    <!--<li><a href="#">Tablets</a></li>-->
-                    <!--<li><a href="#">Accessories</a></li>-->
-                    <!--</ul>-->
-                    <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="shop-price-filter mt-40 shop-sidebar-border pt-35">-->
-                    <!--<h4 class="shop-sidebar-title">Price Filter</h4>--><!--<div class="price_filter mt-25">-->
-                    <!--<span>Range:  $100.00 - 1.300.00 </span>--><!--<div id="slider-range"></div>-->
-                    <!--<div class="price_slider_amount">--><!--<div class="label-input">-->
-                    <!--<input type="text" id="amount" name="price" placeholder="Add Your Price"/>--><!--</div>-->
-                    <!--<button type="button">Filter</button>--><!--</div>--><!--</div>--><!--</div>-->
+                    {% if filter_categories %}
+                    <div class="shop-widget">
+                        <h4 class="shop-sidebar-title">Shop By Categories</h4>
+                        <div class="shop-catigory">
+                            <ul id="faq">
+                                {% if filter_categories.get_children %}
+                                {% for categories in filter_categories.get_children %}
+                                {% if categories.get_children %}
+                                <li><a data-toggle="collapse" data-parent="#faq" href="#{{ categories.id }}">
+                                        {{ categories }}<i class="ion-ios-arrow-down"></i></a>
+                                    <ul id="{{ categories.id }}" class="panel-collapse collapse show">
+                                        {% for category in categories.get_children %}
+                                        <li><a href="{% url 'shop:product-list' category.slug %}">{{ category }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                {% else %}
+                                <li><a href="{% url 'shop:product-list' categories.slug %}">{{ categories }}</a></li>
+                                {% endif %}
+                                {% endfor %}
+                                {% else %}
+                                <li><a href="{% url 'shop:product-list' filter_categories.slug %}">{{ filter_categories }}</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!-- <div class="shop-price-filter mt-40 shop-sidebar-border pt-35">
+                        <h4 class="shop-sidebar-title">Price Filter</h4>
+                        <div class="price_filter mt-25">
+                            <span>Range: $100.00 - 1.300.00 </span>
+                            <div id="slider-range"></div>
+                            <div class="price_slider_amount">
+                                <div class="label-input">
+                                    <input type="text" id="amount" name="price" placeholder="Add Your Price" /></div>
+                                <button type="button">Filter</button>
+                            </div>
+                        </div>
+                    </div> -->
                     {% if products_form.developer %}
-                    <form id="filter_form" method="GET">
-                        <div class="shop-widget mt-40 shop-sidebar-border pt-35">
-                            <h4 class="shop-sidebar-title">
-                                Developer</h4>
-                            <div class="sidebar-list-style mt-20">
-                                <ul>
-                                    <li onclick="document.forms['filter_form'].submit();">{{ products_form.developer }}</li>
-                                </ul>
-                            </div>
+                    <div class="shop-widget mt-40 shop-sidebar-border pt-35">
+                        <h4 class="shop-sidebar-title">
+                            Developer</h4>
+                        <div class="sidebar-list-style mt-20">
+                            <ul>
+                                <li onclick="document.forms['filter_form'].submit();">{{ products_form.developer }}</li>
+                            </ul>
                         </div>
-                        {% endif %}
-                        {% if products_form.publisher %}
-                        <div class="shop-widget mt-40 shop-sidebar-border pt-35">
-                            <h4 class="shop-sidebar-title">
-                                Publisher</h4>
-                            <div class="sidebar-list-style mt-20">
-                                <ul>
-                                    <li onclick="document.forms['filter_form'].submit();">{{ products_form.publisher }}</li>
-                                </ul>
-                            </div>
+                    </div>
+                    {% endif %}
+                    {% if products_form.publisher %}
+                    <div class="shop-widget mt-40 shop-sidebar-border pt-35">
+                        <h4 class="shop-sidebar-title">
+                            Publisher</h4>
+                        <div class="sidebar-list-style mt-20">
+                            <ul>
+                                <li onclick="document.forms['filter_form'].submit();">{{ products_form.publisher }}</li>
+                            </ul>
                         </div>
-                        {% endif %}
-                        {% if products_form.publisher %}
-                        <div class="shop-widget mt-40 shop-sidebar-border pt-35">
-                            <h4 class="shop-sidebar-title">Genre</h4>
-                            <div class="sidebar-list-style mt-20">
-                                <ul>
-                                    <li onclick="document.forms['filter_form'].submit();">{{ products_form.genre }}</li>
-                                </ul>
-                            </div>
+                    </div>
+                    {% endif %}
+                    {% if products_form.publisher %}
+                    <div class="shop-widget mt-40 shop-sidebar-border pt-35">
+                        <h4 class="shop-sidebar-title">Genre</h4>
+                        <div class="sidebar-list-style mt-20">
+                            <ul>
+                                <li onclick="document.forms['filter_form'].submit();">{{ products_form.genre }}</li>
+                            </ul>
                         </div>
-                    </form>
+                    </div>
                     {% endif %}
                     <!--<div class="shop-widget mt-40 shop-sidebar-border pt-35"><h4 class="shop-sidebar-title">By-->
                     <!--Launch Year</h4>-->
@@ -131,7 +132,7 @@
                 <!--</div>-->
                 <div class="shop-topbar-wrapper">
                     <div class="shop-topbar-left">
-                            <h1><a href="?{% url_add request 'sort_by' 'name' %}">{{ page_obj }}</a></h1>
+                        
                         {% include 'shop/include/upper_paginator.html' %}
                         <div class="product-sorting-wrapper">
                             <!--<div class="product-shorting shorting-style"><label>View:</label><select>-->
@@ -140,31 +141,29 @@
                             <!--<option value=""> 30</option>-->
                             <!--</select>-->
                             <!--</div>-->
-                            <form method="GET">
                             <div class="product-show shorting-style">
-                                <label>Sort by:</label>
-                                <select name="sort_by">
-                                    <option name="date" value="date"> Date (Default)</option>
-                                    <option name="name" value="name"> Name (A-Z)</option>
-                                    <option name="price" value="price"> Price (low to high)</option>
-                                </select>
+                                <li style="list-style: none" onchange="document.forms['filter_form'].submit();">{{ products_form.sort_by }}</li>
                             </div>
-                            </form>
                         </div>
                     </div>
                     <div class="tab-content jump">
                         <div class="tab-pane active pb-20" id="product-grid">
                             <div class="row">
                                 {% for product in products %}
-                                {% include 'shop/product_list/product_list_rent.html' %}
+                                    {% if request.GET.rent %}
+                                        {% include 'shop/product_list/product_list_rent.html' %}
+                                    {% else %}
+                                        {% include 'shop/product_list/product_list_buy.html' %}
+                                    {% endif %}
                                 {% endfor %}
                             </div>
-                            {% include 'shop/include/lower_paginator.html' %}
+                            {% include 'shop/include/lower_paginator.html' %}                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </form>
         {% else %}
         <h3 class="page-title" align="center">Oops!, No products found. to continue shopping <a
                 href="{% url 'shop:homepage' %}">Click

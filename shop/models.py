@@ -90,6 +90,9 @@ class Category(MPTTModel):
             self.slug = slugify(self.name)
         return super(Category, self).save(*args, **kwargs)
 
+    def get_parent_with_self(self):
+        return self.get_ancestors(include_self=True)
+
 class Attribute(MPTTModel):
     name = models.CharField(max_length=50, unique=True, default='')
     parent = TreeForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name="children")
@@ -227,7 +230,7 @@ class PromoCard(models.Model):
 
     name = models.CharField(max_length=70, blank=True,)
     description = models.CharField(max_length=120, blank=True, null=True)
-    type = models.CharField(choices=card_type, max_length=100, default='coverpage_top')
+    promocard_type = models.CharField(choices=card_type, max_length=100, default='coverpage_top')
     active = models.BooleanField(blank=True)
     link = models.CharField(max_length=200, null=True, default='', blank=True)
 

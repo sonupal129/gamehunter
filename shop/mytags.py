@@ -7,3 +7,4 @@ def url_add(request, field, value):
       data = request.GET.copy()
       data[field] = value
       return data.urlencode()
+
