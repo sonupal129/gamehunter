@@ -1,28 +1,23 @@
 from django_slack import slack_message
 from carts.models import ProductOrders, Cart, SubscriptionOrders
-from carts.signals import new_order_received, new_subscription_order_received
 from django.dispatch import receiver
-
+from django.db.models.signals import post_save
+from background_task import background
 # Code Starts from Here
 
-
-@receiver(new_order_received)
-def new_product_order_received(sender, **kwargs):
-    suborder = kwargs.get("suborder")
-    if suborder:
+@receiver(post_save, sender=ProductOrders)
+def new_product_order_received(sender, instance, created, **kwargs):
+    if created:
         context = {
-            "order": suborder,
+            "order": instance,
         }
-        slack_message("carts/slack-message/new-order-received.html", context)
-    return ""
+    return slack_message("carts/slack-message/new-order-received.html", context)
 
 
-@receiver(new_subscription_order_received)
-def new_subscription_order_received(sender, **kwargs):
-    subscription = kwargs.get("suborder")
-    if subscription:
+@receiver(post_save, sender=SubscriptionOrders)
+def new_subscription_order_received(sender, instance, created, **kwargs):
+    if created:
         context = {
-            "subscription": subscription
+            "subscription": instance
         }
-        slack_message("carts/slack-message/new-subscription-order-received.html", context)
-    return ""
+    return slack_message("carts/slack-message/new-subscription-order-received.html", context)

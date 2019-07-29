@@ -1,7 +1,4 @@
-<div class="grid-list-options nav view-mode"><a class="active" href="#product-grid"
-                                                data-view="product-grid" data-toggle="tab"><i
-        class="fa fa-th"></i></a></div>
-{% if is_paginated %}
+<div class="grid-list-options nav view-mode"><a class="active" href="#product-grid" data-view="product-grid"
+                data-toggle="tab"><i class="fa fa-th"></i></a></div>
 <p>Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ paginator.count }} results </p>
-{% endif %}
 </div>

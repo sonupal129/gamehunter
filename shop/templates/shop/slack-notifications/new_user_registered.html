@@ -1,0 +1,8 @@
+{% extends django_slack %}
+{% load django_slack %}
+{% block channel %}operation{% endblock %}
+{% block text %}
+New User Registered 😍 👏
+User : {{ user }}
+Keep Working On!
+{% endblock %}

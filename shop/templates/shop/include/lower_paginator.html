@@ -23,8 +23,7 @@
             {% if page_obj.has_next %}
             <li><a class="prev-next next" href="?{% url_add request 'page' page_obj.next_page_number %}">Next<i
                     class="ion-ios-arrow-right"></i></a>
-                {% endif %}
-
+            {% endif %}
                 {% if page_obj.number != paginator.num_pages %}
             <li><a class="prev-next next" href="?{% url_add request 'page' paginator.num_pages %}">Last<i class="ion-ios-arrow-right"></i></a>
                 {% endif %}

@@ -32,7 +32,7 @@
     {% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'shop/img/favicon.png' %}">
     <!-- all css here -->
     <link rel="stylesheet" href="{% static 'shop/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/animate.css' %}">
@@ -263,27 +263,27 @@ fbq('track', 'PageView');
                                 <li>
                                     <ul>
                                         <li class="mega-menu-title">Genre</li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=action-adventure">Action-Adventure</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=sports">Sports</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=shooter">Shooter</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=racing">Racing</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=open world">Open World</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=survival">Survival</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=simulation">Simulation</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=fighting">Fighting</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=1">Action-Adventure</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=3">Sports</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=7">Shooter</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=6">Racing</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=11">Open World</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=8">Survival</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=4">Simulation</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=9">Fighting</a></li>
                                         <li><a href="{% url 'shop:product-list' slug='games' %}">View All</a></li>
                                     </ul>
                                 </li>
                                 <li>
                                     <ul>
                                         <li class="mega-menu-title">Publishers</li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=rockstar games">Rockstar Games</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=ubisoft">Ubisoft</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=square enix">Square Enix</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=electronic arts">Electronic Arts</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=sega">Sega</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=konami">Konami</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=cd projekt red">CD Projekt Red</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=125">Rockstar Games</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=7">Ubisoft</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=15">Square Enix</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=95">Electronic Arts</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=11">Sega</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=8">Konami</a></li>
+                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=20">CD Projekt Red</a></li>
                                         <li><a href="{% url 'shop:product-list' slug='games' %}">View All</a></li>
                                     </ul>
                                 </li>
@@ -334,73 +334,25 @@ fbq('track', 'PageView');
                         </li>
                         <li><a href="{% url 'shop:subscription-list' %}">Subscriptions</a></li>
                         <li class="mega-menu-position"><a
-                                href="{% url 'shop:rent-product-list' slug='games' %}?rent=available"> play on rent <i
+                                href="{% url 'shop:rent-product-list' slug='games' %}?rent=available&{{ request.GET.urlencode }}"> play on rent <i
                                 class="ion-chevron-down"></i> </a>
                             <ul class="mega-menu">
                                 <li>
                                     <ul>
-                                        <li class="mega-menu-title">Platform</li>
-                                        <li><a href="{% url 'shop:product-list' slug='games/playstation-games' %}?rent=available">Playstation
+                                        <li class="mega-menu-title">Games</li>
+                                        <li><a href="{% url 'shop:product-list' slug='games/playstation-games' %}?rent=available&{{ request.GET.urlencode }}">Playstation
                                             Games</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games/xbox-games' %}?rent=available">Xbox
+                                        <li><a href="{% url 'shop:product-list' slug='games/xbox-games' %}?rent=available&{{ request.GET.urlencode }}">Xbox
                                             Games</a></li>
                                         <li><a name="raju-rastogi" href="#">Nintendo Games</a></li>
                                         <li><a href="#">PC Games</a></li>
                                     </ul>
+                                </li>
+                                <li>
                                     <ul>
                                         <li class="mega-menu-title">Consoles</li>
                                         <li><a href="#">Playstation</a></li>
                                         <li><a href="#">Xbox</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <ul>
-                                        <li class="mega-menu-title">Genre</li>
-                                        <li>
-                                            <a href="{% url 'shop:product-list' slug='games' %}?&genre=action-adventure&rent=available">Action-Adventure</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'shop:product-list' slug='games' %}?&genre=sports&rent=available">Sports</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'shop:product-list' slug='games' %}?&genre=shooter&rent=available">Shooter</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'shop:product-list' slug='games' %}?&genre=racing&rent=available">Racing</a>
-                                        </li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=open world&rent=available">Open
-                                            World</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=survival&rent=available">Survival</a>
-                                        </li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=simulation&rent=available">Simulation</a>
-                                        </li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&genre=fighting&rent=available">Fighting</a>
-                                        </li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&rent=available">View All</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <ul>
-                                        <li class="mega-menu-title">Publishers</li>
-                                        <li>
-                                            <a href="{% url 'shop:product-list' slug='games' %}?&publisher=rockstar games&rent=available">Rockstar
-                                                Games</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=ubisoft&rent=available">Ubisoft</a>
-                                        </li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=square enix&rent=available">Square
-                                            Enix</a></li>
-                                        <li>
-                                            <a href="{% url 'shop:product-list' slug='games' %}?&publisher=electronic arts&rent=available">Electronic
-                                                Arts</a></li>
-                                        <li>
-                                            <a href="{% url 'shop:product-list' slug='games' %}?&publisher=sega"&rent=available>Sega</a>
-                                        </li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&publisher=konami&rent=available">Konami</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'shop:product-list' slug='games' %}?&publisher=cd projekt red&rent=available">CD
-                                                Projekt Red</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games' %}?&rent=available">View All</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -478,7 +430,7 @@ fbq('track', 'PageView');
                         <h4>About Us</h4>
                     </div>
                     <div class="footer-about">
-                        <p>We had a vision and the vision is to create something a gamer can relate too. Gamehunter’s
+                        <p>We have a vision and the vision is to create something a gamer can relate too. Gamehunter’s
                             entire website is dedicated to gaming.</p>
                         <p>Gamer wants to play as many as games as they can; however, gaming is India is way too
                             expensive. They always say “Gaming is not a crime but too expensive”, and that’s really a
@@ -496,7 +448,7 @@ fbq('track', 'PageView');
                             <li><a class="facebook" target="_blank" href="https://www.facebook.com/gamehunter.in/"><i
                                     class="ion-social-facebook"></i></a></li>
                             
-                            <!-- <li><a class="twitter" href="#"><i class="ion-social-twitter"></i></a></li> -->
+                            <li><a class="twitter" href="https://twitter.com/GameHun56255189"><i class="ion-social-twitter"></i></a></li>
                             <li><a class="linkedin" target="_blank" href="https://in.linkedin.com/company/gamehunter"><i class="ion-social-linkedin-outline"></i></a></li>
                             <!--<li><a class="youtube" href="#"><i class="ion-social-youtube-outline"></i></a></li>-->
                         </ul>

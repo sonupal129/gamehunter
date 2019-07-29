@@ -1,5 +1,5 @@
 from post_office import mail
-from django.dispatch import receiver
+from background_task import background
 from shop.models import UserProfile
 from django.db.models.signals import pre_save, post_save
 # Testing
@@ -9,17 +9,18 @@ from django.utils.http import urlsafe_base64_encode, force_bytes
 # Code Starts from Here
 
 
-@receiver(post_save, sender=UserProfile)
-def new_user_signup_email(sender, instance, created, **kwargs):
-    if created:
+@background(schedule=3, queue="default")
+def new_user_signup_email(user_id):
+    user = User.objects.get(id=user_id)
+    if user:
         mail.send(
-            recipients=instance.user.email,
+            recipients = user.email,
             sender="no-reply@gamehunter.in",
             template="new_user_sign_up",
             priority="now",
             backend="django_ses",
             context={
-                "user": instance
+                "user": user
             },
         )
         return "Email Sent"

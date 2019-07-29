@@ -73,6 +73,12 @@ def upload_products(filepath):
                 if row.get("Plan"):
                     prod_plan = Plan.objects.get(name__iexact=row.get("Plan", ""))
                     product.plan.add(prod_plan)
+                if row.get("Attribute: source_url"):
+                    attribute = Attribute.objects.get(name="source_url")
+                    ProductAttribute.objects.create(attribute=attribute, product=product, value=row.get("Attribute: source_url"))
+                if row.get("Attribute: game_trailer"):
+                    attribute = Attribute.objects.get(name="game_trailer")
+                    ProductAttribute.objects.create(attribute=attribute, product=product, value=row.get("Attribute: game_trailer"))
                 product.save()
                 product_updated += 1
             else:
@@ -92,12 +98,15 @@ def upload_products(filepath):
                 product.manufacturer = data.get("manufacturer")
                 product.genre = data.get("genre")
                 product.save()
-                print(product)
                 if row.get("Plan"):
                     prod_plan = Plan.objects.get(name__iexact=row.get("Plan", ""))
-                    print(prod_plan)
-                    print(product)
                     product.plan.add(prod_plan)
+                if row.get("Attribute: source_url"):
+                    attribute = Attribute.objects.get(name="source_url")
+                    ProductAttribute.objects.create(attribute=attribute, product=product, value=row.get("Attribute: source_url"))
+                if row.get("Attribute: game_trailer"):
+                    attribute = Attribute.objects.get(name="game_trailer")
+                    ProductAttribute.objects.create(attribute=attribute, product=product, value=row.get("Attribute: game_trailer"))
                 new_product_added += 1
                 time.sleep(1)
         else:

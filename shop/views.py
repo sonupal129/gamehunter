@@ -77,11 +77,11 @@ class HomePageView(ListView):
 
     def get_home_page_banner(self):
         qs = PromoCard.objects.filter(active=True).order_by("-date")
-        top_coverpage = qs.filter(type="coverpage_top")[:3]
-        center_coverpage = qs.filter(type="coverpage_center").first()
-        bottom_coverpage = qs.filter(type="coverpage_bottom").first()
-        left_banner = qs.filter(type="banner_left").first()
-        right_banner = qs.filter(type="banner_right").first()
+        top_coverpage = qs.filter(promocard_type="coverpage_top")[:3]
+        center_coverpage = qs.filter(promocard_type="coverpage_center").first()
+        bottom_coverpage = qs.filter(promocard_type="coverpage_bottom").first()
+        left_banner = qs.filter(promocard_type="banner_left").first()
+        right_banner = qs.filter(promocard_type="banner_right").first()
         return top_coverpage, center_coverpage, bottom_coverpage, left_banner, right_banner
 
     def get_context_data(self, **kwargs):
@@ -111,17 +111,20 @@ class ProductListView(ListView):
     template_name = 'shop/product_list/product-list.html'
     paginate_by = 20
     
-
     @log_exceptions("Product List Querysets Function")
     def get_queryset(self):
         sort_by = self.request.GET.get("sort_by")
         cache_key = self.request.get_raw_uri()
         cached_value = cache.get(cache_key)
         rent = self.kwargs.get("rent")
+        keywords = self.request.GET.get("keywords", None)
 
         if cached_value is None:
-            categories = Category.objects.filter(slug=self.kwargs.get("slug")).get_descendants(include_self=True)
-            queryset = Product.objects.filter(category__in=categories, active=True, item_status__in=["I"])
+            if keywords:
+                queryset = Product.objects.filter(name__icontains=keywords, active=True, item_status__in=["I"])
+            else:
+                categories = Category.objects.filter(slug=self.kwargs.get("slug")).get_descendants(include_self=True)
+                queryset = Product.objects.filter(category__in=categories, active=True, item_status__in=["I"])
             if rent:
                 product_attributes = ProductAttribute.objects.filter(attribute__name="game_based_plan_price", value__isnull=False).values_list('product', flat=True).distinct()
                 queryset = queryset.filter(id__in=product_attributes)
@@ -132,6 +135,7 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
+        keywords = self.request.GET.get("keywords", None)
         product_list = ProductFilter(self.request.GET, queryset=self.get_queryset())
         page = self.request.GET.get("page", 1)
         paginator = Paginator(product_list.qs, 20)
@@ -141,7 +145,10 @@ class ProductListView(ListView):
             products = paginator.page(1)
         except EmptyPage:
             products = paginator.page(paginator.num_pages)
-        context["filter_categories"] = Category.objects.get(slug=self.kwargs.get("slug"))
+        if keywords:
+            context["filter_categories"] = None
+        else:
+            context["filter_categories"] = Category.objects.get(slug=self.kwargs.get("slug"))
         context["products"] = products
         context["products_form"] = product_list.form
         context["paginator"] = paginator
@@ -312,7 +319,7 @@ class ProductSearchView(ListView):
         context["publishers"] = qs.filter(publisher__name__isnull=False).values("publisher__name").distinct()
         context["genres"] = qs.filter(genre__genre__isnull=False).values("genre__genre").distinct()
         context["cart"] = get_cart_obj(self.request)
-        return context;
+        return context
 
 
 class MyOrderView(ListView):
@@ -379,9 +386,6 @@ def clear_cache(request):
     cache.clear()
     return HttpResponse("Cache cleared for website")
 
-
 def test_view(request):
-    filter = ProductFilter(data=request.GET, queryset=Product.objects.all())
-    
-    # form = MyTestForm()
-    return render(request, 'shop/test.html', context={"filter": filter})
+    return HttpResponse("Fired")
+

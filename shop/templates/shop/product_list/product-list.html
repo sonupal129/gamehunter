@@ -32,7 +32,7 @@
                 <input type="hidden" name="rent" value="available" />
             {% endif %}
             {% if request.GET.keywords %}
-                <input type="hidden" name="rent" value="available" />
+                <input type="hidden" name="keywords" value="{{ request.GET.keywords }}" />
             {% endif %}
     <div class="container">
         {% if products %}
@@ -51,16 +51,16 @@
                                         {{ categories }}<i class="ion-ios-arrow-down"></i></a>
                                     <ul id="{{ categories.id }}" class="panel-collapse collapse show">
                                         {% for category in categories.get_children %}
-                                        <li><a href="{% url 'shop:product-list' category.slug %}">{{ category }}</a></li>
+                                        <li><a href="{% url 'shop:product-list' category.slug %}?{{ request.GET.urlencode }}">{{ category }}</a></li>
                                         {% endfor %}
                                     </ul>
                                 </li>
                                 {% else %}
-                                <li><a href="{% url 'shop:product-list' categories.slug %}">{{ categories }}</a></li>
+                                <li><a href="{% url 'shop:product-list' categories.slug %}?{{ request.GET.urlencode }}">{{ categories }}</a></li>
                                 {% endif %}
                                 {% endfor %}
                                 {% else %}
-                                <li><a href="{% url 'shop:product-list' filter_categories.slug %}">{{ filter_categories }}</a></li>
+                                <li><a href="{% url 'shop:product-list' filter_categories.slug %}?{{ request.GET.urlencode }}">{{ filter_categories }}</a></li>
                                 {% endif %}
                             </ul>
                         </div>

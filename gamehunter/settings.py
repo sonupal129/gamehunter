@@ -187,7 +187,7 @@ AWS_SECRET_ACCESS_KEY = 'LKad/Y/bb5p5WhX0Vlw+8TNqvlf5CZzfLhXhfKgA'
 # AWS_SES_REGION_ENDPOINT = 'email-smtp.us-east-1.amazonaws.com'
 
 # Slack API Token & Information for Notification
-SLACK_TOKEN = 'xoxb-402668290307-541515247091-5kxEPnxOQ0dQSLy334WoENDE'
+SLACK_TOKEN = 'xoxp-402668290307-402246933393-540900284017-6de896d6d362ba7e61415b3c6cce942b'
 
 # Instamojo Payment Gateway Link Url
 INSTAMOJO_API_KEY = "test_830b282750b49d50fb88d7e72c9"
@@ -211,6 +211,12 @@ if not DEBUG:
 
 # django htmlmin
 EXCLUDE_FROM_MINIFYING = ('url-optimize/sitemap.xml/', 'cki39vbl3/admin/')
+
+# django-background-task
+
+MAX_ATTEMPTS = 10
+
+
 
 # Django Logging for Refining SQL Queries
 # LOGGING = {

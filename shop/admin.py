@@ -108,7 +108,7 @@ class PlanAdmin(admin.ModelAdmin):
 
 
 class PromoCardAdmin(admin.ModelAdmin):
-    list_display = ('name', 'promocard_type', 'active')
+    list_display = ('id', 'promocard_type', 'active')
     inlines = [PhotoInline]
 
 
@@ -150,6 +150,10 @@ class ExceptionAdmin(ModelAdmin):
     list_display = ["views", "message", "timestamp"]
     readonly_fields = ("views", "message", "timestamp", "exceptionclass",)
 
+class GenreAdmin(ModelAdmin):
+    search_fields = ["genre"]
+
+
 
 admin.site.register(CSVImporter, CSVImporterAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
@@ -157,7 +161,7 @@ admin.site.register(Address, AddressAdmin)
 admin.site.register(PromoCard, PromoCardAdmin)
 admin.site.register(Plan, PlanAdmin)
 admin.site.register(Brand, BrandAdmin)
-admin.site.register(Genre)
+admin.site.register(Genre, GenreAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ExceptionLog, ExceptionAdmin)
 

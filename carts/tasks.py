@@ -2,13 +2,23 @@ from shop.models import Product, ProductAttribute, Attribute
 from carts.models import Cart
 from django.utils import timezone
 import datetime
-from carts.models import Cart
+
 from carts.emails import *
 from background_task import background
 from background_task.models import Task
 # Start Writing Functions Below
 
+@background(schedule=5, queue="default")
+def create_order(cart_id):
+    cart = Cart.objects.get(id=cart_id)
+    if cart.products:
+        cart.create_product_orders()
+    if cart.plan:
+        cart.create_subscription_order()
+    if cart.pay_game_products:
+        cart.create_pay_per_game_product_order()
 
+@background(queue="biweekly-task")
 def delete_old_cart():
     """This function runs as task, Where it checks all carts and carts which are older than 45 days without user details and
     carts which are older than 90 days with no user activity get deleted from system"""

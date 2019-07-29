@@ -1,33 +1,30 @@
-from carts.models import *
+from django.db.models.signals import post_save
 from post_office import mail
-from carts.signals import order_payment_received
+from carts.models import Cart
 from django.dispatch import receiver
 from django.utils import timezone
 import datetime
+
+from background_task import background
 # Code Starts from Here
 
-
-@receiver(order_payment_received)
-def send_cart_order_place_email(sender, **kwargs):
-    # cart = Cart.objects.get(id=13)
-    # print(cart)
-    # print(cart.total_items_list())
-    cart = kwargs.get("cart_id")
-    if cart.payment_status == "Credit":
+@background(schedule=4, queue="default")
+def send_cart_order_place_email(cart_id):
+    cart_obj = Cart.objects.get(id=cart_id)
+    if cart_obj.payment_status == "Credit":
         mail.send(
-            recipients=cart.user.email,
+            recipients=cart_obj.user.email,
             sender="no-reply@gamehunter.in",
             template="new_order_received",
             priority="now",
             backend="django_ses",
             context={
-                "products": cart.total_items_list(),
-                "cart": cart,
-                "user_name": cart.user.first_name + cart.user.last_name
-
+                "products": cart_obj.total_items_list(),
+                "cart": cart_obj,
+                "user_name": cart_obj.user.first_name + cart_obj.user.last_name
             },
         )
-        return ""
+    return ""
 
 # Cart Drop Out Emails
 

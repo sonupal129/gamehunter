@@ -1,6 +1,6 @@
 from django.dispatch import Signal
 from django.db.models.signals import m2m_changed, post_save
-from shop.models import Product, ProductAttribute, Attribute
+from shop.models import Product, ProductAttribute, Attribute, User, UserProfile
 from django.dispatch import receiver
 from django.contrib.sites.models import Site
 from django.conf import settings
@@ -8,6 +8,8 @@ from django.contrib.redirects.models import Redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.signals import request_finished
 from shop.models import ProductAttribute
+from shop.emails import new_user_signup_email
+
 # Code Starts from Here
 
 
@@ -76,3 +78,10 @@ def create_product_redirect_url(sender, instance, created, **kwargs):
             ProductAttribute.objects.create(attribute=attr, value=instance.slug, product=instance)
     return "Redirect Url Created"
 
+
+@receiver(post_save, sender=User)
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance, subscribed=True)
+        new_user_signup_email(instance.id)
+    instance.userprofile.save()

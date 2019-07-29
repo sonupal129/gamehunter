@@ -61,7 +61,7 @@ urlpatterns = [
          name='password_reset_complete'),
 # Products Urls
     path('subscription-plans/', SubscriptionPlanView.as_view(), name='subscription-list'),
-    path('search/', ProductSearchView.as_view(), name='search'),
+    path('search/', ProductListView.as_view(), name='search'),
     path('<slug:slug>', ProductDetailView.as_view(), name='product-detail'),
     path('products/<path:slug>/', ProductListView.as_view(), name='product-list'),
     path('products/<path:slug>', ProductListView.as_view(), {"rent": "rent-available"}, name='rent-product-list',),

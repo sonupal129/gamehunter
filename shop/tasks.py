@@ -1,14 +1,15 @@
-from shop.models import ProductAttribute
+from shop.models import ProductAttribute, Product
 from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
 import time
 from background_task import background
+
 # Start Writing Functions Below
 
-@background(schedule=30)
+@background(queue='biweekly-task')
 def product_updater():
     """This Function is A Task which update products mrp, discount and status from gametheshop on daily"""
-    qs = ProductAttribute.objects.select_related('product').filter(attribute__name="source_url")[:5]
+    qs = ProductAttribute.objects.select_related('product').filter(attribute__name="source_url")
     for atr in qs:
         time.sleep(2)
         single_product_update(atr.value, atr.product)

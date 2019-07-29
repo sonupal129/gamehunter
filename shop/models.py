@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 from django.core.exceptions import ObjectDoesNotExist
 import datetime, os
+
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
@@ -232,6 +233,7 @@ class PromoCard(models.Model):
     description = models.CharField(max_length=120, blank=True, null=True)
     promocard_type = models.CharField(choices=card_type, max_length=100, default='coverpage_top')
     active = models.BooleanField(blank=True)
+    promocard_clickable = models.BooleanField(blank=True, default=False)
     link = models.CharField(max_length=200, null=True, default='', blank=True)
 
     def __str__(self):
@@ -384,13 +386,7 @@ class UserProfile(models.Model):
         except ObjectDoesNotExist:
             return False
 
-    @receiver(post_save, sender=User)
-    def create_or_update_user_profile(sender, instance, created, **kwargs):
-        if created:
-            UserProfile.objects.create(user=instance, subscribed=True)
-        instance.userprofile.save()
-
-
+    
 class AddressManager(models.Manager):
 
     def get_or_create_address(self, user):

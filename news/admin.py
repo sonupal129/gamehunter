@@ -18,12 +18,11 @@ class NewsAttributeInline(admin.TabularInline):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field is self.model.attribute.field:
             try:
-                kwargs["queryset"] = Attribute.objects.get(
-                    attribute="Blogs").get_children()
+                kwargs["queryset"] = Attribute.objects.get(name="Blogs").get_children()
             except IndexError:
                 print(
                     "BLOG attribute is not available in attribute Model, kindly add it with it's children ")
-        return super(BlogAttributeInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
+        return super(NewsAttributeInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 class NewsAdmin(admin.ModelAdmin):
     exclude = ('slug',)

@@ -5,7 +5,7 @@ import random, datetime
 from jsonfield import JSONField
 from django.shortcuts import HttpResponseRedirect, redirect
 from django.core.exceptions import ObjectDoesNotExist
-from carts.signals import new_order_received, new_subscription_order_received
+
 from background_task import background
 # Create your models here.
 
@@ -13,8 +13,7 @@ from background_task import background
 class ProductCartManager(models.Manager):
 
     def create_or_get_cart(self, request):
-        cart_id = request.session.get("cart_id", None)
-        qs = Cart.objects.filter(cart_id=cart_id)
+        qs = Cart.objects.filter(cart_id=request.session.get("cart_id", None))
         if qs.count() == 1:
             cart_obj = qs.first()
             new_obj = False
@@ -76,28 +75,21 @@ class Cart(models.Model):
     def get_selling_price(self):
         total = 0
         if self.plan:
-            total += self.plan.get_plan_selling_price()
-            total += self.plan.get_security_deposit()
-        for p in self.products.all():
-            total += p.get_mrp_and_selling_price()[0]
-        for p in self.pay_game_products.all():
-            total += int(p.get_pay_per_game_subscription_price().value)
-        return total
+            total += self.plan.get_plan_selling_price() + self.plan.get_security_deposit()
+        total += sum(p.get_mrp_and_selling_price()[0] for p in self.products.all())
+        total += sum(p.get_pay_per_game_subscription_price().value for p in self.pay_game_products.all())
+        return int(total)
 
     def get_mrp(self):
         total = 0
         if self.plan:
-            total += self.plan.subscription_amount
-            total += self.plan.get_security_deposit()
-        for p in self.products.all():
-            total += p.get_mrp_and_selling_price()[1]
-        for p in self.pay_game_products.all():
-            total += int(p.get_pay_per_game_subscription_price().value)
-        return total
+            total += self.plan.subscription_amount + self.plan.get_security_deposit()
+        total += sum(p.get_mrp_and_selling_price()[1] for p in self.products.all())
+        total += sum(p.get_pay_per_game_subscription_price().value for p in self.pay_game_products.all())
+        return int(total)
 
     def total_cart_items_count(self):
-        total_count = self.products.all().count()
-        total_count += self.pay_game_products.all().count()
+        total_count = self.products.all().count() + self.pay_game_products.all().count()
         if self.plan:
             total_count += 1
         return total_count
@@ -133,7 +125,6 @@ class Cart(models.Model):
         if self.payment_status == "Credit":
             for product in self.products.all():
                 order_id = f"{self.cart_id}_{order_created}"
-                print(order_id)
                 try:
                     order = ProductOrders.objects.get(suborder_id=order_id)
                 except ObjectDoesNotExist:
@@ -143,7 +134,6 @@ class Cart(models.Model):
                             "delivery_charges": product.delivery_charges, "address": self.address,
                             "final_selling_price": product.delivery_charges + selling_price,
                             "product": product}
-
                     if self.payment_status == "Credit":
                         data["payment_method"] = "PREPAID"
                     elif self.payment_status == "COD":
@@ -155,7 +145,6 @@ class Cart(models.Model):
                     else:
                         data["condition"] = "USED"
                     order = ProductOrders.objects.create(suborder_id=order_id, **data)
-                    new_order_received.send(sender=ProductOrders, suborder=order)
                     order_created += 1
                 else:
                     print("Object is Available in System Can't Create New")
@@ -183,7 +172,6 @@ class Cart(models.Model):
                         data["payment_method"] = "NO METHOD DEFINE"
                     data["condition"] = "USED"
                     order = ProductOrders.objects.create(suborder_id=order_id, **data)
-                    new_order_received.send(sender=ProductOrders, suborder=order)
                     order_created += 1
                 else:
                     print("Object is Available in System Can't Create New")
@@ -204,7 +192,6 @@ class Cart(models.Model):
                 subscription = SubscriptionOrders.objects.get(suborder_id=order_id)
             except ObjectDoesNotExist:
                 subscription = SubscriptionOrders.objects.create(suborder_id=order_id, **data)
-                new_subscription_order_received.send(sender=SubscriptionOrders, suborder=subscription)
             else:
                 print("Subscription is Already Available Can't Create New")
 
@@ -248,11 +235,8 @@ class ProductOrders(models.Model):
         verbose_name_plural = "Product Orders"
 
     def order_tracking_url(self):
-        if self.status == "SP":
-            if self.shipping_link:
-                return self.shipping_link
-            return ""
-        return ""
+        if self.status == "SP" and self.shipping_link:
+            return self.shipping_link
 
 
 class SubscriptionOrders(models.Model):

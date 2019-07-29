@@ -92,7 +92,10 @@ def remove_whole_cart(request):
 
 
 def cart_checkout(request):
-    cart_obj = Cart.objects.get(cart_id=request.session.get("cart_id"))
+    try:
+        cart_obj = Cart.objects.get(cart_id=request.session.get("cart_id"))
+    except Cart.DoesNotExist:
+        return redirect("shop:homepage")
     checkout_form = CheckoutForm(request.POST or None)
     products, pay_game_products = cart_obj.total_items_list()
     if cart_obj.plan:
