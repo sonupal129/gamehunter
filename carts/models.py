@@ -77,7 +77,7 @@ class Cart(models.Model):
         if self.plan:
             total += self.plan.get_plan_selling_price() + self.plan.get_security_deposit()
         total += sum(p.get_mrp_and_selling_price()[0] for p in self.products.all())
-        total += sum(p.get_pay_per_game_subscription_price().value for p in self.pay_game_products.all())
+        total += sum(int(p.get_pay_per_game_subscription_price().value) for p in self.pay_game_products.all())
         return int(total)
 
     def get_mrp(self):
@@ -85,7 +85,7 @@ class Cart(models.Model):
         if self.plan:
             total += self.plan.subscription_amount + self.plan.get_security_deposit()
         total += sum(p.get_mrp_and_selling_price()[1] for p in self.products.all())
-        total += sum(p.get_pay_per_game_subscription_price().value for p in self.pay_game_products.all())
+        total += sum(int(p.get_pay_per_game_subscription_price().value) for p in self.pay_game_products.all())
         return int(total)
 
     def total_cart_items_count(self):

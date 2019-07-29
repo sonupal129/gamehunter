@@ -14,19 +14,19 @@
     <!--<label>Qty:</label>-->
     <!--<input class="cart-plus-minus-box" type="text" name="qtybutton" value="02">-->
     <!--</div>-->
-    {% if product in cart.products.all or product in cart.pay_game_products.all %}
+    {% if product in cart.products.all %}
     <div class="product-action">
         <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">Go
             to Cart</a>
     </div>
     {% elif product.item_status == 'I' %}
     <div class="product-action">
-        <!--<div class="quality">-->
-        <!--<label>Qty:</label>-->
-        <!--<input class="cart-plus-minus-box" type="text" name="qtybutton" value="02">-->
-        <!--</div>-->
         <a id="add-to-cart" class="action-cart" title="Add To Cart" href="{% url 'carts:add' product.slug %}">Add to
             Cart</a>
+    </div>
+    {% elif product.item_status == 'S' %}
+    <div class="product-action">
+        <a id="add-to-cart" class="action-cart" title="Buy Subscription" href="{% url 'shop:subscription-list'%}">Buy Subscriptions</a>
     </div>
     {% endif %}
 </div>

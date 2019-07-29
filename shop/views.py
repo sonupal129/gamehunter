@@ -198,7 +198,7 @@ class SubscriptionPlanView(ListView):
         if cached_value:
             return cached_value
         else:
-            plans = Plan.objects.filter(active=True).order_by('duration')
+            plans = Plan.objects.filter(active=True).order_by('duration').exclude(type="GB")
             return plans
 
 

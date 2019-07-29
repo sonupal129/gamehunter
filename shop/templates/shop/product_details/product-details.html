@@ -65,13 +65,13 @@
                         <!--</ul>-->
                         <!--</div>-->
                     </div>
-                    {% if product.item_status == 'I' %}
+                    {% if request.GET.rent or product.item_status == 'S' %}
+                    <span>Game is Available in Subscription Only</span>
+                    {% elif product.item_status == 'I' %}
                     {% if product.total_discount != 0 %}
                     <span class="product-old-price">₹{{product.get_mrp_and_selling_price|last}}</span>
                     {% endif %}
                     <span>₹ {{product.get_mrp_and_selling_price|first}}</span>
-                    {% elif product.item_status == 'S' %}
-                    <span>Game is Available in Subscription Only</span>
                     {% else %}
                     <span>Sorry! Item is Out of Stock</span>
                     {% endif %}

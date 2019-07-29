@@ -27,18 +27,13 @@ def add_delete_pay_per_game_price(sender, instance, **kwargs):
         if instance.plan.filter(type="GB", id__in=kwargs.get("pk_set")):
             game_price_attribute = ProductAttribute.objects.filter(product=instance, attribute=attr).first()
             if game_price_attribute:
-                if instance.mrp <= 1499:
-                    game_price_attribute.value = 300
-                    game_price_attribute.save()
-                elif 1500 < instance.mrp < 4000:
+                if instance.mrp <= 4000:
                     game_price_attribute.value = 500
                     game_price_attribute.save()
                 else:
                     del game_price_attribute
             else:
-                if instance.mrp <= 1499:
-                    ProductAttribute.objects.create(attribute=attr, value=300, product=instance)
-                elif 1500 < instance.mrp < 4000:
+                if instance.mrp <= 4000:
                     ProductAttribute.objects.create(attribute=attr, value=500, product=instance)
                 else:
                     pass
@@ -50,10 +45,7 @@ def update_pay_per_game_price(sender, instance, **kwargs):
     attr = Attribute.objects.get(name="game_based_plan_price")
     if instance.get_pay_per_game_subscription_price():
         obj = instance.get_pay_per_game_subscription_price()
-        if instance.mrp <= 1499:
-            obj.value = 300
-            obj.save()
-        elif 1500 < instance.mrp < 4000:
+        if instance.mrp <= 4000:
             obj.value = 500
             obj.save()
         else:

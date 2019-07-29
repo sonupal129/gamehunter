@@ -14,11 +14,11 @@
                     <span>For {{ product.category.name|upper }}</span>
                     <h4><a href="{{ product.get_absolute_url }}?rent=available">
                             {{ product.name|truncatechars:30|title }}</a></h4>
-                    {% if product.get_pay_per_game_subscription_price %}
+                    <!-- {% if product.get_pay_per_game_subscription_price %}
                     <div class="product-price-wrapper">
                         <span> Subscription Only </span>
                     </div>
-                    {% endif %}
+                    {% endif %} -->
                 </div>
                 <div class="product-action-wrapper-2 text-center">
                     <div class="product-rating">
@@ -29,11 +29,11 @@
                         <i class="ion-android-star-outline"></i>
                     </div>
                     <p class="product-description-wrapper">{{ product.description|truncatechars:90|safe }}</p>
-                    <div class="product-action">
-                        <!--<a class="same-action" title="Wishlist" href="#">-->
-                        <!--<i class="fa fa-heart-o"></i>-->
-                        <!--</a>-->
-                        {% if product in cart.products.all or product in cart.pay_game_products.all %}
+                    <!-- <div class="product-action">
+                        <a class="same-action" title="Wishlist" href="#">
+                        <i class="fa fa-heart-o"></i>
+                        </a>
+                        {% if product in cart.pay_game_products.all %}
                         <a class="action-cart" title="Go To Cart" href="{% url 'carts:cart' %}">
                             Go to Cart
                         </a>
@@ -50,11 +50,11 @@
                             Buy Subscription
                         </a>
                         {% endif %}
-                        <!--<a class="same-action compare-mrg" data-target="#exampleCompare"-->
-                        <!--data-toggle="modal" title="Compare" href="#">-->
-                        <!--<i class="fa fa-sliders fa-rotate-90"></i>-->
-                        <!--</a>-->
-                    </div>
+                        <a class="same-action compare-mrg" data-target="#exampleCompare"
+                        data-toggle="modal" title="Compare" href="#">
+                        <i class="fa fa-sliders fa-rotate-90"></i>
+                        </a>
+                    </div> -->
                 </div>
             </div>
         </div>
