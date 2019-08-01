@@ -64,7 +64,7 @@ urlpatterns = [
     path('search/', ProductListView.as_view(), name='search'),
     path('<slug:slug>', ProductDetailView.as_view(), name='product-detail'),
     path('products/<path:slug>/', ProductListView.as_view(), name='product-list'),
-    path('products/<path:slug>', ProductListView.as_view(), {"rent": "rent-available"}, name='rent-product-list',),
+    
     path('subscription-plans/<slug:slug>', SubscriptionDetailView.as_view(), name='subscription-detail'),
 # Contact Urls
     path('sell-ur-games/', SellYourGamesView.as_view(), name='sell-games'),

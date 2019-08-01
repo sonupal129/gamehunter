@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import TemplateView, DetailView, ListView
 from .models import *
-from django.http import HttpResponseRedirect
+import requests
+from django.http import HttpResponseRedirect, HttpResponse
 from .forms import CheckoutForm
 from shop.models import Plan
 from django.core.exceptions import ObjectDoesNotExist
-
+from gamehunter.settings import INSTAMOJO_API_KEY, INSTAMOJO_AUTH_TOKEN, BASE_PAYMENT_URL, PAYEMENT_REDIRECT_URL
 # Create your views here.
 
 
@@ -54,7 +55,6 @@ def cart_add_product(request, slug):
     cart_obj.products.add(prod_obj)
     request.session["cart_items"] = cart_obj.total_cart_items_count()
     request.session["cart_total"] = int(cart_obj.get_selling_price())
-    print(int(cart_obj.get_selling_price()))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def add_pay_per_game_product(request, slug):
@@ -92,6 +92,7 @@ def remove_whole_cart(request):
 
 
 def cart_checkout(request):
+    headers = {"X-Api-Key": INSTAMOJO_API_KEY, "X-Auth-Token": INSTAMOJO_AUTH_TOKEN}
     try:
         cart_obj = Cart.objects.get(cart_id=request.session.get("cart_id"))
     except Cart.DoesNotExist:
@@ -138,11 +139,60 @@ def cart_checkout(request):
         address_obj.save()
         cart_obj.address = address_obj
         cart_obj.save()
-        return redirect("carts:payment")
+        if user.is_authenticated and user.is_active:
+            payload = {"purpose": cart_obj.cart_id,
+                   "amount": str(cart_obj.get_selling_price()),
+                   "buyer_name": cart_obj.user.first_name,
+                   "email": cart_obj.user.email,
+                   "phone": str(cart_obj.user.userprofile.phone_number),
+                   "redirect_url": PAYEMENT_REDIRECT_URL,
+                   "send_email": False,
+                   "send_sms": False,
+                   }
+        response = requests.post(BASE_PAYMENT_URL, data=payload, headers=headers)
+        if response:
+            payment_detail = response.json()["payment_request"]
+            cart_obj.payment_request = payment_detail
+            cart_obj.save(update_fields=["payment_request"])
+            embeded_url = str(payment_detail.get("longurl") + str("?embed=form"))
+            return HttpResponse("<script src='https://js.instamojo.com/v1/checkout.js'></script><script>Instamojo.open('{0}');</script>".format(embeded_url))
+        return redirect("carts:checkout")
     else:
         CheckoutForm()
     return render(request, "carts/checkout.html", context)
 
+def redirect_payment_complete(request):
+    """ function takes request as argument and after receiving payment confirmation from payment gateway it redirect to
+    payment complete or declined page"""
+    user = request.user
+    cart_id = request.session.get("cart_id")
+    try:
+        cart_obj = Cart.objects.get(cart_id=cart_id)
+    except:
+        pass
+    else:
+        if user.is_authenticated and user.is_active:
+            if cart_obj:
+                get_payment_id = request.GET.get("payment_id", "")
+                get_payment_status = request.GET.get("payment_status", "")
+                context = {
+                    "cart": cart_obj,
+                }
+                if get_payment_status == "Credit" and cart_obj.payment_request and get_payment_id:
+                    send_cart_order_place_email(cart_obj.id)
+                    cart_obj.payment_id = get_payment_id
+                    cart_obj.payment_status = get_payment_status
+                    cart_obj.save(update_fields=["payment_id", "payment_status"])
+                    create_order(cart_obj.id)
+                    del request.session["cart_id"]
+                    del request.session["cart_items"]
+                    del request.session["cart_total"]
+                    request.session.modified = True
+                    return render(request, "carts/transaction-successful.html", context)
+                else:
+                    return render(request, "carts/transaction-declined.html", context)
+            return redirect("carts:cart")
+    return redirect("shop:login")
 
 class TestView(TemplateView):
     template_name = "shop/coming-soon.html"

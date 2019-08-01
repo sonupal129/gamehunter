@@ -18,7 +18,7 @@ def create_order(cart_id):
     if cart.pay_game_products:
         cart.create_pay_per_game_product_order()
 
-@background(queue="biweekly-task")
+@background(queue="biweekly-tasks")
 def delete_old_cart():
     """This function runs as task, Where it checks all carts and carts which are older than 45 days without user details and
     carts which are older than 90 days with no user activity get deleted from system"""

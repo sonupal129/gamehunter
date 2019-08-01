@@ -5,7 +5,7 @@ import random, datetime
 from jsonfield import JSONField
 from django.shortcuts import HttpResponseRedirect, redirect
 from django.core.exceptions import ObjectDoesNotExist
-
+from carts.slacknotification import new_product_order_received
 from background_task import background
 # Create your models here.
 
@@ -145,6 +145,7 @@ class Cart(models.Model):
                     else:
                         data["condition"] = "USED"
                     order = ProductOrders.objects.create(suborder_id=order_id, **data)
+                    new_product_order_received(order)
                     order_created += 1
                 else:
                     print("Object is Available in System Can't Create New")

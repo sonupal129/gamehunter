@@ -113,12 +113,10 @@ class ProductListView(ListView):
     
     @log_exceptions("Product List Querysets Function")
     def get_queryset(self):
-        sort_by = self.request.GET.get("sort_by")
         cache_key = self.request.get_raw_uri()
         cached_value = cache.get(cache_key)
-        rent = self.kwargs.get("rent")
+        rent = self.request.GET.get("rent", None)
         keywords = self.request.GET.get("keywords", None)
-
         if cached_value is None:
             if keywords:
                 queryset = Product.objects.filter(name__icontains=keywords, active=True, item_status__in=["I"])
@@ -163,23 +161,32 @@ class ProductDetailView(DetailView):
 
     def get_object(self, queryset=None):
         obj = super(ProductDetailView, self).get_object(queryset=queryset)
-        if obj.active is not True:
+        cache_key = self.request.get_raw_uri()
+        cached_value = cache.get(cache_key)
+        if cached_value is None:
+            cache.set(cache_key, obj, 9600)
+            cached_value = cache.get(cache_key)
+        if not cached_value.active:
             raise Http404()
-        return obj
+        return cached_value
 
     def related_product(self):
         count = 4
         relatedproducts = []
         products = Product.objects.filter(active=True, item_status__in=["I", "S"])
         product = self.get_object()
-
-        for pub in products.filter(publisher=product.publisher).order_by("-launch_date")[:count]:
-            relatedproducts.append(pub)
-        for dev in products.filter(developer=product.developer).order_by("-launch_date")[:count]:
-            relatedproducts.append(dev)
-        for cat in products.filter(category=product.category).order_by("-date")[:count]:
-            relatedproducts.append(cat)
-        return relatedproducts
+        cache_key = "related_products_".join(self.request.get_raw_uri())
+        cached_value = cache.get(cache_key)
+        if cached_value is None:
+            for pub in products.filter(publisher=product.publisher).order_by("-launch_date")[:count]:
+                relatedproducts.append(pub)
+            for dev in products.filter(developer=product.developer).order_by("-launch_date")[:count]:
+                relatedproducts.append(dev)
+            for cat in products.filter(category=product.category).order_by("-date")[:count]:
+                relatedproducts.append(cat)
+            cache.set(cache_key, relatedproducts, 9600)
+            return relatedproducts
+        return cached_value
 
     def get_context_data(self, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
@@ -386,6 +393,10 @@ def clear_cache(request):
     cache.clear()
     return HttpResponse("Cache cleared for website")
 
+from carts.slacknotification import new_product_order_received
+
 def test_view(request):
+    new_product_order_received(ProductOrders.objects.get(id=8))
+    print("Fired")
     return HttpResponse("Fired")
 

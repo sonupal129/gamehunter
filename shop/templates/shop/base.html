@@ -334,15 +334,15 @@ fbq('track', 'PageView');
                         </li>
                         <li><a href="{% url 'shop:subscription-list' %}">Subscriptions</a></li>
                         <li class="mega-menu-position"><a
-                                href="{% url 'shop:rent-product-list' slug='games' %}?rent=available&{{ request.GET.urlencode }}"> play on rent <i
+                                href="{% url 'shop:product-list' slug='games' %}?{% url_add request 'rent' 'available' %}"> play on rent <i
                                 class="ion-chevron-down"></i> </a>
                             <ul class="mega-menu">
                                 <li>
                                     <ul>
                                         <li class="mega-menu-title">Games</li>
-                                        <li><a href="{% url 'shop:product-list' slug='games/playstation-games' %}?rent=available&{{ request.GET.urlencode }}">Playstation
+                                        <li><a href="{% url 'shop:product-list' slug='games/playstation-games' %}?{% url_add request 'rent' 'available' %}">Playstation
                                             Games</a></li>
-                                        <li><a href="{% url 'shop:product-list' slug='games/xbox-games' %}?rent=available&{{ request.GET.urlencode }}">Xbox
+                                        <li><a href="{% url 'shop:product-list' slug='games/xbox-games' %}?{% url_add request 'rent' 'available' %}">Xbox
                                             Games</a></li>
                                         <li><a name="raju-rastogi" href="#">Nintendo Games</a></li>
                                         <li><a href="#">PC Games</a></li>

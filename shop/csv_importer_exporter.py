@@ -78,7 +78,10 @@ def upload_products(filepath):
                     ProductAttribute.objects.create(attribute=attribute, product=product, value=row.get("Attribute: source_url"))
                 if row.get("Attribute: game_trailer"):
                     attribute = Attribute.objects.get(name="game_trailer")
-                    ProductAttribute.objects.create(attribute=attribute, product=product, value=row.get("Attribute: game_trailer"))
+                    product_attribute = ProductAttribute.objects.get_or_create(attribute=attribute, product=product)
+                    if product_attribute:
+                        product_attribute.value = row.get("Attribute: game_trailer")
+                        product_attribute.save()
                 product.save()
                 product_updated += 1
             else:
@@ -106,9 +109,11 @@ def upload_products(filepath):
                     ProductAttribute.objects.create(attribute=attribute, product=product, value=row.get("Attribute: source_url"))
                 if row.get("Attribute: game_trailer"):
                     attribute = Attribute.objects.get(name="game_trailer")
-                    ProductAttribute.objects.create(attribute=attribute, product=product, value=row.get("Attribute: game_trailer"))
+                    product_attribute = ProductAttribute.objects.get_or_create(attribute=attribute, product=product)
+                    if product_attribute:
+                        product_attribute.value = row.get("Attribute: game_trailer")
+                        product_attribute.save()
                 new_product_added += 1
-                time.sleep(1)
         else:
             raise ObjectDoesNotExist("Category Is Not Available")
     return f"{product_updated} products data updated & {new_product_added} new products added successfully"

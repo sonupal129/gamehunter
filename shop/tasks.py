@@ -6,12 +6,11 @@ from background_task import background
 
 # Start Writing Functions Below
 
-@background(queue='biweekly-task')
+@background(queue='biweekly-tasks')
 def product_updater():
     """This Function is A Task which update products mrp, discount and status from gametheshop on daily"""
     qs = ProductAttribute.objects.select_related('product').filter(attribute__name="source_url")
     for atr in qs:
-        time.sleep(2)
         single_product_update(atr.value, atr.product)
     return "All Product Data Updated"
 
