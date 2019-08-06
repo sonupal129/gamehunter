@@ -5,7 +5,7 @@ import random, datetime
 from jsonfield import JSONField
 from django.shortcuts import HttpResponseRedirect, redirect
 from django.core.exceptions import ObjectDoesNotExist
-from carts.slacknotification import new_product_order_received
+from carts.slacknotification import new_product_order_received, new_subscription_order_received
 from background_task import background
 # Create your models here.
 
@@ -155,7 +155,6 @@ class Cart(models.Model):
         if self.payment_status == "Credit":
             for product in self.pay_game_products.all():
                 order_id = f"{self.cart_id}_PGP_{order_created}"
-                print(order_id)
                 try:
                     order = ProductOrders.objects.get(suborder_id=order_id)
                 except ObjectDoesNotExist:
@@ -173,6 +172,7 @@ class Cart(models.Model):
                         data["payment_method"] = "NO METHOD DEFINE"
                     data["condition"] = "USED"
                     order = ProductOrders.objects.create(suborder_id=order_id, **data)
+                    new_product_order_received(order)
                     order_created += 1
                 else:
                     print("Object is Available in System Can't Create New")
@@ -193,6 +193,7 @@ class Cart(models.Model):
                 subscription = SubscriptionOrders.objects.get(suborder_id=order_id)
             except ObjectDoesNotExist:
                 subscription = SubscriptionOrders.objects.create(suborder_id=order_id, **data)
+                new_subscription_order_received(subscription)
             else:
                 print("Subscription is Already Available Can't Create New")
 

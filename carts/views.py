@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import TemplateView, DetailView, ListView
-from .models import *
+from carts.models import *
+from carts.emails import send_cart_order_place_email
 import requests
+from carts.tasks import create_order
 from django.http import HttpResponseRedirect, HttpResponse
-from .forms import CheckoutForm
+from carts.forms import CheckoutForm
 from shop.models import Plan
 from django.core.exceptions import ObjectDoesNotExist
 from gamehunter.settings import INSTAMOJO_API_KEY, INSTAMOJO_AUTH_TOKEN, BASE_PAYMENT_URL, PAYEMENT_REDIRECT_URL

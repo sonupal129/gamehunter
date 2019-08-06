@@ -380,11 +380,9 @@ class UserProfile(models.Model):
         return self.user.email
 
     def has_subscription(self):
-        try:
-            self.user.subscription.filter(active=True).first()
+        if self.user.subscription.filter(active=True):
             return True
-        except ObjectDoesNotExist:
-            return False
+        return False
 
     
 class AddressManager(models.Manager):

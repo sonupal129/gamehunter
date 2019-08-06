@@ -1,14 +1,13 @@
 from django_slack import slack_message
-from django.dispatch import receiver
-from shop.models import UserProfile
-from django.db.models.signals import post_save
+from shop.models import User
+from background_task import background
 # Code Starts Below
 
-
-@receiver(post_save, sender=UserProfile)
-def new_user_registered(sender, instance, created, **kwargs):
-      if created:
-            context = {
-                "user": instance
-            }
-            return slack_message("shop/slack-notifications/new_user_registered.html", context)
+@background(schedule=3, queue="default")
+def new_user_registered(user_id):
+    user = User.objects.get(id=user_id)
+    
+    context = {
+            "user": user
+        }
+    return slack_message("shop/slack-notifications/new_user_registered.html", context)

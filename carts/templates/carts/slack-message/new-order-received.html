@@ -4,7 +4,7 @@
 {% block text %}
 Yay! New Order Received 😍 🕺 🍻 👏
 Order ID : {{ order.suborder_id }}
-Status : {{ order.status }}
+Status : {{ order.get_status_display }}
 Payment Method : {{ order.payment_method }}😘
 Selling Price : {{ order.selling_price }}
 MRP : {{ order.mrp }}

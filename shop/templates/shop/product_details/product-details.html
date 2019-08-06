@@ -88,11 +88,7 @@
                         {% if product.launch_date %}
                         <p>Release Date: <span>{{ product.launch_date|date:"b Y"|title }}</span></p>
                         {% endif %}
-                        {% if product.plan.count > 0 %}
-                        <p>Available for Subscription: <span>Yes</span></p>
-                        {% else %}
-                        <p>Available for Subscription: <span>No</span></p>
-                        {% endif %}
+                        <p>Available for Subscription: <span>{% if product.plan or product.get_pay_per_game_subscription_price %}Yes{% else %}No{% endif %}</span></p>
                         {% if product.genre %}
                         <p>Genre: <span>{{ product.genre }}</span></p>
                         {% endif %}

@@ -77,29 +77,43 @@
                     {% else %}
                     <span>₹ {{ plan.subscription_amount }} for {{ plan.duration }} Months</span>
                     {% endif %}
-                    <div class="in-stock">
-                        <p>Monthly Subscription Amount:
-                            <span>₹ {{ plan.get_monthly_subscription_selling_price }} </span></p>
-                        {% if plan.additional_month > 0 %}
-                        <p>Subscription Duration: <span>{{ plan.duration }} Month + {{ plan.additional_month }} Month Extra!</span>
-                        </p>
-                        {% else %}
-                        <p>Subscription Duration: <span>{{ plan.duration }} Month</span></p>
-                        {% endif %}
-                        {% if plan.swaps > 0 %}
-                        <p>Available Swaps: <span>{{ plan.available_swaps }} Swap in Month</span>
+                    <div class="product-list" style="text-indent: 0; font-size: 16px; color:black;">
+                        <ul>
+                            <li>Get Games at ₹ {{ plan.get_monthly_subscription_selling_price }} Per Month.</li>
+                            <li>Select any game from the website.</li>
+                            {% if plan.swaps > 0 %}
+                            <li>Available Free monthly swaps: {{ plan.swaps }} per Month</li>
                             {% endif %}
-                        <p>Security Deposit: {% if plan.security_deposit > 0 and plan.refundable %}<span>₹ {{ plan.security_deposit }} Refundable!</span>
-                            {% elif plan.security_deposit > 0 and not plan.refundable %}<span>₹ {{ plan.security_deposit }} Not Refundable!</span>
-                        {% endif %}</p>
+                            <li>Two Games at a Time.</li>
+                            <li>New Games Available.</li>
+                            <li>Play as long as you want (unlimited time frame).</li>
+                            <li>Physical disc.</li>
+                            <li>Door to Door free service (Shipping & Return).</li>
+                            {% if plan.additional_month > 0 %}
+                            <li>Subscription Duration: <span>{{ plan.duration }} Month + {{ plan.additional_month }} Month Extra!</span>
+                            </li>
+                            {% else %}
+                            <li>Subscription Duration: <span>{{ plan.duration }} Month</span></li>
+                            {% endif %}
+                            <li>Additional Security Deposit: {% if plan.security_deposit > 0 and plan.refundable %}<span>₹ {{ plan.security_deposit }}
+                                    Refundable!</span>
+                                {% elif plan.security_deposit > 0 and not plan.refundable %}<span>₹ {{ plan.security_deposit }} Not
+                                    Refundable!</span>
+                                {% endif %}</li>
+                        </ul>
                     </div>
                     {% else %}
-                    <span>₹ {{ plan.security_deposit }} One Time Registration Fees</span>
-                    <div class="in-stock">
-                        <p>Plan Validity: <span>{{ plan.duration }} Month</span></p>
-                        {% if plan.available_swaps %}
-                        <p>Game Swaping Period: <span>Play Unlimited* or {{ plan.available_swaps }} Months*</span></p>
-                        {% endif %}
+                    <span>Get any Game at ₹ 500/-</span>
+                    <h3 style="margin: 10px;">Register with ₹ {{ plan.security_deposit }} for {{ plan.duration }} months </h3>
+                    <div class="product-list" style="text-indent: 0; font-size: 16px; color:black;">
+                        <li>Select any game from the website.</li>
+                        <li>Rent as many time as you want.</li>
+                        <li>Door to Door free service (Shipping & Return).</li>
+                        <li>One Game at a Time.</li>
+                        <li>New Games Available.</li>
+                        <li>Play as long as you want (unlimited time frame).</li>
+                        <li>Physical disc.</li>
+                        <li>Plan Validity: <span>{{ plan.duration }} months</span></li>
                     </div>
                     {% endif %}
                     {% endif %}
@@ -109,7 +123,7 @@
                             <i class="fa fa-exclamation" style="font-size:36px"></i>
                         </div>
                         <div class="Message-body">
-                            <p>Once you buy this plan you can rent any game for 300 or 500 rupees</p>
+                            <p>Buy the plan & rent all games for ₹ 500/- only</p>
                         </div>
                     </div>
                     {% endif %}
@@ -147,23 +161,23 @@
                         {% endif %}
                         {% endif %}
                     </div>
-                    <!--<div class="pro-dec-categories">-->
-                    <!--<ul>-->
-                    <!--<li class="categories-title">Available for:</li>-->
-                    <!--{% for item in product.item_type.all %}-->
-                    <!--<li><a href="#">{{item}},</a></li>-->
-                    <!--{% endfor %}-->
-                    <!--</ul>-->
-                    <!--</div>-->
-                    <!--<div class="pro-dec-categories">-->
-                    <!--<ul>-->
-                    <!--<li class="categories-title">Tags:</li>-->
-                    <!--<li><a href="#">Plazatheme,</a></li>-->
-                    <!--<li><a href="#"> Table, </a></li>-->
-                    <!--<li><a href="#">Woo,</a></li>-->
-                    <!--<li><a href="#"> e-Commerce,</a></li>-->
-                    <!--</ul>-->
-                    <!--</div>-->
+                    <!-- <div class="pro-dec-categories">
+                    <ul>
+                    <li class="categories-title">Available for:</li>
+                    {% for item in product.item_type.all %}
+                    <li><a href="#">{{item}},</a></li>
+                    {% endfor %}
+                    </ul>
+                    </div>
+                    <div class="pro-dec-categories">
+                    <ul>
+                    <li class="categories-title">Tags:</li>
+                    <li><a href="#">Plazatheme,</a></li>
+                    <li><a href="#"> Table, </a></li>
+                    <li><a href="#">Woo,</a></li>
+                    <li><a href="#"> e-Commerce,</a></li>
+                    </ul>
+                    </div> -->
                     <div class="pro-dec-social">
                         <ul>
                             <span>Share :</span>
@@ -174,10 +188,10 @@
                             </div>
                         </ul>
                     </div>
-                    <!--<div class="pro-dec-btn">-->
-                    <!--<a href="#"><i class="fa fa-angle-left"></i></a>-->
-                    <!--<a href="#"><i class="fa fa-angle-right"></i></a>-->
-                    <!--</div>-->
+                    <!-- <div class="pro-dec-btn">
+                        <a href="#"><i class="fa fa-angle-left"></i></a>
+                        <a href="#"><i class="fa fa-angle-right"></i></a>
+                    </div> -->
                 </div>
             </div>
         </div>

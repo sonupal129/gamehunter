@@ -125,7 +125,7 @@
                                     </td>
                                     <td class="product-name">{% if product.is_object_of_plan_class %}<a
                                             href="{{ product.get_absolute_url }}">{{ product.name|title }}</a>{% else %}
-                                        <a href="{{ product.get_absolute_url }}">{{ product.get_product_title_name}}
+                                        <a href="{{ product.get_absolute_url }}">{{ product.name|title }}
                                         </a>{% endif %}
                                     </td>
                                 </tr>
@@ -139,7 +139,7 @@
                                             height="60">
                                     </td>
                                     <td class="product-name"><a href="{{ product.get_absolute_url }}">
-                                        {{ product.get_product_title_name }}
+                                        {{ product.name|title }}
                                     </a>
                                     </td>
                                 </tr>

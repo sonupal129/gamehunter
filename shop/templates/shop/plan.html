@@ -49,7 +49,7 @@
                                 <h4>
                                     <a href="{{ plan.get_absolute_url }}">{{ plan.name }}</a>
                                 </h4>
-                                <div class="product-price-wrapper">
+                                <!-- <div class="product-price-wrapper">
                                     {% if plan.type == "SB" %}
                                     {% if plan.discount != 0 %}
                                     <span class="product-price-old">₹ {{ plan.get_monthly_subscription_mrp }}</span>
@@ -60,13 +60,17 @@
                                     {% else %}
                                     <span style="font-weight: bold;">Get Any Game at Rupee 300/500 Only*</span>
                                     {% endif %}
-                                </div>
+                                </div> -->
                                 <div class="product-list">
                                     <ul>
                                         {% if plan.type == "SB" %}
-                                        <li>Get Per Month at Rupee: <span> ₹ {{ plan.get_monthly_subscription_selling_price }} </span></li>
+                                        <li>Get games at rupee: <span> ₹ {{ plan.get_monthly_subscription_selling_price }} </span> per month.</li>
+                                        <li>Select any game from the website.</li>
                                         {% if plan.swaps > 0 %}
-                                        <li>Available Monthly Swaps: <span>{{ plan.available_swaps }} Swaps</span></li>
+                                        <li>Available free monthly swaps: <span>{{ plan.available_swaps }} Swaps.</span></li>
+                                        <li>Door to Door free service (Shipping & Return).</li>
+                                        <li>Two games at a time.</li>
+                                        <li>New games available.</li>
                                         {% endif %}
                                         <li>Security Deposit: {% if plan.security_deposit > 0 and plan.refundable %}
                                             <span>₹ {{ plan.security_deposit }} Refundable!</span>

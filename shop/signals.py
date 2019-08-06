@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.signals import request_finished
 from shop.models import ProductAttribute
 from shop.emails import new_user_signup_email
-
+from shop.slack_notifications import new_user_registered
 # Code Starts from Here
 
 
@@ -76,4 +76,5 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance, subscribed=True)
         new_user_signup_email(instance.id)
+        new_user_registered(instance.id)
     instance.userprofile.save()

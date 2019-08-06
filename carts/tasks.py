@@ -23,12 +23,8 @@ def delete_old_cart():
     """This function runs as task, Where it checks all carts and carts which are older than 45 days without user details and
     carts which are older than 90 days with no user activity get deleted from system"""
     one_half_month_old = Cart.objects.filter(user=None, payment_status="", products=None, payment_request="", plan=None,
-                                             updated__lte=timezone.now() - datetime.timedelta(45))
-    if one_half_month_old:
-        one_half_month_old.delete()
-    four_month_old = Cart.objects.filter(payment_status=None, payment_request=None, updated__lte=timezone.now() - datetime.timedelta(120))
-    if four_month_old:
-        four_month_old.delete()
+                                             updated__lte=timezone.now() - datetime.timedelta(45)).delete()
+    four_month_old = Cart.objects.filter(payment_status=None, payment_request=None, updated__lte=timezone.now() - datetime.timedelta(120)).delete()
     return "Carts which were older than 45 and 90 days deleted from system"
 
 
