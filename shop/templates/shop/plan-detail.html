@@ -34,12 +34,12 @@
                              data-zoom-image="{% static 'img/images/no-image.jpg' %}" alt=""
                              height="560" width="560">
                         {% endif %}
-                        <!--<div class="product-video">-->
-                        <!--<a class="video-popup" href="https://www.youtube.com/watch?v=tce_Ap96b0c">-->
-                        <!--<i class="fa fa-video-camera"></i>-->
-                        <!--View Video-->
-                        <!--</a>-->
-                        <!--</div>-->
+                        <div class="product-video">
+                            <a id="video" video-url="https://www.youtube.com/watch?v=Br066f5klSU">
+                                <i class="fa fa-video-camera"></i>
+                                About Gamehunter
+                            </a>
+                        </div>
                     </div>
                     <div id="gallery" class="mt-20 product-dec-slider owl-carousel">
                         <a data-image="{{ plan.image.url }}"
@@ -227,5 +227,19 @@ a2a_config.onclick = 1;
 a2a_config.num_services = 4;
 </script>
 <script async src="https://static.addtoany.com/menu/page.js"></script>
+<script>
+    $(function () {
+        $("#video").videoPopup({
+            autoplay: 1,
+            controlsColor: 'white',
+            showVideoInformations: 0,
+            width: 1000,
+            customOptions: {
+                rel: 0,
+                end: 60
+            }
+        });
+    });
+</script>
 {% endblock %}
 <!-- Nav-bar Area End Here-->

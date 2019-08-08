@@ -30,7 +30,7 @@ def filtered_genre(field_name):
 
 class ProductFilter(django_filters.FilterSet):
       ordering_choices =  {
-            ("date", "Date (by latest)"),
+            ("date", "Newest first"),
             ("name", "Name (a-z)"),
             ("mrp", "Price (low to high)"),
       }
@@ -49,6 +49,6 @@ class ProductFilter(django_filters.FilterSet):
       def get_sorted_products(self, queryset, name, value):
             if value:
                   return queryset.order_by(value)
-            return queryset.order_by("-date")
+            return queryset
 
       

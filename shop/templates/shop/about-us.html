@@ -45,7 +45,7 @@
                     <p>We are trying to create one big gaming community: GameHunter’s Family – let’s hunt down the
                         game.</p>
                     <div class="overview-btn mt-45">
-                        <a class="btn-style-2" href="{% url 'shop:homepage' %}">Shop now!</a>
+                        <a class="btn-style-2" id="video" video-url="https://www.youtube.com/watch?v=Br066f5klSU">Shop now!</a>
                     </div>
                 </div>
             </div>
@@ -298,5 +298,19 @@
 
 <!-- Coverpage Area Starts Here-->
 {% block coverpage %}
+<script>
+    $(function () {
+        $("#video").videoPopup({
+            autoplay: 1,
+            controlsColor: 'white',
+            showVideoInformations: 0,
+            width: 1000,
+            customOptions: {
+                rel: 0,
+                end: 60
+            }
+        });
+    });
+</script>
 {% endblock %}
 <!-- Coverpage Area End Here-->

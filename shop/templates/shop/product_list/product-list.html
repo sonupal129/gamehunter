@@ -5,8 +5,9 @@
 
 <!-- Site Title -->
 {% block title%}
-<title>Rent | Buy | Sell {{ filter_categories.last.name }} Games Online at GameHunter
-</title>
+<title>
+    {% if request.GET.rent %} Rent {% else %} Buy {% endif %}
+     {{ filter_categories.get_parent_with_self.last.name|cut:"Games" }} games online at GameHunter</title>
 {% endblock %}
 {% block navbar %}
 {% if filter_categories %}

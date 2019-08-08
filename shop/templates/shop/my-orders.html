@@ -31,7 +31,7 @@
                             <th></th>
                             <th>Product Name</th>
                             <th>Order Number</th>
-                            <th>₹ Price</th>
+                            <th>Order Date</th>
                             <th>Status</th>
                             <th>Track Order</th>
                         </tr>
@@ -41,21 +41,23 @@
                         <tr>
                             <td class="product-thumbnail">
                                 <a href="{{ order.product.get_absolute_url }}">
-                                {% thumbnail product.get_default_photo.file "80x80" crop="center" quality=70 as im %}
+                                {% thumbnail order.product.get_default_photo.file "80x80" crop="center" quality=70 as im %}
                                     <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}"></a>
                                 {% endthumbnail %}
                             </td>
                             <td class="product-name"><a href="{{ order.product.get_absolute_url }}">
-                                {{order.product.name|title }} for {{ order.product.category }}</a></td>
+                                {{order.product.name }} for {{ order.product.category }}</a></td>
                             <td class="product-name"><a href="#">
                                 {{ order.suborder_id}}</a></td>
-                            <td class="product-subtotal">₹ {{ order.product.get_mrp_and_selling_price|first }}</td>
+                            <td class="product-subtotal">{{ order.order_date|date:"d F Y" }}</td>
                             <td class="product-price-cart"><span
                                     class="amount">{{ order.get_status_display }}</span>
                             </td>
-                            <td class="track-order">{% if order.order_tracking_url %}<b><a
-                                    href="{{ order.order_tracking_url }}" target="_blank">{% endif %} Track Order
-                                >>></a></b></td>
+                            {% if order.shipping_link %}
+                            <td><div class="compare-product-btn mt-45">
+                                    <a class="btn-style-2" href="{{ order.shipping_link }}" target="_blank">Track Order</a>
+                                </div></td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                         </tbody>
