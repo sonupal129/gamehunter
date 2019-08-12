@@ -444,3 +444,4 @@ class SellYourGames(models.Model):
     game_category = models.CharField(max_length=30, choices=game_choice)
     customer_name = models.CharField(max_length=50, blank=True, null=True)
     # user = models.ForeignKey(User, on_delete=models.CASCADE)
+

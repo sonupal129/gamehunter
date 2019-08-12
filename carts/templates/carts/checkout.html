@@ -66,6 +66,12 @@
                                                 </div>
                                                 <div class="col-lg-4 col-md-4">
                                                     <div class="billing-info">
+                                                        <label>Pin Code</label>
+                                                        {{ form.pincode }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4">
+                                                    <div class="billing-info">
                                                         <label>city</label>
                                                         {{ form.city }}
                                                     </div>
@@ -76,19 +82,13 @@
                                                         {{ form.state }}
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-4 col-md-4">
-                                                    <div class="billing-info">
-                                                        <label>Pin Code</label>
-                                                        {{ form.pincode }}
-                                                    </div>
-                                                </div>
                                             </div>
-                                            <div class="ship-wrapper">
+                                            <!-- <div class="ship-wrapper">
                                                 <div class="single-ship">
                                                     <input type="radio" name="address" value="address" checked="True">
                                                     <label>Ship to this address</label>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="billing-back-btn">
                                                 <div class="billing-back">
                                                     <button type="submit" >Pay Online</button>

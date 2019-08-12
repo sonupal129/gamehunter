@@ -1,5 +1,5 @@
 {% load staticfiles %}
-
+{% load compress %}
 {% url 'carts:cart' as cart_url %}
 {% load mytags %}
 
@@ -34,20 +34,21 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'shop/img/favicon.png' %}">
     <!-- all css here -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% compress css %}
     <link rel="stylesheet" href="{% static 'shop/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/animate.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/owl.carousel.min.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/slick.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/chosen.min.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/ionicons.min.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static 'shop/css/pe-icon-7-stroke.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/meanmenu.min.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/responsive.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/jquery-ui.css' %}">
+    {% endcompress %}
     <script src="{% static 'shop/js/vendor/modernizr-2.8.3.min.js' %}"></script>
-
 </head>
 <body>
 <header class="header-area bg-img" style='background-image: url({% static "shop/img/bg/bg-14.jpg" %}' );>
@@ -516,7 +517,7 @@ fbq('track', 'PageView');
                             <li>Email: <a href="#">hunt@gamehunter.in</a></li>
                         </ul>
                     </div>
-                    <div class="opening-time">
+                    <!-- <div class="opening-time">
                         <h4>Opening Time</h4>
                         <div class="opening-content">
                             <ul>
@@ -524,7 +525,7 @@ fbq('track', 'PageView');
                                 <li>Sunday: Close</li>
                             </ul>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

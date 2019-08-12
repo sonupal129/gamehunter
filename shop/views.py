@@ -108,7 +108,7 @@ class HomePageView(ListView):
 
 
 class ProductListView(ListView):
-    template_name = 'shop/product_list/product-list.html'
+    template_name = 'shop/products/product_list/product-list.html'
     paginate_by = 20
     
     @log_exceptions("Product List Querysets Function")
@@ -157,7 +157,7 @@ class ProductListView(ListView):
 class ProductDetailView(DetailView):
     model = Product
     context_object_name = "product"
-    template_name = 'shop/product_details/product-details.html'
+    template_name = 'shop/products/product_details/product-details.html'
 
     def get_object(self, queryset=None):
         obj = super(ProductDetailView, self).get_object(queryset=queryset)
@@ -196,7 +196,7 @@ class ProductDetailView(DetailView):
 
 
 class SubscriptionPlanView(ListView):
-    template_name = 'shop/plan.html'
+    template_name = 'shop/plans/plan.html'
     context_object_name = 'plans'
 
     def get_queryset(self):
@@ -210,7 +210,7 @@ class SubscriptionPlanView(ListView):
 
 
 class SubscriptionDetailView(DetailView):
-    template_name = 'shop/plan-detail.html'
+    template_name = 'shop/plans/plan-detail.html'
     model = Plan
     context_object_name = 'plan'
 
@@ -221,31 +221,31 @@ class SubscriptionDetailView(DetailView):
 
 
 class AboutUsView(TemplateView):
-    template_name = 'shop/about-us.html'
+    template_name = 'shop/static/about-us.html'
 
 
 class ContactUsView(TemplateView):
-    template_name = 'shop/contact.html'
+    template_name = 'shop/static/contact.html'
 
 
 class PrivacyPolicyView(TemplateView):
-    template_name = 'shop/privacy-policy.html'
+    template_name = 'shop/static/privacy-policy.html'
 
 
 class ReturnCancellationView(TemplateView):
-    template_name = 'shop/return-cancellation.html'
+    template_name = 'shop/static/return-cancellation.html'
 
 
 class ShipplingPolicyView(TemplateView):
-    template_name = 'shop/shipping-information.html'
+    template_name = 'shop/static/shipping-information.html'
 
 
 class FaqView(TemplateView):
-    template_name = 'shop/faq.html'
+    template_name = 'shop/static/faq.html'
 
 
 class TermConditionView(TemplateView):
-    template_name = 'shop/term-condition.html'
+    template_name = 'shop/static/term-condition.html'
 
 
 def login_register_page(request):
@@ -302,35 +302,11 @@ def login_register_page(request):
 
     if request.user.is_authenticated:
             return redirect("shop:homepage")
-    return render(request, "shop/login-register.html", context)
-
-
-class ProductSearchView(ListView):
-    template_name = "shop/product_list/product-list.html"
-    context_object_name = "products"
-
-    def get_queryset(self):
-        keywords = self.request.GET.get("keywords")
-        cache_key = self.request.get_raw_uri()
-        cached_value = cache.get(cache_key)
-        if cached_value is None:
-            qs = Product.objects.filter(Q(name__icontains=keywords, item_status__in=["S", "I"]), active=True)
-            cache.set(cache_key, qs, 1200)
-            return qs
-        return cached_value
-
-    def get_context_data(self, **kwargs):
-        context = super(ProductSearchView, self).get_context_data(**kwargs)
-        qs = self.get_queryset()
-        context["developers"] = qs.filter(developer__name__isnull=False).values("developer__name").distinct()
-        context["publishers"] = qs.filter(publisher__name__isnull=False).values("publisher__name").distinct()
-        context["genres"] = qs.filter(genre__genre__isnull=False).values("genre__genre").distinct()
-        context["cart"] = get_cart_obj(self.request)
-        return context
+    return render(request, "shop/registrations/login-register.html", context)
 
 
 class MyOrderView(ListView):
-    template_name = "shop/my-orders.html"
+    template_name = "shop/my-account/my-orders/my-orders.html"
     context_object_name = "orders"
 
     def get_queryset(self):
@@ -345,13 +321,13 @@ class MyOrderView(ListView):
 
 
 class ComingSoonView(TemplateView):
-    template_name = "shop/coming-soon.html"
+    template_name = "shop/static/coming-soon.html"
 
 
 class MyAccountView(TemplateView):
     password_reset_form = ResetPasswordForm
     personal_detail_form = PersonalDetailForm
-    template_name = "shop/my-account.html"
+    template_name = "shop/my-account/my-account.html"
 
     def post(self, request):
         post_data = request.POST or None

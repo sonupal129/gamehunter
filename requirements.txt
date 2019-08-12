@@ -10,6 +10,7 @@ django-background-tasks==1.2.0
 django-bleach==0.5.3
 django-ckeditor==5.6.1
 django-compat==1.0.15
+django-compressor==2.3
 django-filter==2.1.0
 django-htmlmin==0.11.0
 django-js-asset==1.1.0
@@ -33,7 +34,9 @@ pycodestyle==2.5.0
 Pygments==2.3.1
 python-dateutil==2.8.0
 pytz==2018.7
+rcssmin==1.0.6
 requests==2.21.0
+rjsmin==1.1.0
 six==1.12.0
 sorl-thumbnail==12.5.0
 soupsieve==1.9

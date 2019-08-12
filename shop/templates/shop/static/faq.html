@@ -1,0 +1,67 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+
+<!-- Site Title -->
+{% block title%}<title>Frequently Asked Questions | Gamehunter.in </title>{% endblock %}
+
+{% block navbar %}
+<div class="breadcrumb-area gray-bg-5">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <ul>
+                <li><a href="{% url 'shop:homepage' %}">HOME</a></li>
+                <li class="active">FREQUENTLY ASKED QUESTIONS</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="description-review-area pt-25 pb-70">
+    <div class="container">
+        <div class="description-review-wrapper">
+            <div class="description-review-topbar nav text-center">
+                <a class="active" data-toggle="tab" href="#product-faqs">Faq's for Products</a>
+                <a data-toggle="tab" href="#subscription-faqs">Faq's for Subscription</a>
+            </div>
+            <div class="tab-content description-review-bottom">
+                <div id="product-faqs" class="tab-pane active">
+                    <div class="product-description-wrapper">
+                        {% include 'shop/products/product_details/faq.html' %}
+                    </div>
+                </div>
+                <div id="subscription-faqs" class="tab-pane">
+                    <div class="product-anotherinfo-wrapper">
+                        {% include 'shop/plans/faq.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div class="banner-area">-->
+<!--<div class="container">-->
+<!--<div class="row">-->
+<!--<div class="col-lg-8 col-md-8">-->
+<!--<div class="banner-img banner-hover banner-mrg">-->
+<!--<a href="#">-->
+<!--<img src="assets/img/banner/banner-10.jpg" alt="">-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="col-lg-4 col-md-4">-->
+<!--<div class="banner-img banner-mrg-left-2 banner-hover">-->
+<!--<a href="#">-->
+<!--<img src="assets/img/banner/banner-11.jpg" alt="">-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+{% include 'shop/static/shop-service-page.html' %}
+{% endblock %}
+<!-- Nav-bar Area End Here-->
+
+<!-- Coverpage Area Starts Here-->
+{% block coverpage %}
+{% endblock %}
+<!-- Coverpage Area End Here-->

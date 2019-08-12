@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.http import HttpResponse
 from .models import *
-
+from django_slack import slack_message
 
 def log_exceptions(view_name):
     """
@@ -24,10 +24,13 @@ def log_exceptions(view_name):
                 print(actual_view)
                 return response
             except Exception as e:
-                debug_entry = ExceptionLog(timestamp=timezone.now(), views=view_name,
-                                           exceptionclass=str(e.__class__), message=str(e))
-                debug_entry.save()
-                print("Kuch To Locha Hai JO Samajh Nahi Aa raha hai")
+                context = {
+                    "time": timezone.now(),
+                    "view_name": view_name,
+                    "exception": str(e.__class__),
+                    "message": str(e),
+                }
+                slack_message("shop/slack-notifications/error-notification.html", context)
                 return HttpResponse(status=500)
 
         return wrapped_view

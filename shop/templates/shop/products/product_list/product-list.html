@@ -135,7 +135,7 @@
                 <div class="shop-topbar-wrapper">
                     <div class="shop-topbar-left">
                         
-                        {% include 'shop/include/upper_paginator.html' %}
+                        {% include 'shop/paginator/upper_paginator.html' %}
                         <div class="product-sorting-wrapper">
                             <!--<div class="product-shorting shorting-style"><label>View:</label><select>-->
                             <!--<option value=""> 20</option>-->
@@ -153,13 +153,13 @@
                             <div class="row">
                                 {% for product in products %}
                                     {% if request.GET.rent %}
-                                        {% include 'shop/product_list/product_list_rent.html' %}
+                                        {% include 'shop/products/product_list/product_list_rent.html' %}
                                     {% else %}
-                                        {% include 'shop/product_list/product_list_buy.html' %}
+                                        {% include 'shop/products/product_list/product_list_buy.html' %}
                                     {% endif %}
                                 {% endfor %}
                             </div>
-                            {% include 'shop/include/lower_paginator.html' %}                            
+                            {% include 'shop/paginator/lower_paginator.html' %}                            
                         </div>
                     </div>
                 </div>
@@ -173,7 +173,7 @@
         {% endif %}
     </div>
 </div>
-    {% include 'shop/include/shop-service-page.html' %}
+    {% include 'shop/static/shop-service-page.html' %}
     {% endblock %}
     <!-- Nav-bar Area End Here-->
 
