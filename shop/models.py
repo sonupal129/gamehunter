@@ -320,7 +320,7 @@ class Product(models.Model):
 
     def get_default_photo(self):
         if not hasattr(self, '__default_photo'):
-            self.__default_photo = self.photo_set.first()
+            self.__default_photo = self.photo_set.order_by("id").first()
         return self.__default_photo
 
     def get_mrp_and_selling_price(self):
