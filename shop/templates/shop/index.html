@@ -19,7 +19,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-12">
-                <div class="slider-area">
+                <div class="slider-area" data-interval="5000">
                     <div class="slider-active owl-dot-style-2 owl-carousel">
                         {% for coverpage in coverpage_top %}
                         <div class="single-slider pt-70 pb-70 bg-img pl-60 slider-height-2" style="background-image:url({{ coverpage.get_promo_image.file.url }}); width: 777px; height: 420px;">
@@ -83,13 +83,13 @@
 <!-- Featured Product Area Starts Here-->
 {% block featuredproducts %}
 <!-- Featured Products Area Starts -->
-<div class="best-selling-area pt-60 pb-45 gray-bg">
+<div class="best-selling-area pt-60 pb-45">
     <div class="container">
         <div class="top-bar section-border mb-35">
-            <div class="section-title-wrapper section-bg-gray">
+            <div class="section-title-wrapper section-bg-white">
                 <h4 class="section-title">Featured Products</h4>
             </div>
-            <div class="product-tab-list-2 nav section-bg-gray">
+            <div class="product-tab-list-2 nav section-bg-white">
                 <a class="active" href="#home4" data-toggle="tab">
                     <h4>Playstation Games </h4>
                 </a>
@@ -1074,13 +1074,13 @@
 <!-- Homepage-Console-Category Area Starts Here-->
 {% block consolecategory %}
 <!-- Console Category Area Starts -->
-<div class="product-area pt-60 pb-65 product-area-game gray-bg-7">
+<div class="product-area pt-60 pb-65 product-area-game">
     <div class="container">
         <div class="row">
             <div class="col-lg-4">
                 <div class="new-arrivals-area mrg-top-md mrg-top-sm">
                     <div class="section-border mb-40">
-                        <h4 class="section-title white-title section-bg-gray">What's New</h4>
+                        <h4 class="section-title white-title section-bg-white">What's New</h4>
                     </div>
                     <div class="product-slider-active-2 nav-style nav-style-game owl-carousel">
                         <div class="single-product-bundle">
@@ -1183,7 +1183,7 @@
             <div class="col-lg-4">
                 <div class="new-arrivals-area mrg-top-md mrg-top-sm">
                     <div class="section-border mb-40">
-                        <h4 class="section-title white-title section-bg-gray">New Released Games</h4>
+                        <h4 class="section-title white-title section-bg-white">New Released Games</h4>
                     </div>
                     <div class="product-slider-active-2 nav-style nav-style-game owl-carousel">
                         <div class="single-product-bundle">
@@ -1287,7 +1287,7 @@
             <div class="col-lg-4">
                 <div class="new-arrivals-area">
                     <div class="section-border mb-40">
-                        <h4 class="section-title white-title section-bg-gray">What Gamers Buying!</h4>
+                        <h4 class="section-title white-title section-bg-white">What Gamers Buying!</h4>
                     </div>
                     <div class="product-slider-active-2 nav-style nav-style-game owl-carousel">
                         <div class="single-product-bundle">

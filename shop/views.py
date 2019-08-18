@@ -333,6 +333,7 @@ class MyAccountView(TemplateView):
         post_data = request.POST or None
 
 
+
 class SellYourGamesView(FormView):
     template_name = "shop/sell-your-games.html"
     form_class = SellGamesForm
@@ -369,10 +370,25 @@ def clear_cache(request):
     cache.clear()
     return HttpResponse("Cache cleared for website")
 
-from carts.slacknotification import new_product_order_received
+class OrderDetailView(ListView):
+    template_name = "shop/my-account/my-orders/order-detail.html"
+    context_object_name = 'orders'
+    model = ProductOrders
 
+    def get_queryset(self, **kwargs):
+        qs = super(OrderDetailView, self).get_queryset(**kwargs)
+        cart_id = self.kwargs.get("cart", None)
+        if cart_id:
+            product_orders =qs.filter(cart__cart_id=cart_id)
+            return product_orders
+    
+    def get_context_data(self, **kwargs):
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
+        cart_id = self.kwargs.get("cart", None)
+        cart = Cart.objects.get(cart_id=cart_id)
+        context["cart"] = cart
+        return context
+    
 def test_view(request):
-    new_product_order_received(ProductOrders.objects.get(id=8))
-    print("Fired")
-    return HttpResponse("Fired")
+    return render(request, "shop/my-account/my-orders/order-detail.html")
 

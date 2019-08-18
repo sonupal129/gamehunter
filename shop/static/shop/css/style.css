@@ -3863,7 +3863,7 @@ button.icon-cart span.count-style {
 }
 
 .owl-dot-style-2 .owl-dot.active {
-    background: #0363cd none repeat scroll 0 0;
+    background: #df2121 none repeat scroll 0 0;
     height: 13px;
     position: relative;
     top: 2px;
@@ -10098,7 +10098,7 @@ h5.panel-title span {
 }
 
 .entries-info > p {
-    color: #fff;
+    color: #242424;
     font-size: 15px;
     margin: 0;
     text-transform: capitalize;
@@ -10517,8 +10517,6 @@ blockquote > h4 {
     font-weight: 350;
     margin-bottom: 24px;
     color: #242424;
-
-    
 }
 
 .overview-content-2 > h2::before {
@@ -10720,8 +10718,17 @@ h4.section-title-about::before {
 -----------------------------*/
 
 /*---------------------------
-   My Order List View Page CSS
+   My Orders List View Page CSS
 -----------------------------*/
-.track-order{
+
+.order-delivery-detail {
+	border: 2px solid red;
+	margin: 30px;
 
 }
+.order-delivery-detail > h4 {
+	font-size: 20px;
+	color: gray;
+	border-bottom: 1px solid green;
+}
+

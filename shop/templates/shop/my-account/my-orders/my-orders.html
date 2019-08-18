@@ -47,7 +47,7 @@
                             </td>
                             <td class="product-name"><a href="{{ order.product.get_absolute_url }}">
                                 {{order.product.name }} for {{ order.product.category }}</a></td>
-                            <td class="product-name"><a href="#">
+                            <td class="product-name"><a href="{% url 'shop:order-details' cart=order.get_cart %}">
                                 {{ order.suborder_id}}</a></td>
                             <td class="product-subtotal">{{ order.order_date|date:"d F Y" }}</td>
                             <td class="product-price-cart"><span

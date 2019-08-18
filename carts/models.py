@@ -240,6 +240,8 @@ class ProductOrders(models.Model):
         if self.status == "SP" and self.shipping_link:
             return self.shipping_link
 
+    def get_cart(self):
+        return self.cart
 
 class SubscriptionOrders(models.Model):
     cart = models.ForeignKey(Cart, null=True, blank=True, on_delete=models.CASCADE)

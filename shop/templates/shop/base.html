@@ -83,8 +83,8 @@ fbq('track', 'PageView');
                         <div class="language-currency lang-curr-border-4">
                             <div class="lang-curr-dropdown">
                                 <ul>
-                                    <li><a class="language-click" href="#">Hi, {% if user.first_name %}
-                                        {{ user.first_name }} {{ user.last_name }} {% else %} Hunter {% endif %}<i
+                                    <li><a class="language-click" href="#">Hi, {% if user.get_full_name %}
+                                        {{ user.get_full_name }} {% else %} Hunter {% endif %}<i
                                                 class="ion-chevron-down"></i></a>
                                         <ul class="language-dropdown">
                                             <li><a href="{% url 'shop:my-account' %}">My Account </a></li>
@@ -351,9 +351,7 @@ fbq('track', 'PageView');
                             </ul>
                         </li>
                         <li><a href="{% url 'shop:subscription-list' %}">Subscriptions</a></li>
-                        <li class="mega-menu-position"><a
-                                href="{% url 'shop:product-list' slug='games' %}?{% url_add request 'rent' 'available' %}"> play on rent <i
-                                class="ion-chevron-down"></i> </a>
+                        <li class="mega-menu-position"><a href="{% url 'shop:product-list' slug='games' %}?{% url_add request 'rent' 'available' %}"> play on rent <i class="ion-chevron-down"></i> </a>
                             <ul class="mega-menu">
                                 <li>
                                     <ul>

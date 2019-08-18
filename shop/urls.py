@@ -47,6 +47,7 @@ urlpatterns = [
     path('login/', login_register_page, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('my-orders/', login_required(MyOrderView.as_view()), name='orders'),
+    path('my-orders/<str:cart>/', OrderDetailView.as_view(), name='order-details'),
     path('my-account/', login_required(MyAccountView.as_view()), name='my-account'),
     path('password-reset/', reset_password, name='password_reset'),
     path('password-reset/done/',

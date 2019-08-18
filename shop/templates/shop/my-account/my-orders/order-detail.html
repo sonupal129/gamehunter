@@ -1,0 +1,93 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+
+
+{% block title%}<title>My Orders</title>{% endblock %}
+<meta name="robots" content="noindex" />
+{% block navbar %}
+<div class="breadcrumb-area gray-bg-5">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <ul>
+                <li><a href="{% url 'shop:homepage' %}">HOME</a></li>
+                <li><a href="{% url 'shop:orders' %}">MY ORDERS</a></li>
+                <li class="active">{{ orders.first.get_cart }}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- shopping-cart-area start -->
+<div class="best-selling-area pt-60 pb-45 gray-bg">
+    <div class="container">
+        <div class="tab-content jump">
+            <div class="tab-pane active">
+                <div class="row">
+                    <div class="col-xl-12 col-lg-8 col-md-6">
+                        {% for order in orders %}
+                        <div class="best-selling-pro-wrapper mb-6 best-selling-big-img" style="margin-bottom: 20px;">
+                            <div class="product-img best-selling-img">
+                                <a href="{{ order.product.get_absolute_url }}">
+                                    {% thumbnail order.product.get_default_photo.file "300x300" crop="center" quality=70 as im %}
+                                    <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.height }}">
+                                    {% endthumbnail %}
+                                </a>
+                            </div>
+                            <div class="product-content best-pro-content best-selling-style-2">
+                                <span>{{ order.product.name }}</span>
+                                <h4 style="margin-top: 20px;">
+                                    <a href="{% url 'shop:coming-soon' %}" target="_blank">Download Invoice</a>
+                                </h4>
+
+                                <div class="product-list">
+                                    <li>Order ID: <span>{{ order.suborder_id }}</span></li>
+                                    <li>Category: <span>For {{ order.product.category }}</span></li>
+                                    <li>Payment Method: <span>{{ order.payment_method }}</span></li>
+                                    <li>Selling Price: <span>{{ order.final_selling_price }}</span></li>
+
+                                </div>
+                                {% if order.status == "SP" or order.status == "OD" or order.status == "CO" and order.shipping_link %}
+                                <div class="best-pro-action-2" style="margin-bottom: 30px">
+                                    <a class="action-cart" href="{{ order.shipping_link }}" style="background-color: #a1dd70;"
+                                        title="Choose Your Games" target="_blank"> Track Order </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel-body">
+    <div class="billing-information-wrapper">
+        <div class="account-info-wrapper">
+            <h3>Delivery Details</h3>
+        </div>
+        <div class="entries-wrapper">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 d-flex align-items-start justify-content-center">
+                    <div class="entries-info text-start">
+                        <p>Customer Name: {{ cart.user.get_full_name }} </p>
+                        <p>Email: <span style="text-transform: lowercase;">{{ cart.user.email }}</span></p>
+                        <p>Phone No: {{ cart.address.phone_number }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 d-flex align-items-center justify-content-center">
+                    <div class="entries-info text-center">
+                        <p>{{ cart.address.address }} </p>
+                        <p>{{ cart.address.city }}</p>
+                        <p>{{ cart.address.state }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% include 'shop/static/shop-service-page.html' %}
+{% endblock %}
+<!-- Nav-bar Area End Here-->
