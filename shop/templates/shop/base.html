@@ -34,21 +34,24 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'shop/img/favicon.png' %}">
     <!-- all css here -->
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    {% compress css %}
-    <link rel="stylesheet" href="{% static 'shop/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'shop/css/animate.css' %}">
-    <link rel="stylesheet" href="{% static 'shop/css/owl.carousel.min.css' %}">
-    <link rel="stylesheet" href="{% static 'shop/css/slick.css' %}">
-    <link rel="stylesheet" href="{% static 'shop/css/chosen.min.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/ionicons.min.css' %}">
-    <link rel="stylesheet" href="{% static 'shop/css/pe-icon-7-stroke.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/chosen.min.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/meanmenu.min.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/style.css' %}">
+    {% compress css file base %}
+    <link rel="stylesheet" href="{% static 'shop/css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/pe-icon-7-stroke.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/responsive.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/jquery-ui.css' %}">
     {% endcompress %}
+    {% compress js %}
     <script src="{% static 'shop/js/vendor/modernizr-2.8.3.min.js' %}"></script>
+    {% endcompress %}
 </head>
 <body>
 <header class="header-area bg-img" style='background-image: url({% static "shop/img/bg/bg-14.jpg" %}' );>
@@ -572,6 +575,7 @@ fbq('track', 'PageView');
         </div>
     </div>
 </footer>
+{% compress js file base %}
 <!-- all js here -->
 <script src="{% static 'shop/js/vendor/jquery-1.12.0.min.js' %}"></script>
 <script src="{% static 'shop/js/popper.js' %}"></script>
@@ -581,6 +585,8 @@ fbq('track', 'PageView');
 <script src="{% static 'shop/js/plugins.js' %}"></script>
 <script src="{% static 'shop/js/main.js' %}"></script>
 <script src="{% static 'shop/js/video.popup.js' %}"></script>
+{% endcompress %}
+
 <!-- Start of Async Drift Code -->
 <script>
 "use strict";

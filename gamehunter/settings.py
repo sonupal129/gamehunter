@@ -147,9 +147,6 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
-if not DEBUG:
-    COMPRESS_ENABLED = True
-
 COMPRESS_CSS_FILTERS = [
     'compressor.filters.cssmin.CSSMinFilter'
 ]
