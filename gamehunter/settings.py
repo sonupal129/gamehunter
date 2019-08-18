@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'django_filters',
     'compressor',
 
-
 ]
 
 MIDDLEWARE = [
@@ -148,10 +147,20 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
+if not DEBUG:
+    COMPRESS_ENABLED = True
+
+COMPRESS_CSS_FILTERS = [
+    'compressor.filters.cssmin.CSSMinFilter'
+]
+COMPRESS_JS_FILTERS = [
+    'compressor.filters.jsmin.JSMinFilter'
+]
+
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
-COMPRESS_ROOT = '/compressed/'
+COMPRESS_OUTPUT_DIR = '/cache/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
